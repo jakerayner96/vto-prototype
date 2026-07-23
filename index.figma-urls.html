@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f0f">
+<title>VTO Journey Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#f8b5cc; --soft-black:#0f0f0f; --grey-05:#fafafa; --grey-25:#d6d6d6;
+    --grey-3:#b5b5b5; --grey-4:#767676; --grey-5:#6b6b6b; --grey-6:#323232;
+    --red:#d33f3f; --bag-primary:#f8b5cc; --bag-border:#f8b5cc;
+    --ease-sheet:cubic-bezier(0.32,0.72,0,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+  html,body{height:100%;}
+  body{background:#000;font-family:'Montserrat',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+  .stage{display:flex;flex-direction:column;align-items:center;gap:0;}
+  .phone{width:390px;height:844px;background:#fff;overflow:hidden;position:relative;flex-shrink:0;}
+
+  /* ============ PDP ============ */
+  .pdp{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;background:#fff;scrollbar-width:none;}
+  .pdp::-webkit-scrollbar{display:none;}
+  .hdr{background:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;}
+  .hdr-left{display:flex;align-items:center;gap:16px;width:146px;height:24px;}
+  .icon-abs{position:relative;}
+  .icon-abs img{position:absolute;display:block;}
+  .ic-hamburger{width:24px;height:24px;}
+  .ic-hamburger img{width:22px;height:14px;left:1px;top:50%;transform:translateY(-50%);}
+  .logo{flex:1;aspect-ratio:1631.84/270.73;position:relative;}
+  .logo img{position:absolute;display:block;}
+  .hdr-icons{display:flex;align-items:flex-start;}
+  .hdr-btn{width:38px;height:36px;display:flex;align-items:center;justify-content:center;position:relative;}
+  .ic24{width:24px;height:24px;position:relative;}
+  .ic24 img{position:absolute;display:block;}
+  .ic-search img{left:0;top:0;right:4.17%;bottom:4.17%;width:95.83%;height:95.83%;}
+  .ic-account img{width:22px;top:4.17%;bottom:4.17%;height:91.66%;left:50%;transform:translateX(-50%);}
+  .ic-heart img{width:20px;height:19px;left:50%;top:calc(50% + .5px);transform:translate(-50%,-50%);}
+  .ic-bag img.glyph{left:9.53%;right:9.53%;top:4.17%;bottom:4.17%;width:80.94%;height:91.66%;}
+  .bag-counter{position:absolute;right:0;top:1px;width:11px;height:11px;background:#000;border-radius:23.467px;display:flex;align-items:center;justify-content:center;}
+  .bag-counter span{font-size:8.311px;font-weight:400;color:#fff;line-height:normal;}
+  .usp-light{background:var(--grey-05);padding:4px 16px;display:flex;justify-content:center;}
+  .usp-light p{font-size:12px;font-weight:400;color:#000;white-space:nowrap;}
+  .usp-dark{background:#000;padding:4px 16px;display:flex;gap:8px;align-items:center;justify-content:center;}
+  .usp-dark p,.usp-dark span{font-size:12px;color:#fff;white-space:nowrap;}
+  .usp-dark .code-bold{font-weight:600;}
+  .usp-divider{width:4px;height:1px;background:#fff;opacity:.9;}
+  .menu-banner{background:#ffe0eb;display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:center;padding:8px 0;}
+  .menu-banner .t1{font-size:14px;font-weight:700;color:#000;}
+  .menu-banner .t2{font-size:14px;font-weight:500;color:#000;}
+  .breadcrumbs{display:flex;gap:8px;padding:16px;font-size:12px;font-weight:500;color:#000;}
+  .breadcrumbs span{text-transform:capitalize;line-height:18px;white-space:nowrap;}
+  .breadcrumbs .sep{text-transform:uppercase;letter-spacing:.4px;line-height:18px;}
+
+  .carousel{height:350px;display:flex;gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+  .carousel::-webkit-scrollbar{display:none;}
+  .carousel .slide{height:350px;flex:0 0 233px;scroll-snap-align:start;position:relative;}
+  .carousel .slide.mid{flex-basis:234px;}
+  .carousel .slide img{width:100%;height:100%;object-fit:cover;display:block;}
+  .carousel .slide.contain img{object-fit:contain;}
+  .pag-wrap{padding:16px 16px 0;}
+  .pag-track{width:358px;height:4px;background:var(--grey-25);border-radius:100px;position:relative;overflow:hidden;}
+  .pag-fill{position:absolute;top:0;bottom:0;left:0;width:25%;background:#000;border-radius:100px;transition:transform .15s linear;}
+
+  .pdp-body{display:flex;flex-direction:column;gap:16px;padding:16px;width:390px;}
+  .chip-row{display:flex;justify-content:center;padding:0 16px;}
+  .chip{background:var(--primary);display:flex;gap:6px;align-items:center;padding:9px 14px;border-radius:100px;box-shadow:0 0 14px -4px rgba(0,0,0,.25);cursor:pointer;border:none;font-family:'Montserrat',sans-serif;}
+  .chip .ic16{width:16px;height:16px;position:relative;}
+  .chip .ic16 img{position:absolute;left:3.57%;right:3.57%;top:14.29%;bottom:14.29%;width:92.86%;height:71.42%;}
+  .chip p{font-size:13px;font-weight:600;color:#000;white-space:nowrap;}
+  .brand-row{display:flex;gap:8px;align-items:flex-start;}
+  .brand-col{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
+  .brand-col .brand{font-size:16px;font-weight:700;color:#000;}
+  .brand-col .title{font-size:16px;font-weight:500;color:#000;}
+  .wishlist-btn{width:44px;height:44px;position:relative;flex-shrink:0;}
+  .wishlist-btn .heart{position:absolute;width:16.667px;height:15.83px;left:50%;top:50%;transform:translate(-50%,-50%);}
+  .price-row{display:flex;gap:12px;align-items:center;}
+  .price-now{font-size:24px;font-weight:700;color:var(--red);}
+  .price-was{font-size:24px;font-weight:400;color:var(--grey-5);text-decoration:line-through;}
+  .badge-save{background:#fde8e8;border-radius:4px;padding:4px 8px;display:flex;align-items:center;justify-content:center;}
+  .badge-save span{font-size:14px;font-weight:500;color:#d00000;}
+  .order-msg{display:flex;gap:8px;align-items:center;}
+  .order-msg .ic20{width:20px;height:20px;position:relative;flex-shrink:0;}
+  .order-msg .ic20 img{position:absolute;left:2.5%;right:3.16%;top:17.71%;bottom:13.88%;width:94.34%;height:68.41%;}
+  .order-msg p{font-size:14px;font-weight:500;color:#000;}
+  .order-msg b{font-weight:700;}
+  .selectors{display:flex;flex-direction:column;gap:16px;}
+  .colour-line{font-size:16px;font-weight:500;color:#000;}
+  .colour-line b{font-weight:700;}
+  .size-block{display:flex;flex-direction:column;gap:12px;width:358px;}
+  .size-head{display:flex;align-items:center;justify-content:space-between;}
+  .size-head .lbl{font-size:16px;font-weight:500;color:#000;flex:1;}
+  .size-guide{display:flex;gap:4px;align-items:center;}
+  .size-guide .ic16{width:16px;height:16px;position:relative;}
+  .size-guide .ic16 img{position:absolute;width:13.53px;height:13.53px;left:calc(50% + .1px);top:calc(50% + .1px);transform:translate(-50%,-50%);}
+  .size-guide span{font-size:14px;font-weight:400;color:#000;}
+  .size-row{display:flex;gap:8px;}
+  .size-btn{width:60px;min-width:60px;height:50px;background:#fff;border:1px solid var(--grey-3);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;position:relative;}
+  .size-btn span{font-size:16px;font-weight:500;color:#000;}
+  .size-btn .strike{position:absolute;inset:1px;pointer-events:none;}
+  .size-btn .strike img{width:100%;height:100%;display:block;}
+  .advisor{position:relative;border-radius:4px;padding:20px;overflow:hidden;width:358px;}
+  .advisor .bg{position:absolute;inset:0;}
+  .advisor .bg img{width:100%;height:100%;object-fit:cover;border-radius:4px;display:block;}
+  .advisor .bg .grad{position:absolute;inset:0;border-radius:4px;background:linear-gradient(90.17deg,rgba(248,181,204,.8) 1.91%,rgba(248,181,204,0) 55.34%);}
+  .advisor-inner{position:relative;display:flex;gap:24px;align-items:center;}
+  .advisor-copy{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .advisor-copy .name{font-size:24px;font-weight:700;font-style:italic;letter-spacing:-0.48px;color:#000;text-transform:capitalize;}
+  .advisor-copy .desc{font-size:12px;font-weight:500;color:#000;line-height:normal;}
+  .advisor-cta{width:128px;background:var(--primary);border-radius:4px;padding:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .advisor-cta span{font-size:12px;color:#000;white-space:nowrap;}
+  .advisor-cta .l{font-weight:500;}
+  .advisor-cta .n{font-weight:800;font-style:italic;}
+  .cta-stack{display:flex;flex-direction:column;gap:8px;}
+  .btn-atb{width:358px;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .btn-atb span{font-size:16px;font-weight:700;line-height:24px;color:#000;text-transform:uppercase;font-family:'Montserrat',sans-serif;}
+  .btn-paypal{width:358px;height:50px;background:#ffc439;border-radius:4px;display:flex;align-items:center;justify-content:center;}
+  .pp-logo{width:74.167px;height:19.974px;position:relative;}
+  .pp-logo img{position:absolute;display:block;}
+  .btn-applepay{width:358px;height:50px;background:#000;border-radius:4px;display:flex;align-items:center;justify-content:center;}
+  .btn-applepay img{width:53.587px;height:22px;display:block;}
+  .deliver-banner{background:#ffe0eb;border-radius:4px;padding:16px 20px;width:358px;}
+  .deliver-inner{display:flex;flex-direction:column;gap:12px;}
+  .deliver-logo{width:200px;height:19px;}
+  .deliver-logo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .deliver-list{display:flex;flex-direction:column;gap:8px;}
+  .deliver-title{font-size:14px;font-weight:700;letter-spacing:-0.14px;color:#000;width:318px;}
+  .deliver-item{display:flex;gap:8px;align-items:center;}
+  .deliver-item .ic16{width:16px;height:16px;position:relative;flex-shrink:0;}
+  .deliver-item .ic16 img{position:absolute;left:14.58%;right:14.58%;top:25%;bottom:25%;width:70.84%;height:50%;}
+  .deliver-item p{font-size:12px;font-weight:400;letter-spacing:-0.12px;color:#000;flex:1;}
+  .deliver-more{font-size:14px;font-weight:700;letter-spacing:-0.14px;line-height:18.2px;color:#000;}
+  .pdp-end-pad{height:60px;}
+
+  /* ============ VTO FULL-SCREEN EXPERIENCE ============ */
+  .vto{position:absolute;inset:0;background:var(--soft-black);transform:translateY(100%);transition:transform .45s var(--ease-sheet);z-index:40;overflow:hidden;will-change:transform;}
+  .vto.open{transform:translateY(0);}
+  .vto.closing{transform:translateY(100%);transition:transform .42s var(--ease-sheet);}
+  .vto-screen{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+  .vto-screen.active{opacity:1;pointer-events:auto;}
+  .grad-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.8),rgba(0,0,0,.8)),linear-gradient(90deg,#e0dedc,#e0dedc);overflow:hidden;}
+  .blur-img{position:absolute;left:calc(50% - 14px);top:calc(50% + 1px);transform:translate(-50%,-50%);opacity:.2;filter:blur(10.5px);}
+  .blur-img.landing{width:574px;height:862px;}
+  .blur-img.loading{width:606px;height:908px;transform:translate(-50%,-50%) scaleX(-1);}
+  .blur-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .circle-btn{position:absolute;width:32px;height:32px;cursor:pointer;backdrop-filter:blur(2px);border:none;background:transparent;padding:0;}
+  .circle-btn .ring{position:absolute;inset:0;width:100%;height:100%;}
+  .circle-btn .glyph{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+  .circle-btn .glyph.x{width:12px;height:12px;}
+  .circle-btn .glyph.sh{width:16px;height:16px;object-fit:contain;}
+  .btn-close-vto{left:338px;top:20px;}
+  .btn-share-vto{left:338px;top:64px;}
+
+  /* landing sheet */
+  .vto-sheet{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:390px;border-radius:12px 12px 0 0;background:linear-gradient(162.7deg,#0f0f0f 3.09%,#131313 100%);display:flex;flex-direction:column;gap:20px;padding:20px 24px 24px;}
+  .vto-sheet .h1{font-size:28px;font-weight:700;color:#fff;line-height:normal;}
+  .vto-sheet .helper{display:flex;flex-direction:column;gap:4px;}
+  .vto-sheet .sub{font-size:13.5px;font-weight:500;color:#fff;line-height:1.35;}
+  .vto-btn-row{display:flex;gap:8px;width:100%;}
+  .btn-pink{flex:1;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 24px;cursor:pointer;font-family:'Montserrat',sans-serif;}
+  .btn-pink .ic20{width:20px;height:20px;position:relative;flex-shrink:0;}
+  .btn-pink .ic20 img{position:absolute;display:block;}
+  .btn-pink .ic20 img.cam{left:3.57%;right:3.57%;top:14.29%;bottom:14.29%;width:92.86%;height:71.42%;}
+  .btn-pink .ic20 img.upl{inset:8.33%;width:83.34%;height:83.34%;}
+  .btn-pink span{font-size:16px;font-weight:600;line-height:24px;color:#000;text-transform:uppercase;white-space:nowrap;}
+  .disclaimer{font-size:12px;font-weight:300;text-align:center;color:var(--grey-3);line-height:normal;}
+  .disclaimer a{color:var(--primary);text-decoration:none;font-weight:300;cursor:pointer;}
+
+  /* loading */
+  .vto-status{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:390px;display:flex;flex-direction:column;gap:16px;align-items:center;padding:8px 18px 18px;}
+  .vto-status .ic32{width:32px;height:32px;position:relative;}
+  .vto-status .ic32 img{position:absolute;inset:9.38%;width:81.24%;height:81.24%;animation:aiPulse 1.8s ease-in-out infinite;}
+  @keyframes aiPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.55;transform:scale(.92);}}
+  .vto-status .headline{font-size:20px;font-weight:700;color:#fff;text-align:center;width:100%;}
+  .prog-track{width:240px;height:6px;background:var(--grey-5);border-radius:100px;overflow:hidden;}
+  .prog-fill{height:6px;width:0;background:var(--primary);border-radius:100px;transition:width .35s ease;}
+  .vto-status .cap{font-size:11.5px;font-weight:400;color:var(--grey-3);text-align:center;line-height:normal;}
+  .btn-continue{position:absolute;left:calc(50% + .5px);top:738px;transform:translateX(-50%);background:var(--primary);border:none;border-radius:4px;padding:8px 16px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;}
+  .btn-continue span{font-size:14px;font-weight:600;line-height:24px;color:#000;white-space:nowrap;}
+  .wardrobe-note{position:absolute;left:50%;bottom:46px;transform:translate(-50%,100%);width:256px;font-size:12px;font-weight:300;color:var(--grey-3);text-align:center;line-height:normal;}
+
+  /* result */
+  #scrResult{background:#242424;}
+  .result-canvas{position:absolute;top:0;left:0;width:390px;height:753px;overflow:hidden;}
+  .result-canvas img{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1);}
+  .vto-screen.result.active .result-canvas img{animation:reveal .5s ease both;}
+  @keyframes reveal{from{transform:scaleX(-1) scale(1.03);opacity:.4;}to{transform:scaleX(-1) scale(1);opacity:1;}}
+  .result-sheet{position:absolute;left:50%;bottom:0;width:390px;border-radius:12px 12px 0 0;background:linear-gradient(167.3deg,#0f0f0f 3.09%,#131313 100%);display:flex;flex-direction:column;gap:20px;padding:20px 24px 16px;}
+  /* sheets slide in on top of each screen */
+  .vto-sheet,.result-sheet{transform:translate(-50%,110%);transition:transform .42s var(--ease-sheet);will-change:transform;}
+  .vto-sheet.in,.result-sheet.in{transform:translate(-50%,0);}
+  .result-sizes{display:flex;gap:8px;}
+  .rsize{width:62px;min-width:60px;height:50px;background:#242424;border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;position:relative;}
+  .rsize span{font-size:16px;font-weight:500;color:#fff;}
+  .rsize.sel{background:var(--primary);}
+  .rsize.sel span{color:#000;}
+  .rsize.oos{cursor:default;}
+  .rsize.oos span{color:var(--grey-5);}
+  .rsize.oos .strike{position:absolute;inset:1px;pointer-events:none;}
+  .rsize.oos .strike img{width:100%;height:100%;display:block;}
+  /* action rail: accordions out when the screen lands */
+  .rail{position:absolute;right:20px;top:20px;display:flex;flex-direction:column;gap:12px;}
+  .rail .circle-btn{position:relative;left:auto;top:auto;opacity:0;transform:translateY(-14px) scale(.9);transition:opacity .28s ease,transform .38s var(--ease-sheet);}
+  .rail.in .circle-btn{opacity:1;transform:translateY(0) scale(1);}
+  .rail .circle-btn:nth-child(2){transition-delay:.06s;}
+  .rail .circle-btn:nth-child(3){transition-delay:.12s;}
+  .rail .circle-btn:nth-child(4){transition-delay:.18s;}
+  .rail .glyph.cam16{width:16px;height:16px;left:8px;top:8px;transform:none;object-fit:contain;padding:2.29px 0.57px;box-sizing:border-box;}
+  .rail .glyph.img16{width:16px;height:16px;left:8px;top:8px;transform:none;object-fit:contain;padding:1.33px;box-sizing:border-box;}
+  .result-cta{display:flex;flex-direction:column;gap:12px;}
+  .btn-atb-vto{width:342px;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;}
+  .btn-atb-vto span{font-size:16px;font-weight:600;line-height:24px;color:#000;text-transform:uppercase;}
+  .saved-note{font-size:12px;font-weight:400;color:var(--grey-4);text-align:center;line-height:normal;}
+  .saved-note a{color:var(--primary);text-decoration:none;cursor:pointer;}
+
+  /* ============ ADDED TO BAG ============ */
+  .scrim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:50;}
+  .scrim.on{opacity:1;pointer-events:auto;}
+  .bag-sheet{position:absolute;left:0;bottom:0;width:390px;height:368px;background:#fff;border-radius:4px 4px 0 0;padding:24px;display:flex;flex-direction:column;gap:24px;justify-content:flex-end;transform:translateY(105%);transition:transform .38s var(--ease-sheet);z-index:60;}
+  .bag-sheet.up{transform:translateY(0);}
+  .bag-head{display:flex;gap:12px;align-items:center;}
+  .bag-head .t{flex:1;font-size:20px;font-weight:600;color:var(--soft-black);}
+  .bag-head .x{width:16px;height:16px;position:relative;cursor:pointer;}
+  .bag-head .x img{position:absolute;inset:4.17%;width:91.66%;height:91.66%;}
+  .bag-slots{display:flex;flex-direction:column;gap:24px;background:#fff;border-radius:4px 4px 0 0;}
+  .bag-prod{height:148px;position:relative;}
+  .bag-prod .thumb{position:absolute;left:0;top:0;width:99px;height:148px;}
+  .bag-prod .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .bag-prod .info{position:absolute;left:115px;top:2px;width:189px;height:133px;color:#000;}
+  .bag-prod .info .b{position:absolute;left:0;top:0;width:189px;font-size:16px;font-weight:700;line-height:normal;}
+  .bag-prod .info .n{position:absolute;left:0;top:23px;width:189px;font-size:16px;font-weight:500;line-height:normal;}
+  .bag-prod .info .v{position:absolute;left:0;top:94px;width:189px;font-size:16px;font-weight:500;line-height:normal;}
+  .bag-prod .info .p{position:absolute;left:0;top:118px;width:189px;font-size:12px;font-weight:500;line-height:normal;}
+  .bag-prod .info .p .now{color:var(--red);}
+  .bag-prod .info .p .was{text-decoration:line-through;}
+  .bag-btns{display:flex;flex-direction:column;gap:8px;}
+  .btn-viewbag{width:342px;height:50px;background:var(--bag-primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;}
+  .btn-viewbag span{font-size:16px;font-weight:600;line-height:24px;color:#000;text-transform:uppercase;}
+  .btn-contshop{width:342px;height:50px;background:#fff;border:1px solid var(--bag-border);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;}
+  .btn-contshop span{font-size:16px;font-weight:600;line-height:24px;color:#000;}
+  .counter-pop{animation:pop .35s ease;}
+  @keyframes pop{0%{transform:scale(1);}45%{transform:scale(1.55);}100%{transform:scale(1);}}
+
+  /* ============ CAMERA / REVIEW (native) ============ */
+  .cam-screen{background:#000;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;}
+  .viewfinder{position:absolute;left:-0.5px;top:79px;width:389px;height:583px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000;}
+  .viewfinder video{width:390px;height:585px;object-fit:cover;transform:scaleX(-1);}
+  .viewfinder video.rear{transform:none;}
+  .viewfinder img.mock{width:390px;height:585px;object-fit:cover;transform:scaleX(-1);opacity:1;}
+  .viewfinder img.shot{width:390px;height:585px;object-fit:cover;}
+  .cam-flash{position:absolute;left:16px;top:40px;width:20px;height:20px;}
+  .cam-flash img{position:absolute;left:21.88%;right:21.88%;top:0;bottom:0;width:56.24%;height:100%;}
+  .cam-1x{position:absolute;left:176px;top:561px;width:38px;height:38px;}
+  .cam-1x img{position:absolute;inset:0;width:100%;height:100%;}
+  .cam-1x span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:600;letter-spacing:-.3px;color:#fff;}
+  .cam-photo-lbl{position:absolute;left:194.5px;top:637px;transform:translateX(-50%);font-size:13px;letter-spacing:-.3px;color:#ffd60a;text-align:center;white-space:nowrap;}
+  .cam-shutter{position:absolute;left:160px;top:668px;width:70px;height:70px;border:none;background:transparent;padding:0;cursor:pointer;}
+  .cam-shutter img{width:100%;height:100%;display:block;}
+  .cam-shutter:active{transform:scale(.92);}
+  .cam-cancel{position:absolute;left:32px;top:693px;font-size:18px;letter-spacing:-.3px;color:#fff;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;}
+  .cam-switch{position:absolute;left:322px;top:686px;width:35px;height:35px;background:none;border:none;padding:0;cursor:pointer;}
+  .cam-switch img{position:absolute;left:0;right:0;top:12.5%;bottom:12.5%;width:100%;height:75%;}
+  .home-ind{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:139px;height:5px;background:#fff;border-radius:100px;}
+  .cam-retake{position:absolute;left:25.99px;top:760.85px;font-size:18.709px;letter-spacing:-.31px;color:#fff;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;}
+  .cam-use{position:absolute;right:26.6px;top:760.85px;font-size:18.709px;letter-spacing:-.31px;color:#fff;text-align:right;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;}
+
+  /* loading phases */
+  #scrLoading .phase-b{display:none;}
+  #scrLoading.creating .phase-a{display:none;}
+  #scrLoading.creating .phase-b{display:block;}
+  #scrLoading .btn-continue,#scrLoading .wardrobe-note{opacity:0;pointer-events:none;transition:opacity .3s ease;}
+  #scrLoading.creating .btn-continue,#scrLoading.creating .wardrobe-note{opacity:1;pointer-events:auto;}
+  .blur-img.userphoto{transform:translate(-50%,-50%);}
+  .blur-img.userphoto img{object-fit:cover;}
+
+  /* account icon states */
+  .acct-ai{position:absolute;left:22px;top:-2px;width:16px;height:16px;display:none;}
+  .acct-ai img{position:absolute;inset:9.38%;width:81.24%;height:81.24%;}
+  .acct-ai.pulsing{display:block;}
+  .acct-ai.pulsing img{animation:aiPulse 1.4s ease-in-out infinite;}
+  .acct-dot{position:absolute;left:calc(50% + 11px);top:calc(50% - 12px);width:4px;height:4px;transform:translate(-50%,-50%);display:none;}
+  .acct-dot img{width:100%;height:100%;display:block;}
+  .acct-dot.on{display:block;}
+
+  /* toast */
+  .toast{position:absolute;left:16px;top:176px;width:358px;background:rgba(255,255,255,.9);backdrop-filter:blur(3.5px);border-radius:8px;box-shadow:0 0 20px rgba(0,0,0,.1);padding:16px;display:flex;align-items:center;justify-content:space-between;z-index:30;opacity:0;transform:translateY(-12px);pointer-events:none;transition:opacity .3s ease,transform .3s var(--ease-sheet);}
+  .toast.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+  .toast .lead{display:flex;gap:8px;align-items:center;flex:1;min-width:0;}
+  .toast .tick{width:16px;height:16.041px;position:relative;flex-shrink:0;}
+  .toast .tick img.circle{position:absolute;inset:0;width:100%;height:100%;}
+  .toast .tick img.mark{position:absolute;inset:16.67%;width:66.66%;height:66.66%;}
+  .toast .msg{font-size:14px;font-weight:400;color:#000;}
+  .toast .view{font-size:14px;font-weight:600;color:#00787d;background:none;border:none;padding:0;cursor:pointer;font-family:'Montserrat',sans-serif;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="phone" id="phone">
+
+    <!-- ================= PDP ================= -->
+    <div class="pdp" id="pdp">
+      <div class="hdr">
+        <div class="hdr-left">
+          <div class="icon-abs ic-hamburger"><img src="https://www.figma.com/api/mcp/asset/5176d9e5-80b2-417c-a934-dcf9de808ce9" alt=""></div>
+          <div class="logo">
+            <img style="left:16.69%;top:27.51%;width:15.54%;height:72.49%;" src="https://www.figma.com/api/mcp/asset/eb85491d-4505-43ff-823a-3cce6491b508" alt="">
+            <img style="left:33.36%;top:27.51%;width:15.54%;height:72.49%;" src="https://www.figma.com/api/mcp/asset/1669b943-2b68-4ad0-9493-6561945004c5" alt="">
+            <img style="left:67.79%;top:27.51%;width:15.54%;height:72.49%;" src="https://www.figma.com/api/mcp/asset/ee8359bd-298e-40a9-9367-29a657401d2d" alt="">
+            <img style="left:84.46%;top:27.51%;width:15.54%;height:72.49%;" src="https://www.figma.com/api/mcp/asset/1d7db956-3c8f-4fbc-ab9e-b5ed3e8b4bbe" alt="">
+            <img style="left:50.11%;top:0.05%;width:16.51%;height:99.95%;" src="https://www.figma.com/api/mcp/asset/5518b8be-1f40-40cc-a854-7b41abc3f2ab" alt="">
+            <img style="left:0;top:0;width:15.56%;height:100%;" src="https://www.figma.com/api/mcp/asset/bb1e52b8-e8f2-4dc7-91a6-70c340cad877" alt="">
+          </div>
+        </div>
+        <div class="hdr-icons">
+          <div class="hdr-btn"><div class="ic24 icon-abs ic-search"><img src="https://www.figma.com/api/mcp/asset/e837cd05-8a6e-4e16-9706-4216f173d414" alt=""></div></div>
+          <div class="hdr-btn" id="accountBtn">
+            <div class="ic24 icon-abs ic-account"><img src="https://www.figma.com/api/mcp/asset/f02fb6a3-1726-4a64-9425-990776f99794" alt=""></div>
+            <div class="acct-ai" id="acctAi"><img src="https://www.figma.com/api/mcp/asset/dbcb8ecd-a1c9-4b69-b9fe-ef43bb4ae015" alt=""></div>
+            <div class="acct-dot" id="acctDot"><img src="https://www.figma.com/api/mcp/asset/f43ff2f9-3602-4bdb-818f-a8b90a52d4ef" alt=""></div>
+          </div>
+          <div class="hdr-btn"><div class="ic24 icon-abs ic-heart"><img src="https://www.figma.com/api/mcp/asset/26b65aef-093d-4a40-b796-d0c033f9b909" alt=""></div></div>
+          <div class="hdr-btn">
+            <div class="ic24 icon-abs ic-bag">
+              <img class="glyph" src="https://www.figma.com/api/mcp/asset/9aec39d0-2b52-4c9b-88a9-e48eb8da0d6a" alt="">
+              <div class="bag-counter" id="bagCounter"><span id="bagCount">88</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="usp-light"><p>Lorem ipsum dolor sit amet</p></div>
+      <div class="usp-dark">
+        <p>Lorem ipsum dolor sit amet</p>
+        <div class="usp-divider"></div>
+        <p><span>Code: </span><span class="code-bold">FAST</span></p>
+      </div>
+      <div class="menu-banner">
+        <p class="t1">Title Title Title Title</p>
+        <p class="t2">Subtitle subtitle subtitle subtitle subtitle</p>
+      </div>
+      <div class="breadcrumbs">
+        <span>Home</span><span class="sep">/</span>
+        <span>Womens</span><span class="sep">/</span>
+        <span>Womens Clothing</span><span class="sep">/</span>
+        <span>Tops</span><span class="sep">/</span>
+        <span>T-Shirts</span>
+      </div>
+
+      <div class="carousel" id="carousel">
+        <div class="slide contain"><img src="https://mediahub.boohoo.com/xtt01659_light%20blue_xl?qlt=70&amp;w=800&amp;ssz=true&amp;dpr=1" alt="DSGN Studio Stripe Football Jersey, light blue, side view"></div>
+        <div class="slide mid contain"><img src="https://mediahub.boohoo.com/xtt01659_light%20blue_xl_1?qlt=70&amp;w=800&amp;ssz=true&amp;dpr=1" alt="DSGN Studio Stripe Football Jersey, light blue, back view"></div>
+        <div class="slide mid contain"><img src="https://mediahub.boohoo.com/xtt01659_light%20blue_xl_2?qlt=70&amp;w=800&amp;ssz=true&amp;dpr=1" alt="DSGN Studio Stripe Football Jersey, light blue, front view"></div>
+        <div class="slide contain"><img src="https://mediahub.boohoo.com/xtt01659_light%20blue_xl_3?qlt=70&amp;w=800&amp;ssz=true&amp;dpr=1" alt="DSGN Studio Stripe Football Jersey, light blue, styled detail"></div>
+        <div class="slide contain"><img src="https://mediahub.boohoo.com/xtt01659_light%20blue_xl_4?qlt=70&amp;w=800&amp;ssz=true&amp;dpr=1" alt="DSGN Studio Stripe Football Jersey, light blue, close up"></div>
+      </div>
+      <div class="pag-wrap"><div class="pag-track"><div class="pag-fill" id="pagFill"></div></div></div>
+
+      <div class="pdp-body">
+        <div class="chip-row">
+          <button class="chip" id="vtoChip" onclick="openVTO()">
+            <div class="ic16 icon-abs"><img src="https://www.figma.com/api/mcp/asset/76d7a451-ada1-47b4-99d9-e865c1fed249" alt=""></div>
+            <p>Virtual Try On</p>
+          </button>
+        </div>
+        <div class="brand-row">
+          <div class="brand-col">
+            <p class="brand">DSGN Studio</p>
+            <p class="title">DSGN Studio Stripe Football Jersey</p>
+          </div>
+          <div class="wishlist-btn">
+            <img class="heart" src="https://www.figma.com/api/mcp/asset/ee89fd7a-f731-4f22-834c-e22483612126" alt="">
+          </div>
+        </div>
+        <div class="price-row">
+          <span class="price-now">£12.00</span>
+          <span class="price-was">£15.00</span>
+          <div class="badge-save"><span>-20%</span></div>
+        </div>
+        <div class="order-msg">
+          <div class="ic20 icon-abs"><img src="https://www.figma.com/api/mcp/asset/daec9a16-c404-4d6c-9799-88ea940f4bae" alt=""></div>
+          <p>Order in <b>10 hrs 30 mins</b> for Next Day Delivery</p>
+        </div>
+        <div class="selectors">
+          <p class="colour-line">Colour: <b>Light Blue</b></p>
+          <div class="size-block">
+            <div class="size-head">
+              <p class="lbl">Select a size:</p>
+              <div class="size-guide">
+                <div class="ic16 icon-abs"><img src="https://www.figma.com/api/mcp/asset/2a293ea0-23cb-4001-b3d4-844af3135e52" alt=""></div>
+                <span>Size Guide</span>
+              </div>
+            </div>
+            <div class="size-row">
+              <button class="size-btn"><span>XS</span></button>
+              <button class="size-btn"><span>S</span></button>
+              <div class="size-btn"><span>M</span><div class="strike"><img src="https://www.figma.com/api/mcp/asset/5d061574-ddf3-4eb2-849e-ef4dff66053d" alt=""></div></div>
+              <div class="size-btn"><span>L</span><div class="strike"><img src="https://www.figma.com/api/mcp/asset/5d061574-ddf3-4eb2-849e-ef4dff66053d" alt=""></div></div>
+              <div class="size-btn"><span>XL</span><div class="strike"><img src="https://www.figma.com/api/mcp/asset/5d061574-ddf3-4eb2-849e-ef4dff66053d" alt=""></div></div>
+            </div>
+          </div>
+          <div class="advisor">
+            <div class="bg">
+              <img src="https://www.figma.com/api/mcp/asset/2dace6a0-a35d-4c76-a5b6-1915ae184e94" alt="">
+              <div class="grad"></div>
+            </div>
+            <div class="advisor-inner">
+              <div class="advisor-copy">
+                <p class="name">T-Studio</p>
+                <p class="desc">Brings your idea to life.<br>Idea to order, delivered in days.</p>
+              </div>
+              <div class="advisor-cta"><span><span class="l">Launch </span><span class="n">T-Studio</span></span></div>
+            </div>
+          </div>
+          <div class="cta-stack">
+            <button class="btn-atb"><span>Add to bag</span></button>
+            <div class="btn-paypal">
+              <div class="pp-logo">
+                <img style="left:0;top:0;width:36.64%;height:84.68%;" src="https://www.figma.com/api/mcp/asset/6dafa57c-18b2-48ed-99af-660c99ceefc1" alt="">
+                <img style="left:54.53%;top:0;width:36.64%;height:84.68%;" src="https://www.figma.com/api/mcp/asset/95a4a375-a045-4d86-b37e-7185e0b5e930" alt="">
+                <img style="left:37.98%;top:24.96%;width:17.52%;height:75.04%;" src="https://www.figma.com/api/mcp/asset/7a224122-60c3-49d3-85ce-3ad6d3ecce51" alt="">
+                <img style="left:91.51%;top:0;width:8.49%;height:83.4%;" src="https://www.figma.com/api/mcp/asset/8611203a-36fa-4801-ac72-2cf953ed851c" alt="">
+              </div>
+            </div>
+            <div class="btn-applepay"><img src="https://www.figma.com/api/mcp/asset/f4f4f798-257b-4afd-90e6-a67a23eb3fc0" alt=""></div>
+          </div>
+          <div class="deliver-banner">
+            <div class="deliver-inner">
+              <div class="deliver-logo"><img src="https://www.figma.com/api/mcp/asset/90e0aace-e3cc-4c52-9b4e-4cb87cc1ec4f" alt=""></div>
+              <p class="deliver-title">Elevate Your Experience</p>
+              <div class="deliver-list">
+                <div class="deliver-item"><div class="ic16 icon-abs"><img src="https://www.figma.com/api/mcp/asset/d1402e97-1a1e-4948-a143-9ea38c4099eb" alt=""></div><p>+14-day return extension</p></div>
+                <div class="deliver-item"><div class="ic16 icon-abs"><img src="https://www.figma.com/api/mcp/asset/d1402e97-1a1e-4948-a143-9ea38c4099eb" alt=""></div><p>£5/day late delivery compensation</p></div>
+                <div class="deliver-item"><div class="ic16 icon-abs"><img src="https://www.figma.com/api/mcp/asset/d1402e97-1a1e-4948-a143-9ea38c4099eb" alt=""></div><p>Full order coverage (lost, stolen, damaged) with instant payout on eligible claims</p></div>
+              </div>
+              <p class="deliver-more">Learn more</p>
+            </div>
+          </div>
+        </div>
+        <div class="pdp-end-pad"></div>
+      </div>
+    </div>
+
+    <!-- ================= VTO EXPERIENCE ================= -->
+    <div class="vto" id="vto">
+
+      <!-- Screen 1: Add a Photo -->
+      <div class="vto-screen active" id="scrLanding">
+        <div class="grad-bg">
+          <div class="blur-img landing"><img src="https://www.figma.com/api/mcp/asset/4e0db7a1-9d1b-4944-81ff-2a47778d90b5" alt=""></div>
+        </div>
+        <div class="vto-sheet" id="landingSheet">
+          <div class="helper">
+            <p class="h1">Add a Photo</p>
+            <p class="sub">A full-length image, plain background and good light works best.</p>
+          </div>
+          <div class="vto-btn-row">
+            <button class="btn-pink" onclick="openCamera()">
+              <div class="ic20"><img class="cam" src="https://www.figma.com/api/mcp/asset/6f0a2adf-238c-46e7-9818-527423aa3588" alt=""></div>
+              <span>Camera</span>
+            </button>
+            <button class="btn-pink" onclick="openLibrary()">
+              <div class="ic20"><img class="upl" src="https://www.figma.com/api/mcp/asset/3a74f695-3239-4427-a61b-3896184c6d9d" alt=""></div>
+              <span>Upload</span>
+            </button>
+          </div>
+          <p class="disclaimer">You are interacting with generative artificial intelligence technology. By continuing, you confirm that you accept and understand the <a>Disclaimer</a> and <a>Privacy Policy</a>.</p>
+        </div>
+        <button class="circle-btn btn-close-vto" onclick="closeVTO()">
+          <img class="ring" src="https://www.figma.com/api/mcp/asset/8e317ad8-a998-4a80-aa56-411848f59954" alt="">
+          <img class="glyph x" src="https://www.figma.com/api/mcp/asset/223391ea-ccee-4597-bc76-42804945efa6" alt="">
+        </button>
+      </div>
+
+      <!-- Screen 2: Take A Photo (live camera) -->
+      <div class="vto-screen cam-screen" id="scrCamera">
+        <div class="viewfinder" id="viewfinder">
+          <video id="camVideo" autoplay playsinline muted></video>
+          <img class="mock" id="camMock" style="display:none" src="https://www.figma.com/api/mcp/asset/7a5996af-c416-49d4-b3a9-6acbb9cf9b87" alt="">
+        </div>
+        <div class="cam-flash"><img src="https://www.figma.com/api/mcp/asset/b7c60792-a9ca-4f65-822c-5cd572ebe6e5" alt=""></div>
+        <div class="cam-1x"><img src="https://www.figma.com/api/mcp/asset/4c85eab1-c790-4b57-b29f-a70af3cfe4d6" alt=""><span>1&times;</span></div>
+        <p class="cam-photo-lbl">PHOTO</p>
+        <button class="cam-shutter" onclick="capturePhoto()"><img src="https://www.figma.com/api/mcp/asset/df1b98ea-a712-4255-a93e-7d241f1f9ff8" alt=""></button>
+        <button class="cam-cancel" onclick="cancelCamera()">Cancel</button>
+        <button class="cam-switch" onclick="switchCamera()"><img src="https://www.figma.com/api/mcp/asset/4af30919-b29c-4cc7-998e-82dd5691ddf6" alt=""></button>
+        <div class="home-ind"></div>
+      </div>
+
+      <!-- Screen 3: Review (Retake / Use Photo) -->
+      <div class="vto-screen cam-screen" id="scrReview">
+        <div class="viewfinder"><img class="shot" id="reviewImg" alt=""></div>
+        <div class="cam-flash"><img src="https://www.figma.com/api/mcp/asset/94c4b892-c6d6-4e93-a78b-3035bd6dee68" alt=""></div>
+        <button class="cam-retake" onclick="retake()">Retake</button>
+        <button class="cam-use" onclick="usePhoto()">Use Photo</button>
+        <div class="home-ind"></div>
+      </div>
+
+      <!-- Screen 4: Analysing / Creating -->
+      <div class="vto-screen" id="scrLoading">
+        <div class="grad-bg">
+          <div class="blur-img loading" id="loadingBlur"><img id="loadingBlurImg" src="https://www.figma.com/api/mcp/asset/33b76000-d28e-4e3f-a95d-01991bbbf7d7" alt=""></div>
+        </div>
+        <div class="vto-status">
+          <div class="ic32"><img src="https://www.figma.com/api/mcp/asset/cb77630c-e0b3-49f5-a3f8-3b94d6b97af3" alt=""></div>
+          <p class="headline phase-a">Analysing your photo...</p>
+          <p class="headline phase-b">Creating Your Outfit...</p>
+          <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+          <p class="cap phase-a">This usually takes ~30 seconds</p>
+          <p class="cap phase-b">You can continue shopping.<br>We&rsquo;ll let you know when it&rsquo;s ready.</p>
+        </div>
+        <button class="btn-continue" onclick="closeVTO()"><span>Continue Shopping</span></button>
+        <p class="wardrobe-note">All your generated looks are saved in the &lsquo;My Wardrobe&rsquo; section of your Account.</p>
+        <button class="circle-btn btn-close-vto" onclick="closeVTO()">
+          <img class="ring" src="https://www.figma.com/api/mcp/asset/91ff1302-3868-4ecc-90a3-572ac84303bf" alt="">
+          <img class="glyph x" src="https://www.figma.com/api/mcp/asset/a0724705-fa76-4342-9c23-90980b75d230" alt="">
+        </button>
+      </div>
+
+      <!-- Screen 5: Result -->
+      <div class="vto-screen result" id="scrResult">
+        <div class="result-canvas"><img src="https://www.figma.com/api/mcp/asset/39290a59-9d28-4bc6-b7e6-7bf1deff6f28" alt=""></div>
+        <div class="result-sheet" id="resultSheet">
+          <div class="result-sizes">
+            <div class="rsize oos"><span>8</span><div class="strike"><img src="https://www.figma.com/api/mcp/asset/913f7451-6538-44e1-bb8a-89cd97fdfe9f" alt=""></div></div>
+            <button class="rsize" onclick="selSize(this)"><span>10</span></button>
+            <button class="rsize sel" onclick="selSize(this)"><span>12</span></button>
+            <button class="rsize" onclick="selSize(this)"><span>14</span></button>
+            <button class="rsize" onclick="selSize(this)"><span>16</span></button>
+          </div>
+          <div class="result-cta">
+            <button class="btn-atb-vto" onclick="addToBag()"><span>ADD TO BAG</span></button>
+            <p class="saved-note">Look saved to My Wardrobe. <a>View</a> <a>My Wardrobe</a></p>
+          </div>
+        </div>
+        <div class="rail" id="resultRail">
+          <button class="circle-btn" onclick="closeVTO()">
+            <img class="ring" src="https://www.figma.com/api/mcp/asset/e15cf133-5446-414e-96ac-b90892e128ce" alt="">
+            <img class="glyph x" src="https://www.figma.com/api/mcp/asset/06800ff6-bac4-4190-b05c-bb04a1cf6dc3" alt="">
+          </button>
+          <button class="circle-btn">
+            <img class="ring" src="https://www.figma.com/api/mcp/asset/e15cf133-5446-414e-96ac-b90892e128ce" alt="">
+            <img class="glyph sh" src="https://www.figma.com/api/mcp/asset/5400cd71-24d7-49a5-840c-74774948a0b5" alt="">
+          </button>
+          <button class="circle-btn" onclick="openCamera()">
+            <img class="ring" src="https://www.figma.com/api/mcp/asset/e15cf133-5446-414e-96ac-b90892e128ce" alt="">
+            <img class="glyph cam16" src="https://www.figma.com/api/mcp/asset/04b44ee9-d154-46a1-a904-1cba1a0074b2" alt="">
+          </button>
+          <button class="circle-btn" onclick="openLibrary()">
+            <img class="ring" src="https://www.figma.com/api/mcp/asset/e15cf133-5446-414e-96ac-b90892e128ce" alt="">
+            <img class="glyph img16" src="https://www.figma.com/api/mcp/asset/230e6ad2-2ec4-47da-af83-ae3f0d815724" alt="">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TOAST (ready notification) ================= -->
+    <div class="toast" id="toast">
+      <div class="lead">
+        <div class="tick">
+          <img class="circle" src="https://www.figma.com/api/mcp/asset/026349a3-744d-434e-a824-c2e542a8d0ad" alt="">
+          <img class="mark" src="https://www.figma.com/api/mcp/asset/26427926-830b-496b-93ea-7ba21c82daa0" alt="">
+        </div>
+        <p class="msg">Your Virtal Try On is ready</p>
+      </div>
+      <button class="view" onclick="viewResult()">View</button>
+    </div>
+
+    <input type="file" id="libraryInput" accept="image/*" style="display:none">
+
+    <!-- ================= ADDED TO BAG ================= -->
+    <div class="scrim" id="scrim" onclick="closeBag()"></div>
+    <div class="bag-sheet" id="bagSheet">
+      <div class="bag-head">
+        <p class="t">Added to Bag</p>
+        <div class="x" onclick="closeBag()"><img src="https://www.figma.com/api/mcp/asset/8b247d07-291b-437d-a5d2-77b3a9a1c4aa" alt=""></div>
+      </div>
+      <div class="bag-slots">
+        <div class="bag-prod">
+          <div class="thumb"><img src="https://www.figma.com/api/mcp/asset/fc9feb91-9bb3-4a5b-be42-b36973be1fc4" alt=""></div>
+          <div class="info">
+            <p class="b">DSGN Studio</p>
+            <p class="n">DSGN Studio Stripe Football Jersey</p>
+            <p class="v">M / Black</p>
+            <p class="p"><span class="now">£18.75</span> <span class="was">£25.00</span></p>
+          </div>
+        </div>
+        <div class="bag-btns">
+          <button class="btn-viewbag" onclick="closeBag()"><span>View Bag</span></button>
+          <button class="btn-contshop" onclick="closeBag()"><span>Continue Shopping</span></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  var vto = document.getElementById('vto');
+  var screens = {
+    landing: document.getElementById('scrLanding'),
+    camera:  document.getElementById('scrCamera'),
+    review:  document.getElementById('scrReview'),
+    loading: document.getElementById('scrLoading'),
+    result:  document.getElementById('scrResult')
+  };
+  var progFill = document.getElementById('progFill');
+  var scrLoading = document.getElementById('scrLoading');
+  var scrim = document.getElementById('scrim');
+  var bagSheet = document.getElementById('bagSheet');
+  var bagCount = document.getElementById('bagCount');
+  var bagCounter = document.getElementById('bagCounter');
+  var acctAi = document.getElementById('acctAi');
+  var acctDot = document.getElementById('acctDot');
+  var toast = document.getElementById('toast');
+  var camVideo = document.getElementById('camVideo');
+  var camMock = document.getElementById('camMock');
+  var reviewImg = document.getElementById('reviewImg');
+  var libraryInput = document.getElementById('libraryInput');
+  var loadingBlur = document.getElementById('loadingBlur');
+  var loadingBlurImg = document.getElementById('loadingBlurImg');
+
+  var GEN_TOTAL = 30000;        /* real ~30s generation */
+  var PHASE_A   = 4500;         /* Analysing your photo... */
+  var genState = 'idle';        /* idle | generating | ready */
+  var genStart = 0;
+  var rafId = null, doneTimer = null, phaseTimer = null, toastTimer = null;
+  var stream = null, facing = 'user', photoSource = null; /* 'camera' | 'library' */
+
+  var landingSheet = document.getElementById('landingSheet');
+  var resultSheet = document.getElementById('resultSheet');
+  var resultRail = document.getElementById('resultRail');
+
+  function show(name, animDelay){
+    if (animDelay === undefined) animDelay = 120;
+    for (var k in screens){ screens[k].classList.toggle('active', k === name); }
+    /* sheets and rail retract instantly, then slide back in once the screen has landed */
+    landingSheet.classList.remove('in');
+    resultSheet.classList.remove('in');
+    resultRail.classList.remove('in');
+    if (name === 'landing'){ setTimeout(function(){ landingSheet.classList.add('in'); }, animDelay); }
+    if (name === 'result'){
+      setTimeout(function(){ resultSheet.classList.add('in'); }, animDelay);
+      setTimeout(function(){ resultRail.classList.add('in'); }, animDelay + 100);
+    }
+  }
+
+  function openVTO(){
+    vto.classList.remove('closing');
+    vto.classList.add('open');
+    /* overlay lands first (450ms), then the card slides in on top */
+    if (genState === 'ready'){ show('result', 430); markViewed(); }
+    else if (genState === 'generating'){ show('loading'); }
+    else { show('landing', 430); }
+  }
+
+  function closeVTO(){
+    vto.classList.remove('open');
+    vto.classList.add('closing');
+    stopCamera();
+    setTimeout(function(){ vto.classList.remove('closing'); }, 450);
+    /* generation carries on in the background */
+    if (genState === 'generating'){ acctAi.classList.add('pulsing'); }
+  }
+
+  /* ---------- Camera (native getUserMedia) ---------- */
+  function openCamera(){
+    photoSource = 'camera';
+    show('camera');
+    startCamera();
+  }
+  function startCamera(){
+    stopCamera();
+    camVideo.style.display = '';
+    camMock.style.display = 'none';
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ return cameraFallback(); }
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: facing }, audio: false })
+      .then(function(s){
+        stream = s;
+        camVideo.srcObject = s;
+        camVideo.classList.toggle('rear', facing === 'environment');
+      })
+      .catch(cameraFallback);
+  }
+  function cameraFallback(){
+    /* camera blocked or unavailable: fall back to the design's bodyshot so the flow still demos */
+    camVideo.style.display = 'none';
+    camMock.style.display = '';
+  }
+  function stopCamera(){
+    if (stream){ stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; }
+    camVideo.srcObject = null;
+  }
+  function switchCamera(){
+    facing = (facing === 'user') ? 'environment' : 'user';
+    startCamera();
+  }
+  function cancelCamera(){
+    stopCamera();
+    /* if a look already exists (adding another photo), return to it */
+    if (genState === 'ready'){ show('result'); } else { show('landing'); }
+  }
+  function capturePhoto(){
+    if (stream && camVideo.videoWidth){
+      var c = document.createElement('canvas');
+      c.width = camVideo.videoWidth; c.height = camVideo.videoHeight;
+      var ctx = c.getContext('2d');
+      if (facing === 'user'){ ctx.translate(c.width, 0); ctx.scale(-1, 1); } /* keep what the user saw */
+      ctx.drawImage(camVideo, 0, 0);
+      reviewImg.src = c.toDataURL('image/jpeg', 0.9);
+    } else {
+      reviewImg.src = camMock.src; /* fallback frame */
+    }
+    stopCamera();
+    show('review');
+  }
+
+  /* ---------- Photo library (native picker) ---------- */
+  function openLibrary(){
+    photoSource = 'library';
+    libraryInput.value = '';
+    libraryInput.click();
+  }
+  libraryInput.addEventListener('change', function(){
+    var f = libraryInput.files && libraryInput.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      reviewImg.src = e.target.result;
+      show('review');
+    };
+    reader.readAsDataURL(f);
+  });
+
+  function retake(){
+    if (photoSource === 'library'){ openLibrary(); }
+    else { openCamera(); }
+  }
+
+  /* ---------- Generation: Analysing -> Creating, ~30s ---------- */
+  function usePhoto(){
+    /* the user's own photo becomes the blurred backdrop while generating */
+    if (reviewImg.src){
+      loadingBlurImg.src = reviewImg.src;
+      loadingBlur.classList.add('userphoto');
+    }
+    startGenerating();
+  }
+
+  function startGenerating(){
+    genState = 'generating';
+    genStart = Date.now();
+    scrLoading.classList.remove('creating');
+    show('loading');
+    progFill.style.width = '0';
+    cancelAnimationFrame(rafId);
+    (function tick(){
+      var t = Date.now() - genStart;
+      progFill.style.width = Math.min(100, (t / GEN_TOTAL) * 100) + '%';
+      if (t < GEN_TOTAL){ rafId = requestAnimationFrame(tick); }
+    })();
+    clearTimeout(phaseTimer); clearTimeout(doneTimer);
+    phaseTimer = setTimeout(function(){ scrLoading.classList.add('creating'); }, PHASE_A);
+    doneTimer  = setTimeout(generationDone, GEN_TOTAL);
+  }
+
+  function generationDone(){
+    genState = 'ready';
+    cancelAnimationFrame(rafId);
+    progFill.style.width = '100%';
+    if (vto.classList.contains('open')){
+      /* user waited in the experience: reveal the result in place */
+      setTimeout(function(){ show('result'); markViewed(); }, 350);
+    } else {
+      /* user carried on shopping: swap pulse for dot, raise the toast */
+      acctAi.classList.remove('pulsing');
+      acctDot.classList.add('on');
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 6000);
+    }
+  }
+
+  function viewResult(){
+    toast.classList.remove('show');
+    clearTimeout(toastTimer);
+    openVTO();
+  }
+
+  function markViewed(){
+    acctAi.classList.remove('pulsing');
+    acctDot.classList.remove('on');
+  }
+
+  function selSize(btn){
+    var all = btn.parentElement.children;
+    for (var i = 0; i < all.length; i++) all[i].classList.remove('sel');
+    btn.classList.add('sel');
+  }
+
+  /* ADD TO BAG: close the VTO experience, land back on the PDP,
+     then auto-slide the mini bag up - one continuous sequence */
+  function addToBag(){
+    /* look stays saved (My Wardrobe) - reopening the chip returns to it */
+    markViewed();
+    vto.classList.remove('open');
+    vto.classList.add('closing');                       /* t=0: VTO slides down */
+    setTimeout(function(){                              /* t=380ms: bag counter ticks */
+      bagCount.textContent = '89';
+      bagCounter.classList.add('counter-pop');
+    }, 380);
+    setTimeout(function(){                              /* t=650ms: scrim + mini bag */
+      vto.classList.remove('closing');
+      scrim.classList.add('on');
+      bagSheet.classList.add('up');
+    }, 650);
+  }
+
+  function closeBag(){
+    scrim.classList.remove('on');
+    bagSheet.classList.remove('up');
+  }
+
+  function resetAll(){
+    cancelAnimationFrame(rafId);
+    clearTimeout(doneTimer); clearTimeout(phaseTimer); clearTimeout(toastTimer);
+    stopCamera();
+    closeBag();
+    genState = 'idle'; facing = 'user'; photoSource = null;
+    vto.classList.remove('open','closing');
+    show('landing');
+    scrLoading.classList.remove('creating');
+    progFill.style.width = '0';
+    loadingBlur.classList.remove('userphoto');
+    loadingBlurImg.src = 'https://www.figma.com/api/mcp/asset/33b76000-d28e-4e3f-a95d-01991bbbf7d7';
+    markViewed();
+    toast.classList.remove('show');
+    bagCount.textContent = '88';
+    bagCounter.classList.remove('counter-pop');
+    document.getElementById('pdp').scrollTop = 0;
+    document.getElementById('carousel').scrollLeft = 0;
+  }
+
+  /* carousel pagination tracks scroll */
+  var car = document.getElementById('carousel');
+  var pagFill = document.getElementById('pagFill');
+  car.addEventListener('scroll', function(){
+    var max = car.scrollWidth - car.clientWidth;
+    var pct = max > 0 ? car.scrollLeft / max : 0;
+    pagFill.style.transform = 'translateX(' + (pct * 300) + '%)';
+  });
+
+  /* scale phone to fill the viewport, whatever the screen size */
+  function fit(){
+    var phone = document.getElementById('phone');
+    var s = Math.min(10, window.innerHeight / 844, window.innerWidth / 390);
+    phone.style.transform = 'scale(' + s + ')';
+    phone.style.transformOrigin = 'top center';
+    phone.style.marginBottom = -(844 * (1 - s)) + 'px';
+    phone.style.marginTop = Math.max(0, (window.innerHeight - 844 * s) / 2) + 'px';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+</script>
+</body>
+</html>

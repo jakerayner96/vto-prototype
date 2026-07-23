@@ -1,0 +1,11 @@
+{
+  "name": "vto-prototype",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VTO first-use journey prototype. Pixel-matched to Figma file LxHqA4rFpRYNWJu8vzn18X.",
+  "scripts": {
+    "embed": "node embed-assets.js",
+    "serve": "npx serve -l 8000 .",
+    "tunnel": "npx localtunnel --port 8000"
+  }
+}
