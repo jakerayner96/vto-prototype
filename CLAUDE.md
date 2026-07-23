@@ -13,8 +13,11 @@ Single-file HTML prototype of the Virtual Try On first-use journey. All UI is pi
 
 ## Structure
 
-- index.html: entire prototype (styles, markup, journey logic). Screens: PDP, VTO landing (Add a Photo), camera (real getUserMedia), review, two-phase 30s loading, result, Added to Bag sheet. Background generation path: pulsing AI icon on account, 4px dot plus toast on ready.
-- embed-assets.js: inlines Figma asset URLs as base64 (run once, within 7 days of asset export).
+- index.html: entire prototype (styles, markup, journey logic). Screens: PDP, VTO landing (Add a Photo), camera (real getUserMedia), review, two-phase 30s loading, result, Added to Bag sheet, Account Landing. Background generation path: pulsing AI icon on account, 6px #bb305f dot plus toast on ready.
+- Layout is fluid responsive (designed at 390 wide, no fixed frame, no transform scaling). Bottom sheets carry env(safe-area-inset-bottom).
+- Account Landing: opened via the header account icon (tap again to return to the PDP). Three design options B/C/D differ in badge treatment on the Virtual Wardrobe, Subscribe and Save, and Premier rows; tapping the boohoo logo on this page cycles B > C > D. Option A was dropped at Jake's request.
+- Header banners differ by page to match Figma: PDP is black then pink (#ffe0eb) with the code; Account is grey (#fafafa) then black with the code. PDP bag counter is #bb305f.
+- embed-assets.js: inlines Figma asset URLs as base64 (run once, within 7 days of asset export). Account page assets were inlined directly at build time.
 
 ## Commands
 
