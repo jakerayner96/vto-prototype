@@ -29,4 +29,4 @@ Camera access needs HTTPS, so either:
 
 ## Journey
 
-PDP > Virtual Try On chip > Add a Photo > Camera (real) or Upload (native picker) > review > Analysing (~4.5s) > Creating Your Outfit (30s total) > result. Close mid-generation and the AI icon pulses on the account button; on completion it becomes a dot and a toast offers View. Add to Bag closes the experience, ticks the bag counter and slides the Added to Bag sheet up over the PDP.
+PDP > Virtual Try On chip > Add a Photo > Camera (real) or Upload (native picker) > review > Analysing (3-6s) > Creating Your Outfit (3-6s) > result. Close mid-generation and the AI icon pulses on the account button; on completion it becomes a dot and a toast offers View. Reopening mid-generation shows Nearly Ready. Once a look exists the chip carries a count badge and opens the result directly. Add to Bag closes the experience, ticks the bag counter and slides the Added to Bag sheet up over the PDP. The account page (header account icon) links to the Virtual Wardrobe with three layouts cycled by tapping the logo.
