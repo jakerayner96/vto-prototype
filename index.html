@@ -294,12 +294,12 @@
   #accountBtn{cursor:pointer;}
 
   /* ============ ACCOUNT LANDING (Virtual Wardrobe) ============ */
-  .account{position:absolute;inset:0;background:#fafafa;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;z-index:20;transform:translateX(100%);visibility:hidden;transition:transform .42s var(--ease-sheet),visibility 0s linear .42s;will-change:transform;}
+  .account{position:absolute;inset:0;background:transparent;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;z-index:20;visibility:hidden;transition:visibility 0s linear .42s;}
   .account::-webkit-scrollbar{display:none;}
-  .account.open{transform:translateX(0);visibility:visible;transition:transform .42s var(--ease-sheet);}
+  .account.open{visibility:visible;transition:none;}
   .account .logo{cursor:pointer;}
   .account .hdr-btn{cursor:pointer;}
-  .acct-stack{display:flex;flex-direction:column;gap:16px;align-items:center;padding:16px 0 calc(24px + env(safe-area-inset-bottom, 0px));}
+  .acct-stack{display:flex;flex-direction:column;gap:16px;align-items:center;padding:16px 0 calc(24px + env(safe-area-inset-bottom, 0px));background:#fafafa;min-height:calc(100% - 102px);transform:translateX(100%);transition:transform .42s var(--ease-sheet);will-change:transform;}
   .acct-greet{width:100%;padding:0 16px;display:flex;flex-direction:column;gap:4px;color:#000;}
   .acct-greet .hi{font-size:24px;font-weight:700;line-height:normal;}
   .acct-greet .email{font-size:12px;font-weight:400;line-height:normal;}
@@ -332,9 +332,9 @@
   .account:not(.var-b):not(.var-c) .v-bc{display:none !important;}
 
   /* ============ VIRTUAL WARDROBE (layouts B Grid / C Split / D Rails) ============ */
-  .wardrobe{position:absolute;inset:0;background:#fff;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;z-index:22;transform:translateX(100%);visibility:hidden;transition:transform .42s var(--ease-sheet),visibility 0s linear .42s;will-change:transform;}
+  .wardrobe{position:absolute;inset:0;background:transparent;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;z-index:22;visibility:hidden;transition:visibility 0s linear .42s;}
   .wardrobe::-webkit-scrollbar{display:none;}
-  .wardrobe.open{transform:translateX(0);visibility:visible;transition:transform .42s var(--ease-sheet);}
+  .wardrobe.open{visibility:visible;transition:none;}
   .wardrobe .logo{cursor:pointer;}
   .page-head{height:44px;display:flex;align-items:center;gap:12px;padding:0 16px;}
   .page-head .back{width:16px;height:16px;position:relative;cursor:pointer;background:none;border:none;padding:0;}
@@ -452,6 +452,10 @@
   /* layout switch (logo tap) crossfades */
   .w-variant.on{animation:wvIn .28s ease;}
   @keyframes wvIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  .account.open .acct-stack{transform:translateX(0);}
+  .wslide{background:#fff;min-height:calc(100% - 102px);transform:translateX(100%);transition:transform .42s var(--ease-sheet);will-change:transform;}
+  .wardrobe.open .wslide{transform:translateX(0);}
 </style>
 </head>
 <body>
@@ -621,6 +625,8 @@
           <div class="hdr-btn">
             <div class="ic24 icon-abs ic-bag">
               <img class="glyph" src="data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgdmlld0JveD0iMCAwIDIwLjQyNiAyMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikdyb3VwIDE5NCI+CjxwYXRoIGlkPSJWZWN0b3IiIGQ9Ik0xNC4xMDE5IDkuM1Y0LjM4ODg5QzE0LjEwMTkgMi4yNDExMSAxMi4zNjA4IDAuNSAxMC4yMTMgMC41QzguMDY1MiAwLjUgNi4zMjQwOSAyLjI0MTExIDYuMzI0MDkgNC4zODg4OVY5LjNNMi41MDA0MiAyMi41SDE3LjkyNTZDMTkuMTM2MiAyMi41IDIwLjA2OTMgMjEuNDMyOSAxOS45MDc3IDIwLjIzMzFMMTcuOTkwOCA2LjAwMDAySDIuNDM1MjNMMC41MTgzMTggMjAuMjMzMUMwLjM1NjcyNyAyMS40MzI5IDEuMjg5NzggMjIuNSAyLjUwMDQyIDIyLjVaIiBzdHJva2U9ImJsYWNrIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9nPgo8L3N2Zz4K" alt="">
+              <div class="bag-counter"><span>3</span></div>
+            
             </div>
           </div>
         </div>
@@ -727,6 +733,7 @@
         <div class="usp-divider"></div>
         <p><span>Code: </span><span class="code-bold">FAST</span></p>
       </div>
+      <div class="wslide">
       <div class="page-head">
         <button class="back" onclick="backToAccount()"><img src="data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgdmlld0JveD0iMCAwIDguNTQwNDQgMTUuNjY2NyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikdyb3VwIDYiPgo8cGF0aCBpZD0iVmVjdG9yIDIiIGQ9Ik04LjA0MDQ0IDAuNUwwLjcwNzEwNyA3LjgzMzMzTDguMDQwNDQgMTUuMTY2NyIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZz4KPC9zdmc+Cg==" alt=""></button>
         <p>Virtual Wardrobe</p>
@@ -852,6 +859,7 @@
           </div>
         </div>
 
+      </div>
       </div>
     </div>
 
