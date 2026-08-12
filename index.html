@@ -217,12 +217,13 @@
   /* pill mirrors the circle buttons exactly: 32px tall at top 20, Ellipse 10 gradient at .9, same blur */
   .tries-pill{position:absolute;left:20px;top:20px;z-index:5;height:32px;display:flex;align-items:center;background:linear-gradient(154.3deg,rgba(15,15,15,.9) 0%,rgba(19,19,19,.9) 100%);backdrop-filter:blur(2px);border-radius:100px;padding:0 14px;font-size:12px;font-weight:500;color:#fff;line-height:normal;-webkit-tap-highlight-color:transparent;}
   .tries-pill.last{background:rgba(255,255,255,.92);color:var(--red);font-weight:600;}
-  /* Try On Limit warning modal (patterned on the Figma error modal set) */
+  /* 1 Try-On Left Today warning modal (Figma Modal/Default, node 15341-20868) */
   .vto-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:0 16px;z-index:30;}
   .vto-modal.on{display:flex;}
-  .vto-modal .card{width:100%;background:#fff;border-radius:12px;padding:24px 16px 16px;display:flex;flex-direction:column;gap:20px;text-align:center;}
-  .vto-modal .t{font-size:24px;font-weight:600;color:#000;line-height:normal;}
-  .vto-modal .b{font-size:16px;font-weight:500;color:#000;line-height:1.4;padding:0 8px;}
+  .vto-modal .card{width:100%;background:#fff;border-radius:4px;padding:20px 16px 16px;display:flex;flex-direction:column;gap:24px;align-items:center;text-align:center;}
+  .vto-modal .copy{display:flex;flex-direction:column;gap:12px;width:100%;}
+  .vto-modal .t{font-size:18px;font-weight:600;color:#000;line-height:normal;text-transform:capitalize;}
+  .vto-modal .b{font-size:16px;font-weight:400;color:#000;line-height:normal;}
   .vto-modal .cta{width:100%;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;}
   .vto-modal .cta span{font-size:16px;font-weight:600;line-height:24px;color:#000;text-transform:uppercase;}
 
@@ -1026,8 +1027,10 @@
       <!-- Try On Limit warning: raised when the 4th generation completes -->
       <div class="vto-modal" id="limitModal">
         <div class="card">
-          <p class="t">Try On Limit</p>
-          <p class="b">You have used 4 of 5 try-ons today. You have 1 try-on remaining.</p>
+          <div class="copy">
+            <p class="t">1 try-on left Today</p>
+            <p class="b">You&rsquo;ve used 4 of your 5 daily Virtual Try Ons. Your limit resets tomorrow.</p>
+          </div>
           <button class="cta" onclick="continueLimitWarn()"><span>Continue</span></button>
         </div>
       </div>
