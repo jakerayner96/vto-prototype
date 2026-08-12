@@ -157,7 +157,6 @@
   .vto-sheet .sub{font-size:13.5px;font-weight:500;color:#fff;line-height:1.35;}
   .vto-sheet .btn-block{display:flex;flex-direction:column;gap:12px;width:100%;}
   .vto-sheet .tries-note{width:100%;font-size:12px;font-weight:400;color:var(--grey-3);text-align:center;line-height:normal;}
-  .vto-sheet .tries-note.last{align-self:center;width:auto;background:rgba(255,255,255,.9);border-radius:2px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--red);}
   .vto-btn-row{display:flex;gap:8px;width:100%;}
   .btn-pink{flex:1;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 24px;cursor:pointer;font-family:'Montserrat',sans-serif;}
   .btn-pink .ic20{width:20px;height:20px;position:relative;flex-shrink:0;}
@@ -216,7 +215,6 @@
   .saved-note a{color:var(--primary);text-decoration:none;cursor:pointer;}
   /* pill mirrors the circle buttons exactly: 32px tall at top 20, Ellipse 10 gradient at .9, same blur */
   .tries-pill{position:absolute;left:20px;top:20px;z-index:5;height:32px;display:flex;align-items:center;background:linear-gradient(154.3deg,rgba(15,15,15,.9) 0%,rgba(19,19,19,.9) 100%);backdrop-filter:blur(2px);border-radius:100px;padding:0 14px;font-size:12px;font-weight:500;color:#fff;line-height:normal;-webkit-tap-highlight-color:transparent;}
-  .tries-pill.last{background:rgba(255,255,255,.92);color:var(--red);font-weight:600;}
   /* 1 Try-On Left Today warning modal (Figma Modal/Default, node 15341-20868) */
   .vto-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:0 16px;z-index:30;}
   .vto-modal.on{display:flex;}
@@ -1118,19 +1116,17 @@
   var triesUsed = 0;
   function syncTries(){
     var last = triesUsed >= TRIES_MAX;
-    var txt = last ? 'This is your last try-on today' : triesUsed + ' of ' + TRIES_MAX + ' today';
     var line = document.getElementById('loadingTries');
     var pill = document.getElementById('resultTries');
-    line.textContent = txt; pill.textContent = txt;
+    line.textContent = last ? 'You’ve used all ' + TRIES_MAX + ' try-ons for today' : triesUsed + ' of ' + TRIES_MAX + ' today';
     line.classList.toggle('last', last);
-    pill.classList.toggle('last', last);
+    pill.textContent = triesUsed + ' of ' + TRIES_MAX + ' today';
     line.style.display = pill.style.display = triesUsed > 0 ? '' : 'none';
-    /* landing counts what is left; warning treatment once only one remains */
+    /* landing counts what is left, same quiet style at every count */
     var note = document.getElementById('landingTries');
     var remaining = TRIES_MAX - triesUsed;
     note.textContent = triesUsed === 0 ? 'Max limit of ' + TRIES_MAX + ' try ons per day'
       : remaining + ' try-on' + (remaining === 1 ? '' : 's') + ' left today';
-    note.classList.toggle('last', remaining <= 1);
     /* at the daily limit the PDP chip goes dead until tomorrow */
     document.getElementById('vtoChip').classList.toggle('disabled', triesUsed >= TRIES_MAX);
   }
