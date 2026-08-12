@@ -138,8 +138,8 @@
   .vto-screen.active{opacity:1;pointer-events:auto;}
   .grad-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.8),rgba(0,0,0,.8)),linear-gradient(90deg,#e0dedc,#e0dedc);overflow:hidden;}
   .blur-img{position:absolute;left:calc(50% - 14px);top:calc(50% + 1px);transform:translate(-50%,-50%);opacity:.2;filter:blur(10.5px);}
-  .blur-img.landing{width:148%;height:102%;transform:translate(-50%,-50%) scaleX(-1);} /* mirrored to face the same way as the loading blur */
-  .blur-img.loading{width:156%;height:108%;transform:translate(-50%,-50%) scaleX(-1);}
+  .blur-img.landing{width:148%;height:102%;}
+  .blur-img.loading{width:156%;height:108%;}
   .blur-img img{width:100%;height:100%;object-fit:cover;display:block;}
   .circle-btn{position:absolute;width:32px;height:32px;cursor:pointer;backdrop-filter:blur(2px);border:none;background:transparent;padding:0;}
   .circle-btn .ring{position:absolute;inset:0;width:100%;height:100%;}
@@ -184,9 +184,9 @@
   /* result */
   #scrResult{background:#242424;}
   .result-canvas{position:absolute;inset:0;overflow:hidden;}
-  .result-canvas img{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1);}
+  .result-canvas img{width:100%;height:100%;object-fit:cover;display:block;}
   .vto-screen.result.active .result-canvas img{animation:reveal .5s ease both;}
-  @keyframes reveal{from{transform:scaleX(-1) scale(1.03);opacity:.4;}to{transform:scaleX(-1) scale(1);opacity:1;}}
+  @keyframes reveal{from{transform:scale(1.03);opacity:.4;}to{transform:scale(1);opacity:1;}}
   .result-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:12px 12px 0 0;background:linear-gradient(167.3deg,#0f0f0f 3.09%,#131313 100%);display:flex;flex-direction:column;gap:20px;padding:20px 24px calc(16px + env(safe-area-inset-bottom, 0px));}
   /* sheets slide in on top of each screen */
   .vto-sheet,.result-sheet{transform:translateY(110%);transition:transform .42s var(--ease-sheet);will-change:transform;}
@@ -258,9 +258,8 @@
   /* ============ CAMERA / REVIEW (native) ============ */
   .cam-screen{background:#000;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;}
   .viewfinder{position:absolute;left:0;right:0;top:79px;bottom:182px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000;}
-  .viewfinder video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
-  .viewfinder video.rear{transform:none;}
-  .viewfinder img.mock{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);opacity:1;}
+  .viewfinder video{width:100%;height:100%;object-fit:cover;}
+  .viewfinder img.mock{width:100%;height:100%;object-fit:cover;opacity:1;}
   .viewfinder img.shot{width:100%;height:100%;object-fit:cover;}
   .cam-flash{position:absolute;left:16px;top:40px;width:20px;height:20px;}
   .cam-flash img{position:absolute;left:21.88%;right:21.88%;top:0;bottom:0;width:56.24%;height:100%;}
@@ -389,13 +388,10 @@
   .rdot.cur{background:#fff;}
   /* Add Another Photo: modal presented over the current look, not the blurred backdrop */
   .another-bg{position:absolute;inset:0;background:#242424;display:none;}
-  .another-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1);}
+  .another-bg img{width:100%;height:100%;object-fit:cover;display:block;}
   #scrLanding.another .grad-bg{display:none;}
   #scrLanding.another .another-bg{display:block;}
 
-  .result-canvas img.noflip{transform:none;}
-  .vto-screen.result.active .result-canvas img.noflip{animation:none;}
-  .another-bg img.noflip{transform:none;}
 
   /* account/wardrobe content rises in after the page lands */
   .acct-stack>*{opacity:0;transform:translateY(14px);transition:opacity .3s ease,transform .4s var(--ease-sheet);}
@@ -1174,9 +1170,9 @@
     }
   }
 
-  /* the landing blur backdrop shows the first product image of the product being tried on */
+  /* the landing blur backdrop shows the first PDP carousel image of the product being tried on */
   var landingBlurImg = document.getElementById('landingBlurImg');
-  var LANDING_BLUR_JERSEY = landingBlurImg.src;
+  var LANDING_BLUR_JERSEY = document.querySelector('#carousel img').src;
 
   function openVTO(){
     photoFlowMode = 'look';
