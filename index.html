@@ -175,9 +175,9 @@
   .prog-track{width:240px;height:6px;background:var(--grey-5);border-radius:100px;overflow:hidden;}
   .prog-fill{height:6px;width:0;background:var(--primary);border-radius:100px;transition:width .35s ease;}
   .vto-status .cap{font-size:11.5px;font-weight:400;color:var(--grey-3);text-align:center;line-height:normal;}
-  /* daily usage counter: quiet line while tries remain, expiry-chip treatment on the last try */
+  /* daily usage counter: quiet grey line, solid white once all tries are used */
   .tries-line{font-size:11.5px;font-weight:400;color:var(--grey-3);text-align:center;line-height:normal;}
-  .tries-line.last{background:rgba(255,255,255,.9);border-radius:2px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--red);}
+  .tries-line.last{color:#fff;}
   #vto.photomode .tries-line,#vto.photomode .tries-note{display:none;}
   .wardrobe-note{position:absolute;left:50%;bottom:calc(61px + env(safe-area-inset-bottom, 0px));transform:translate(-50%,100%);width:308px;font-size:12px;font-weight:300;color:var(--grey-3);text-align:center;line-height:normal;}
 
@@ -215,9 +215,11 @@
   /* pill mirrors the circle buttons exactly: 32px tall at top 20, Ellipse 10 gradient at .9, same blur */
   .tries-pill{position:absolute;left:20px;top:20px;z-index:5;height:32px;display:flex;align-items:center;background:linear-gradient(154.3deg,rgba(15,15,15,.9) 0%,rgba(19,19,19,.9) 100%);backdrop-filter:blur(2px);border-radius:100px;padding:0 14px;font-size:12px;font-weight:500;color:#fff;line-height:normal;-webkit-tap-highlight-color:transparent;}
   /* 1 Try-On Left Today warning modal (Figma Modal/Default, node 15341-20868) */
-  .vto-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:0 16px;z-index:30;}
+  .vto-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:0 16px;z-index:30;opacity:0;pointer-events:none;transition:opacity .25s ease;}
   .vto-modal.error{z-index:80;} /* phone-level: must sit above the VTO overlay and the PDP alike */
-  .vto-modal.on{display:flex;}
+  .vto-modal .card{transform:scale(.96);transition:transform .25s ease;}
+  .vto-modal.on{opacity:1;pointer-events:auto;}
+  .vto-modal.on .card{transform:scale(1);}
   .vto-modal .card{width:100%;background:#fff;border-radius:4px;padding:20px 16px 16px;display:flex;flex-direction:column;gap:24px;align-items:center;text-align:center;}
   .vto-modal .copy{display:flex;flex-direction:column;gap:12px;width:100%;}
   .vto-modal .t{font-size:18px;font-weight:600;color:#000;line-height:normal;text-transform:capitalize;}
