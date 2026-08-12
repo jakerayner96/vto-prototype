@@ -65,6 +65,7 @@
   .chip .ic16{width:16px;height:16px;position:relative;}
   .chip .ic16 img{position:absolute;left:3.57%;right:3.57%;top:14.29%;bottom:14.29%;width:92.86%;height:71.42%;}
   .chip p{font-size:13px;font-weight:600;color:#000;white-space:nowrap;}
+  .chip.disabled{filter:grayscale(1);opacity:.45;pointer-events:none;}
   .brand-row{display:flex;gap:8px;align-items:flex-start;}
   .brand-col{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
   .brand-col .brand{font-size:16px;font-weight:700;color:#000;}
@@ -154,6 +155,8 @@
   .vto-sheet .h1{font-size:28px;font-weight:700;color:#fff;line-height:normal;}
   .vto-sheet .helper{display:flex;flex-direction:column;gap:4px;}
   .vto-sheet .sub{font-size:13.5px;font-weight:500;color:#fff;line-height:1.35;}
+  .vto-sheet .tries-note{font-size:12px;font-weight:500;color:var(--grey-3);line-height:1.35;}
+  .vto-sheet .tries-note.last{align-self:flex-start;background:rgba(255,255,255,.9);border-radius:2px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--red);}
   .vto-btn-row{display:flex;gap:8px;width:100%;}
   .btn-pink{flex:1;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 24px;cursor:pointer;font-family:'Montserrat',sans-serif;}
   .btn-pink .ic20{width:20px;height:20px;position:relative;flex-shrink:0;}
@@ -176,7 +179,7 @@
   /* daily usage counter: quiet line while tries remain, expiry-chip treatment on the last try */
   .tries-line{font-size:11.5px;font-weight:400;color:var(--grey-3);text-align:center;line-height:normal;}
   .tries-line.last{background:rgba(255,255,255,.9);border-radius:2px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--red);}
-  #vto.photomode .tries-line{display:none;}
+  #vto.photomode .tries-line,#vto.photomode .tries-note{display:none;}
   .wardrobe-note{position:absolute;left:50%;bottom:calc(61px + env(safe-area-inset-bottom, 0px));transform:translate(-50%,100%);width:308px;font-size:12px;font-weight:300;color:var(--grey-3);text-align:center;line-height:normal;}
 
   /* result */
@@ -210,8 +213,17 @@
   .btn-atb-vto span{font-size:16px;font-weight:600;line-height:24px;color:#000;text-transform:uppercase;}
   .saved-note{font-size:12px;font-weight:400;color:var(--grey-4);text-align:center;line-height:normal;}
   .saved-note a{color:var(--primary);text-decoration:none;cursor:pointer;}
-  .tries-pill{position:absolute;left:20px;top:20px;z-index:5;height:32px;display:flex;align-items:center;background:rgba(15,15,15,.55);border-radius:100px;padding:0 14px;font-size:12px;font-weight:500;color:#fff;line-height:normal;-webkit-tap-highlight-color:transparent;}
+  /* pill mirrors the circle buttons exactly: 32px tall at top 20, Ellipse 10 gradient at .9, same blur */
+  .tries-pill{position:absolute;left:20px;top:20px;z-index:5;height:32px;display:flex;align-items:center;background:linear-gradient(154.3deg,rgba(15,15,15,.9) 0%,rgba(19,19,19,.9) 100%);backdrop-filter:blur(2px);border-radius:100px;padding:0 14px;font-size:12px;font-weight:500;color:#fff;line-height:normal;-webkit-tap-highlight-color:transparent;}
   .tries-pill.last{background:rgba(255,255,255,.92);color:var(--red);font-weight:600;}
+  /* Try On Limit warning modal (patterned on the Figma error modal set) */
+  .vto-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:0 16px;z-index:30;}
+  .vto-modal.on{display:flex;}
+  .vto-modal .card{width:100%;background:#fff;border-radius:12px;padding:24px 16px 16px;display:flex;flex-direction:column;gap:20px;text-align:center;}
+  .vto-modal .t{font-size:24px;font-weight:600;color:#000;line-height:normal;}
+  .vto-modal .b{font-size:16px;font-weight:500;color:#000;line-height:1.4;padding:0 8px;}
+  .vto-modal .cta{width:100%;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:'Montserrat',sans-serif;}
+  .vto-modal .cta span{font-size:16px;font-weight:600;line-height:24px;color:#000;text-transform:uppercase;}
 
   /* ============ ADDED TO BAG ============ */
   .scrim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:50;}
@@ -904,6 +916,7 @@
             <p class="h1 h1-change">Change Your Photo</p>
             <p class="sub sub-first">A full-length image, plain background and good light works best.</p>
             <p class="sub sub-another">Try items against different backgrounds, outfits or occasions. Switch between them anytime.</p>
+            <p class="tries-note" id="landingTries"></p>
           </div>
           <div class="vto-btn-row">
             <button class="btn-pink" onclick="openCamera()">
@@ -1006,6 +1019,15 @@
           </button>
         </div>
       </div>
+
+      <!-- Try On Limit warning: raised when the 4th generation completes -->
+      <div class="vto-modal" id="limitModal">
+        <div class="card">
+          <p class="t">Try On Limit</p>
+          <p class="b">You have used 4 of 5 try-ons today. You have 1 try-on remaining.</p>
+          <button class="cta" onclick="continueLimitWarn()"><span>Continue</span></button>
+        </div>
+      </div>
     </div>
 
     <!-- ================= TOAST (ready notification) ================= -->
@@ -1097,6 +1119,22 @@
     line.classList.toggle('last', last);
     pill.classList.toggle('last', last);
     line.style.display = pill.style.display = triesUsed > 0 ? '' : 'none';
+    /* landing counts the try about to be spent, so the warning lands one try earlier */
+    var note = document.getElementById('landingTries');
+    note.textContent = triesUsed === 0 ? 'You can create ' + TRIES_MAX + ' try-ons per day'
+      : triesUsed === TRIES_MAX - 1 ? 'This is your last try-on today'
+      : triesUsed + ' of ' + TRIES_MAX + ' today';
+    note.classList.toggle('last', triesUsed >= TRIES_MAX - 1);
+    /* at the daily limit the PDP chip goes dead until tomorrow */
+    document.getElementById('vtoChip').classList.toggle('disabled', triesUsed >= TRIES_MAX);
+  }
+  /* 4th generation complete: warn that the next try-on is the last before revealing the look */
+  var limitWarnPending = false;
+  function showLimitWarn(){ document.getElementById('limitModal').classList.add('on'); }
+  function continueLimitWarn(){
+    document.getElementById('limitModal').classList.remove('on');
+    limitWarnPending = false;
+    if (!screens.result.classList.contains('active')){ show('result'); markViewed(); }
   }
   /* hidden review tap target: the result pill cycles 1-5 so the last-try state demos without five generations */
   function cycleTries(){ triesUsed = (triesUsed % TRIES_MAX) + 1; syncTries(); }
@@ -1125,7 +1163,10 @@
     vto.classList.remove('closing');
     vto.classList.add('open');
     /* overlay lands first (450ms), then the card slides in on top */
-    if (genState === 'ready'){ show('result', 430); markViewed(); }
+    if (genState === 'ready'){
+      show('result', 430); markViewed();
+      if (limitWarnPending){ setTimeout(showLimitWarn, 900); }
+    }
     else if (genState === 'generating'){
       /* reopened mid-generation: estimate copy, stop the header pulse */
       scrLoading.classList.add('nearly');
@@ -1280,10 +1321,12 @@
     cancelAnimationFrame(rafId);
     progFill.style.width = '100%';
     if (vto.classList.contains('open')){
-      /* user waited in the experience: reveal the result in place */
-      setTimeout(function(){ show('result'); markViewed(); }, 350);
+      /* user waited in the experience: warn at 4 of 5, otherwise reveal the result in place */
+      if (triesUsed === TRIES_MAX - 1){ setTimeout(showLimitWarn, 350); }
+      else { setTimeout(function(){ show('result'); markViewed(); }, 350); }
     } else {
       /* user carried on shopping: swap pulse for dot, raise the toast */
+      if (triesUsed === TRIES_MAX - 1){ limitWarnPending = true; }
       acctAi.classList.remove('pulsing');
       acctDot.classList.add('on');
       toast.classList.add('show');
@@ -1347,6 +1390,8 @@
     lookCount = 0;
     triesUsed = 0;
     syncTries();
+    limitWarnPending = false;
+    document.getElementById('limitModal').classList.remove('on');
     document.getElementById('chipBadge').classList.remove('on');
     scrLoading.classList.remove('nearly');
     scrLanding.classList.remove('another');
