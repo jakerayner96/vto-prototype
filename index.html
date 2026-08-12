@@ -155,8 +155,9 @@
   .vto-sheet .h1{font-size:28px;font-weight:700;color:#fff;line-height:normal;}
   .vto-sheet .helper{display:flex;flex-direction:column;gap:4px;}
   .vto-sheet .sub{font-size:13.5px;font-weight:500;color:#fff;line-height:1.35;}
-  .vto-sheet .tries-note{font-size:12px;font-weight:500;color:var(--grey-3);line-height:1.35;}
-  .vto-sheet .tries-note.last{align-self:flex-start;background:rgba(255,255,255,.9);border-radius:2px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--red);}
+  .vto-sheet .btn-block{display:flex;flex-direction:column;gap:12px;width:100%;}
+  .vto-sheet .tries-note{width:100%;font-size:12px;font-weight:400;color:var(--grey-3);text-align:center;line-height:normal;}
+  .vto-sheet .tries-note.last{align-self:center;width:auto;background:rgba(255,255,255,.9);border-radius:2px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--red);}
   .vto-btn-row{display:flex;gap:8px;width:100%;}
   .btn-pink{flex:1;height:50px;background:var(--primary);border:none;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 24px;cursor:pointer;font-family:'Montserrat',sans-serif;}
   .btn-pink .ic20{width:20px;height:20px;position:relative;flex-shrink:0;}
@@ -164,8 +165,8 @@
   .btn-pink .ic20 img.cam{left:3.57%;right:3.57%;top:14.29%;bottom:14.29%;width:92.86%;height:71.42%;}
   .btn-pink .ic20 img.upl{inset:8.33%;width:83.34%;height:83.34%;}
   .btn-pink span{font-size:16px;font-weight:600;line-height:24px;color:#000;text-transform:uppercase;white-space:nowrap;}
-  .disclaimer{font-size:12px;font-weight:300;text-align:center;color:var(--grey-3);line-height:normal;}
-  .disclaimer a{color:var(--primary);text-decoration:none;font-weight:300;cursor:pointer;}
+  .disclaimer{font-size:12px;font-weight:400;text-align:center;color:var(--grey-3);line-height:normal;}
+  .disclaimer a{color:var(--primary);text-decoration:none;font-weight:400;cursor:pointer;}
 
   /* loading */
   .vto-status{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:16px;align-items:center;padding:8px 18px 18px;}
@@ -916,8 +917,8 @@
             <p class="h1 h1-change">Change Your Photo</p>
             <p class="sub sub-first">A full-length image, plain background and good light works best.</p>
             <p class="sub sub-another">Try items against different backgrounds, outfits or occasions. Switch between them anytime.</p>
-            <p class="tries-note" id="landingTries"></p>
           </div>
+          <div class="btn-block">
           <div class="vto-btn-row">
             <button class="btn-pink" onclick="openCamera()">
               <div class="ic20"><img class="cam" src="data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgdmlld0JveD0iMCAwIDE5LjU3MTQgMTUuMjg1NyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9Ikdyb3VwIDI1NSI+CjxnIGlkPSJWZWN0b3IiPgo8cGF0aCBkPSJNMTkuMDcxNCA0Ljc4NTcxQzE5LjA3MTQgNC40MDY4MyAxOC45MjA5IDQuMDQzNDcgMTguNjUzIDMuNzc1NTZDMTguMzg1MSAzLjUwNzY2IDE4LjAyMTcgMy4zNTcxNCAxNy42NDI5IDMuMzU3MTRIMTQuNzg1N0wxMi42NDI5IDAuNUg2LjkyODU3TDQuNzg1NzEgMy4zNTcxNEgxLjkyODU3QzEuNTQ5NjkgMy4zNTcxNCAxLjE4NjMzIDMuNTA3NjYgMC45MTg0MTkgMy43NzU1NkMwLjY1MDUxIDQuMDQzNDcgMC41IDQuNDA2ODMgMC41IDQuNzg1NzFWMTMuMzU3MUMwLjUgMTMuNzM2IDAuNjUwNTEgMTQuMDk5NCAwLjkxODQxOSAxNC4zNjczQzEuMTg2MzMgMTQuNjM1MSAxLjU0OTY5IDE0Ljc4NTcgMS45Mjg1NyAxNC43ODU3SDE3LjY0MjlDMTguMDIxNyAxNC43ODU3IDE4LjM4NTEgMTQuNjM1MSAxOC42NTMgMTQuMzY3M0MxOC45MjA5IDE0LjA5OTQgMTkuMDcxNCAxMy43MzYgMTkuMDcxNCAxMy4zNTcxVjQuNzg1NzFaIiBzdHJva2U9ImJsYWNrIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTkuNzg1NzIgMTEuNTcxNEMxMS41NjA5IDExLjU3MTQgMTMgMTAuMTMyMyAxMyA4LjM1NzE0QzEzIDYuNTgxOTQgMTEuNTYwOSA1LjE0Mjg2IDkuNzg1NzIgNS4xNDI4NkM4LjAxMDUyIDUuMTQyODYgNi41NzE0MyA2LjU4MTk0IDYuNTcxNDMgOC4zNTcxNEM2LjU3MTQzIDEwLjEzMjMgOC4wMTA1MiAxMS41NzE0IDkuNzg1NzIgMTEuNTcxNFoiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L2c+CjwvZz4KPC9zdmc+Cg==" alt=""></div>
@@ -928,7 +929,9 @@
               <span>Upload</span>
             </button>
           </div>
-          <p class="disclaimer">You are interacting with generative artificial intelligence technology. By continuing, you confirm that you accept and understand the <a>Disclaimer</a> and <a>Privacy Policy</a>.</p>
+          <p class="tries-note" id="landingTries"></p>
+          </div>
+          <p class="disclaimer">You are interacting with generative AI technology.<br>By continuing, you confirm that you accept and understand the <a>Terms &amp; Conditions</a> and <a>Privacy Policy</a>.</p>
         </div>
         <button class="circle-btn btn-close-vto" onclick="closeVTO()">
           <img class="ring" src="data:image/svg+xml;base64,PHN2ZyBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIiBvdmVyZmxvdz0idmlzaWJsZSIgc3R5bGU9ImRpc3BsYXk6IGJsb2NrOyIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiB2aWV3Qm94PSIwIDAgMzIgMzIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgaWQ9IkVsbGlwc2UgMTAiIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0idXJsKCNwYWludDBfbGluZWFyXzBfOTQpIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzBfOTQiIHgxPSIxLjcyMzA4IiB5MT0iMC42MzY1MjkiIHgyPSIxOS42MzI5IiB5Mj0iMzcuOTM3OSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMEYwRjBGIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzEzMTMxMyIvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=" alt="">
@@ -1121,7 +1124,7 @@
     line.style.display = pill.style.display = triesUsed > 0 ? '' : 'none';
     /* landing counts the try about to be spent, so the warning lands one try earlier */
     var note = document.getElementById('landingTries');
-    note.textContent = triesUsed === 0 ? 'You can create ' + TRIES_MAX + ' try-ons per day'
+    note.textContent = triesUsed === 0 ? 'Max limit of ' + TRIES_MAX + ' try ons per day'
       : triesUsed === TRIES_MAX - 1 ? 'This is your last try-on today'
       : triesUsed + ' of ' + TRIES_MAX + ' today';
     note.classList.toggle('last', triesUsed >= TRIES_MAX - 1);
