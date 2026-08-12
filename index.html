@@ -1242,8 +1242,7 @@
       var c = document.createElement('canvas');
       c.width = camVideo.videoWidth; c.height = camVideo.videoHeight;
       var ctx = c.getContext('2d');
-      if (facing === 'user'){ ctx.translate(c.width, 0); ctx.scale(-1, 1); } /* keep what the user saw */
-      ctx.drawImage(camVideo, 0, 0);
+      ctx.drawImage(camVideo, 0, 0); /* save the true image, not the mirrored preview */
       reviewImg.src = c.toDataURL('image/jpeg', 0.9);
     } else {
       reviewImg.src = camMock.src; /* fallback frame */
