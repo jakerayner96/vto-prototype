@@ -1125,12 +1125,12 @@
     line.classList.toggle('last', last);
     pill.classList.toggle('last', last);
     line.style.display = pill.style.display = triesUsed > 0 ? '' : 'none';
-    /* landing counts the try about to be spent, so the warning lands one try earlier */
+    /* landing counts what is left; warning treatment once only one remains */
     var note = document.getElementById('landingTries');
+    var remaining = TRIES_MAX - triesUsed;
     note.textContent = triesUsed === 0 ? 'Max limit of ' + TRIES_MAX + ' try ons per day'
-      : triesUsed === TRIES_MAX - 1 ? 'This is your last try-on today'
-      : triesUsed + ' of ' + TRIES_MAX + ' today';
-    note.classList.toggle('last', triesUsed >= TRIES_MAX - 1);
+      : remaining + ' try-on' + (remaining === 1 ? '' : 's') + ' left today';
+    note.classList.toggle('last', remaining <= 1);
     /* at the daily limit the PDP chip goes dead until tomorrow */
     document.getElementById('vtoChip').classList.toggle('disabled', triesUsed >= TRIES_MAX);
   }
