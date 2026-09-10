@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en" data-brand="boohoo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f0f0f">
+<title>Virtual Stylist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600&family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Jost:wght@400;500;600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ---- brand slots: filled from brands.js at load (applyBrand) ---- */
+  :root{
+    --font:'Montserrat',sans-serif; --w-body:400; --w-med:500; --w-bold:700; --w-btn:600; --case-btn:uppercase; --radius:4px;
+    --primary:#000; --primary-ink:#fff; --cta:#000; --outline:#000; --check:#000; --vto:#000;
+    --body-bg:#fff; --white:#fff; --grey-05:#fafafa; --grey-1:#f2f2f2; --grey-2:#e7e7e7; --grey-25:#d6d6d6; --grey-3:#b5b5b5; --grey-4:#767676; --grey-5:#6b6b6b; --grey-6:#323232; --soft-black:#242424;
+    --red:#d33f3f; --badge-bg:#fff2f2; --badge-ink:#d33f3f; --price:#d33f3f;
+    --banner1-bg:#fafafa; --banner1-ink:#000; --banner2-bg:#000; --banner2-ink:#fff;
+    --dplus-bg:#f2f2f2; --dplus-ink:#000; --dplus-link:#000;
+    /* VTO overlay sheet (dark theme defaults; light theme overrides below) */
+    --sheet-bg:linear-gradient(162.7deg,#0f0f0f 3.09%,#131313 100%); --sheet-ink:#fff; --sheet-sub:#fff; --sheet-note:#b5b5b5;
+    --size-bg:#242424; --size-ink:#fff; --size-border:transparent; --oos-ink:#6b6b6b; --oos-stroke:#6b6b6b;
+    --sheet-cta:#fff; --sheet-cta-ink:#000; --sheet-sel:#fff; --sheet-sel-ink:#000; --sheet-link:#fff; --progress:#fff;
+    --check-bg:#fff; --check-border:#b5b5b5;
+    --ease-sheet:cubic-bezier(0.32,0.72,0,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+  html,body{height:100%;}
+  body{background:#000;font-family:var(--font);overflow:hidden;}
+  button{font-family:inherit;}
+  img{object-fit:contain;} /* icons: fixed square boxes, never squished */
+  .phone{position:fixed;inset:0;background:var(--body-bg);overflow:hidden;}
+
+  /* ============ PDP ============ */
+  .pdp{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;background:var(--body-bg);scrollbar-width:none;}
+  .pdp::-webkit-scrollbar{display:none;}
+  .hdr{background:var(--body-bg);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;}
+  .hdr-left{display:flex;align-items:center;gap:16px;flex:1;min-width:0;}
+  .ic-hamburger{width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .ic-hamburger img{width:22px;height:14px;display:block;}
+  .logo{height:24px;display:flex;align-items:center;min-width:0;}
+  .logo img{display:block;height:var(--logo-h,18px);width:auto;}
+  .hdr-icons{display:flex;align-items:flex-start;flex-shrink:0;}
+  .hdr-btn{width:38px;height:36px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;}
+  .hdr-btn img{width:24px;height:24px;display:block;}
+  .bag-counter{position:absolute;right:4px;top:2px;min-width:14px;height:14px;padding:0 3px;background:#000;border-radius:99px;display:flex;align-items:center;justify-content:center;}
+  .bag-counter span{font-size:9px;font-weight:500;color:#fff;line-height:1;}
+  .usp-1{background:var(--banner1-bg);padding:4px 16px;display:flex;justify-content:center;}
+  .usp-1 p{font-size:12px;font-weight:var(--w-body);color:var(--banner1-ink);white-space:nowrap;}
+  .usp-2{background:var(--banner2-bg);padding:4px 16px;display:flex;gap:8px;align-items:center;justify-content:center;}
+  .usp-2 p{font-size:12px;font-weight:var(--w-body);color:var(--banner2-ink);white-space:nowrap;}
+  .usp-2 b{font-weight:600;}
+  .breadcrumbs{display:flex;gap:8px;padding:16px;font-size:12px;font-weight:var(--w-med);color:#000;overflow-x:auto;scrollbar-width:none;}
+  .breadcrumbs::-webkit-scrollbar{display:none;}
+  .breadcrumbs span{white-space:nowrap;line-height:18px;}
+  .carousel{display:flex;gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+  .carousel::-webkit-scrollbar{display:none;}
+  .carousel .slide{flex:0 0 min(60%,280px);aspect-ratio:233/350;scroll-snap-align:start;background:var(--grey-05);position:relative;}
+  .carousel .slide img{width:100%;height:100%;object-fit:cover;display:block;}
+  .pag-wrap{padding:16px 16px 0;}
+  .pag-track{width:100%;height:4px;background:var(--grey-25);border-radius:100px;position:relative;overflow:hidden;}
+  .pag-fill{position:absolute;top:0;bottom:0;left:0;width:25%;background:#000;border-radius:100px;transition:transform .15s linear;}
+  .pdp-body{display:flex;flex-direction:column;gap:16px;padding:16px;width:100%;}
+  .chip-row{display:flex;justify-content:center;}
+  .chip{background:var(--white);display:flex;gap:6px;align-items:center;padding:9px 14px;border-radius:100px;box-shadow:0 0 14px -4px rgba(0,0,0,.25);cursor:pointer;border:none;position:relative;}
+  .chip svg{width:16px;height:16px;display:block;}
+  .chip p{font-size:13px;font-weight:600;color:#000;white-space:nowrap;}
+  .chip-badge{position:absolute;right:-4px;top:-4px;min-width:16px;height:16px;background:var(--cta);border-radius:100px;display:none;align-items:center;justify-content:center;padding:0 4px;}
+  .chip-badge span{font-size:10px;font-weight:600;color:#fff;line-height:1;}
+  .chip-badge.on{display:flex;}
+  .brand-row{display:flex;gap:8px;align-items:flex-start;}
+  .brand-col{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
+  .brand-col .brand{font-size:16px;font-weight:var(--w-bold);color:#000;}
+  .brand-col .title{font-size:16px;font-weight:var(--w-med);color:#000;}
+  .wishlist-btn{width:44px;height:44px;flex-shrink:0;background:var(--white);border-radius:50%;box-shadow:0 0 14px -4px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;}
+  .wishlist-btn img{width:20px;height:20px;display:block;}
+  .stars-row{display:none;gap:8px;align-items:center;}
+  .stars-row.on{display:flex;}
+  .stars{display:flex;gap:2px;}
+  .stars svg{display:block;width:14px;height:14px;}
+  .stars-row .count{font-size:14px;font-weight:var(--w-body);color:#000;text-decoration:underline;}
+  .price-row{display:flex;gap:12px;align-items:center;}
+  .price-now{font-size:24px;font-weight:var(--w-bold);color:var(--price);}
+  .price-now.full{color:#000;}
+  .price-was{font-size:24px;font-weight:var(--w-body);color:var(--grey-5);text-decoration:line-through;}
+  .badge-save{background:var(--badge-bg);border-radius:var(--radius);padding:4px 8px;display:flex;align-items:center;justify-content:center;}
+  .badge-save span{font-size:14px;font-weight:var(--w-med);color:var(--badge-ink);}
+  .order-msg{display:flex;gap:8px;align-items:center;}
+  .order-msg img{width:20px;height:20px;flex-shrink:0;display:block;}
+  .order-msg p{font-size:14px;font-weight:var(--w-med);color:#000;}
+  .order-msg b{font-weight:var(--w-bold);}
+  .selectors{display:flex;flex-direction:column;gap:16px;}
+  .colour-line{font-size:16px;font-weight:var(--w-med);color:#000;}
+  .colour-line b{font-weight:var(--w-bold);}
+  .size-block{display:flex;flex-direction:column;gap:12px;width:100%;}
+  .size-head{display:flex;align-items:center;justify-content:space-between;}
+  .size-head .lbl{font-size:16px;font-weight:var(--w-med);color:#000;flex:1;}
+  .size-guide{display:flex;gap:4px;align-items:center;}
+  .size-guide img{width:16px;height:16px;display:block;}
+  .size-guide span{font-size:14px;font-weight:var(--w-body);color:#000;}
+  .size-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
+  .size-row::-webkit-scrollbar{display:none;}
+  .size-btn{width:60px;min-width:60px;height:50px;background:var(--white);border:1px solid var(--grey-3);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;}
+  .size-btn span{font-size:16px;font-weight:var(--w-med);color:#000;}
+  .size-btn.sel{border-color:#000;}
+  .size-btn.oos{cursor:default;}
+  .size-btn.oos span{color:var(--grey-3);}
+  .size-btn.oos::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:1px;background:var(--grey-3);transform:rotate(-40deg);}
+  .cta-stack{display:flex;flex-direction:column;gap:8px;}
+  .btn-atb{width:100%;height:50px;background:var(--primary);border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .btn-atb span{font-size:16px;font-weight:var(--w-btn);line-height:24px;color:var(--primary-ink);text-transform:var(--case-btn);}
+  .btn-paypal{width:100%;height:50px;background:#ffc439;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;}
+  .btn-paypal img{width:75px;height:20px;display:block;}
+  .btn-applepay{width:100%;height:50px;background:#000;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;}
+  .btn-applepay img{width:54px;height:22px;display:block;}
+  .deliver-banner{background:var(--dplus-bg);border-radius:var(--radius);padding:16px 20px;width:100%;display:flex;flex-direction:column;gap:12px;color:var(--dplus-ink);}
+  .deliver-logo{display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-height:19px;}
+  .deliver-logo img{display:block;}
+  .deliver-logo .dp-text{font-size:16px;font-weight:var(--w-bold);letter-spacing:.02em;}
+  .deliver-logo .dp-text b{font-weight:var(--w-bold);}
+  .deliver-title{font-size:14px;font-weight:var(--w-bold);letter-spacing:-0.14px;}
+  .deliver-list{display:flex;flex-direction:column;gap:8px;}
+  .deliver-item{display:flex;gap:8px;align-items:flex-start;}
+  .deliver-item svg{flex-shrink:0;display:block;margin-top:3px;}
+  .deliver-item p{font-size:12px;font-weight:var(--w-body);letter-spacing:-0.12px;flex:1;}
+  .deliver-more{font-size:14px;font-weight:var(--w-bold);letter-spacing:-0.14px;line-height:18.2px;color:var(--dplus-link);}
+  .pdp-end-pad{height:60px;}
+
+  /* ============ VIRTUAL STYLIST OVERLAY ============ */
+  .vto{position:absolute;inset:0;background:var(--soft-black);transform:translateY(100%);transition:transform .45s var(--ease-sheet);z-index:40;overflow:hidden;will-change:transform;}
+  .vto.open{transform:translateY(0);}
+  .vto.closing{transform:translateY(100%);transition:transform .42s var(--ease-sheet);}
+  .vto-screen{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+  .vto-screen.active{opacity:1;pointer-events:auto;}
+  .grad-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.8),rgba(0,0,0,.8)),linear-gradient(90deg,#e0dedc,#e0dedc);overflow:hidden;}
+  .blur-img{position:absolute;left:calc(50% - 14px);top:calc(50% + 1px);transform:translate(-50%,-50%);opacity:.2;filter:blur(10.5px);}
+  .blur-img.landing{width:148%;height:102%;}
+  .blur-img.loading{width:156%;height:108%;}
+  .blur-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .circle-btn{position:absolute;width:32px;height:32px;cursor:pointer;backdrop-filter:blur(2px);border:none;background:transparent;padding:0;border-radius:50%;}
+  .circle-btn .ring{position:absolute;inset:0;width:100%;height:100%;}
+  .circle-btn .glyph{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+  .circle-btn .glyph.x{width:12px;height:12px;}
+  .circle-btn .glyph.sh{width:16px;height:16px;}
+  .btn-close-vto{right:20px;top:20px;}
+  /* light theme: white discs with black glyphs (PLT / KM Figma) */
+  .vto.light .circle-btn{background:#fff;box-shadow:0 0 14px -4px rgba(0,0,0,.25);}
+  .vto.light .circle-btn .ring{display:none;}
+  .vto.light .circle-btn .glyph{filter:brightness(0);}
+
+  /* intro sheet: Add a Photo + consent (Figma 15578-1559) */
+  .vto-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:12px 12px 0 0;background:var(--sheet-bg);display:flex;flex-direction:column;gap:16px;padding:20px 24px calc(24px + env(safe-area-inset-bottom, 0px));}
+  .vto-sheet .h1{font-size:28px;font-weight:var(--w-bold);color:var(--sheet-ink);line-height:normal;}
+  .vto-sheet .helper{display:flex;flex-direction:column;gap:4px;}
+  .vto-sheet .sub{font-size:13.5px;font-weight:var(--w-med);color:var(--sheet-sub);line-height:1.35;}
+  .consent{display:flex;gap:16px;align-items:center;width:100%;}
+  .checkbox{width:24px;height:24px;flex-shrink:0;border-radius:3px;background:var(--check-bg);border:1px solid var(--check-border);position:relative;cursor:pointer;padding:0;transition:background .15s,border-color .15s;}
+  .checkbox svg{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .15s;}
+  .checkbox.on{background:var(--check);border-color:var(--check);}
+  .checkbox.on svg{opacity:1;}
+  .consent p{flex:1;font-size:12px;font-weight:var(--w-body);color:var(--sheet-note);line-height:normal;}
+  .consent a{color:var(--sheet-link);text-decoration:none;cursor:pointer;}
+  .vto-sheet .btn-block{display:flex;flex-direction:column;gap:12px;width:100%;}
+  .vto-btn-row{display:flex;gap:8px;width:100%;}
+  .btn-sheet{flex:1;height:50px;background:var(--sheet-cta);border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 24px;cursor:pointer;transition:opacity .2s;}
+  .btn-sheet img{width:20px;height:20px;display:block;flex-shrink:0;}
+  .btn-sheet span{font-size:16px;font-weight:var(--w-btn);line-height:24px;color:var(--sheet-cta-ink);text-transform:var(--case-btn);white-space:nowrap;}
+  .btn-sheet[disabled]{opacity:.35;cursor:not-allowed;}
+  .vto.light .btn-sheet img{filter:brightness(0) invert(1);} /* icons are white glyphs; on a garnet/orange/black CTA they stay white */
+  .vto.light[data-cta-ink="dark"] .btn-sheet img{filter:brightness(0);}
+  .vto:not(.light)[data-cta-ink="dark"] .btn-sheet img{filter:brightness(0);}
+  .tries-note{width:100%;font-size:12px;font-weight:var(--w-body);color:var(--sheet-note);text-align:center;line-height:normal;}
+
+  /* loading */
+  .vto-status{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:16px;align-items:center;padding:8px 18px 18px;}
+  .vto-status .ic32{width:32px;height:32px;position:relative;}
+  .vto-status .ic32 img{position:absolute;inset:9.38%;width:81.24%;height:81.24%;animation:aiPulse 1.8s ease-in-out infinite;}
+  @keyframes aiPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.55;transform:scale(.92);}}
+  .vto-status .headline{font-size:20px;font-weight:var(--w-bold);color:#fff;text-align:center;width:100%;}
+  .prog-track{width:240px;height:6px;background:var(--grey-5);border-radius:100px;overflow:hidden;}
+  .prog-fill{height:6px;width:0;background:var(--progress);border-radius:100px;transition:width .35s ease;}
+  .vto-status .cap{font-size:11.5px;font-weight:var(--w-body);color:var(--grey-3);text-align:center;line-height:normal;}
+  .tries-line{font-size:11.5px;font-weight:var(--w-body);color:var(--grey-3);text-align:center;line-height:normal;}
+  .tries-line.last{color:#fff;}
+  #scrLoading .phase-b,#scrLoading .phase-c{display:none;}
+  #scrLoading.creating .phase-a{display:none;}
+  #scrLoading.creating .phase-b{display:block;}
+  #scrLoading.nearly .phase-a,#scrLoading.nearly .phase-b{display:none;}
+  #scrLoading.nearly .phase-c{display:block;}
+  .blur-img.userphoto{transform:translate(-50%,-50%);}
+
+  /* result (Figma 15550-23866): full-bleed look, brand watermark, sizes + ADD TO BAG, close + share rail */
+  #scrResult{background:#242424;}
+  .result-canvas{position:absolute;inset:0;overflow:hidden;}
+  .result-canvas img{width:100%;height:100%;object-fit:cover;display:block;}
+  .vto-screen.result.active .result-canvas img{animation:reveal .5s ease both;}
+  @keyframes reveal{from{transform:scale(1.03);opacity:.4;}to{transform:scale(1);opacity:1;}}
+  .watermark{position:absolute;left:50%;bottom:180px;transform:translateX(-50%);height:32px;width:116px;display:flex;align-items:center;justify-content:center;opacity:.7;pointer-events:none;}
+  .watermark img{max-width:100%;max-height:100%;height:auto;filter:brightness(0) invert(1);}
+  .vto.light .watermark img{filter:brightness(0) saturate(0) brightness(.25);}
+  .result-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:12px 12px 0 0;background:var(--sheet-bg);display:flex;flex-direction:column;gap:20px;padding:20px 24px calc(24px + env(safe-area-inset-bottom, 0px));}
+  .vto-sheet,.result-sheet{transform:translateY(110%);transition:transform .42s var(--ease-sheet);will-change:transform;}
+  .vto-sheet.in,.result-sheet.in{transform:translateY(0);}
+  .result-sizes{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
+  .result-sizes::-webkit-scrollbar{display:none;}
+  .rsize{flex:1 1 0;min-width:52px;height:50px;background:var(--size-bg);border:1px solid var(--size-border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;}
+  .rsize span{font-size:16px;font-weight:var(--w-med);color:var(--size-ink);}
+  .rsize.sel{background:var(--sheet-sel);border-color:var(--sheet-sel);}
+  .rsize.sel span{color:var(--sheet-sel-ink);}
+  .rsize.oos{cursor:default;}
+  .rsize.oos span{color:var(--oos-ink);}
+  .rsize.oos::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:1px;background:var(--oos-stroke);transform:rotate(-40deg);}
+  .rail{position:absolute;right:20px;top:20px;display:flex;flex-direction:column;gap:12px;}
+  .rail .circle-btn{position:relative;left:auto;top:auto;opacity:0;transform:translateY(-14px) scale(.9);transition:opacity .28s ease,transform .38s var(--ease-sheet);}
+  .rail.in .circle-btn{opacity:1;transform:translateY(0) scale(1);}
+  .rail .circle-btn:nth-child(2){transition-delay:.06s;}
+  .btn-atb-vto{width:100%;height:50px;background:var(--sheet-cta);border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .btn-atb-vto span{font-size:16px;font-weight:var(--w-btn);line-height:24px;color:var(--sheet-cta-ink);text-transform:var(--case-btn);}
+
+  /* modal (Figma Modal/Default) */
+  .vto-modal{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:0 16px;z-index:80;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  .vto-modal .card{width:100%;background:#fff;border-radius:var(--radius);padding:20px 16px 16px;display:flex;flex-direction:column;gap:24px;align-items:center;text-align:center;transform:scale(.96);transition:transform .25s ease;}
+  .vto-modal.on{opacity:1;pointer-events:auto;}
+  .vto-modal.on .card{transform:scale(1);}
+  .vto-modal .copy{display:flex;flex-direction:column;gap:12px;width:100%;}
+  .vto-modal .t{font-size:18px;font-weight:var(--w-bold);color:#000;line-height:normal;}
+  .vto-modal .b{font-size:16px;font-weight:var(--w-body);color:#000;line-height:normal;}
+  .vto-modal .cta{width:100%;height:50px;background:var(--primary);border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .vto-modal .cta span{font-size:16px;font-weight:var(--w-btn);line-height:24px;color:var(--primary-ink);text-transform:var(--case-btn);}
+
+  /* ============ ADDED TO BAG ============ */
+  .scrim{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:50;}
+  .scrim.on{opacity:1;pointer-events:auto;}
+  .bag-sheet{position:absolute;left:0;right:0;bottom:0;background:var(--white);border-radius:var(--radius) var(--radius) 0 0;padding:24px 24px calc(24px + env(safe-area-inset-bottom, 0px));display:flex;flex-direction:column;gap:24px;transform:translateY(105%);transition:transform .38s var(--ease-sheet);z-index:60;}
+  .bag-sheet.up{transform:translateY(0);}
+  .bag-head{display:flex;gap:12px;align-items:center;}
+  .bag-head .t{flex:1;font-size:20px;font-weight:var(--w-bold);color:var(--soft-black);}
+  .bag-head .x{width:16px;height:16px;cursor:pointer;}
+  .bag-head .x img{width:16px;height:16px;display:block;}
+  .bag-prod{display:flex;gap:16px;}
+  .bag-prod .thumb{width:99px;height:148px;flex-shrink:0;background:var(--grey-05);}
+  .bag-prod .thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .bag-prod .info{flex:1;display:flex;flex-direction:column;gap:4px;color:#000;padding-top:2px;min-width:0;}
+  .bag-prod .info .b{font-size:16px;font-weight:var(--w-bold);}
+  .bag-prod .info .n{font-size:16px;font-weight:var(--w-med);}
+  .bag-prod .info .v{font-size:16px;font-weight:var(--w-med);margin-top:auto;}
+  .bag-prod .info .p{font-size:12px;font-weight:var(--w-med);}
+  .bag-prod .info .p .now{color:var(--price);}
+  .bag-prod .info .p .now.full{color:#000;}
+  .bag-prod .info .p .was{text-decoration:line-through;}
+  .bag-btns{display:flex;flex-direction:column;gap:8px;}
+  .btn-viewbag{width:100%;height:50px;background:var(--primary);border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .btn-viewbag span{font-size:16px;font-weight:var(--w-btn);line-height:24px;color:var(--primary-ink);text-transform:var(--case-btn);}
+  .btn-contshop{width:100%;height:50px;background:var(--white);border:1px solid var(--outline);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .btn-contshop span{font-size:16px;font-weight:var(--w-btn);line-height:24px;color:#000;}
+  .counter-pop{animation:pop .35s ease;}
+  @keyframes pop{0%{transform:scale(1);}45%{transform:scale(1.55);}100%{transform:scale(1);}}
+
+  /* ============ CAMERA / REVIEW (native iOS) ============ */
+  .cam-screen{background:#000;font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;}
+  .viewfinder{position:absolute;left:0;right:0;top:79px;bottom:182px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#000;}
+  .viewfinder video{width:100%;height:100%;object-fit:cover;}
+  .viewfinder img.mock,.viewfinder img.shot{width:100%;height:100%;object-fit:cover;}
+  .cam-flash{position:absolute;left:16px;top:40px;width:20px;height:20px;}
+  .cam-flash img{width:20px;height:20px;}
+  .cam-1x{position:absolute;left:50%;bottom:245px;transform:translateX(-50%);width:38px;height:38px;}
+  .cam-1x img{position:absolute;inset:0;width:100%;height:100%;}
+  .cam-1x span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:600;letter-spacing:-.3px;color:#fff;}
+  .cam-photo-lbl{position:absolute;left:50%;bottom:191px;transform:translateX(-50%);font-size:13px;letter-spacing:-.3px;color:#ffd60a;text-align:center;white-space:nowrap;}
+  .cam-shutter{position:absolute;left:50%;bottom:106px;transform:translateX(-50%);width:70px;height:70px;border:none;background:transparent;padding:0;cursor:pointer;}
+  .cam-shutter img{width:100%;height:100%;display:block;}
+  .cam-shutter:active{transform:translateX(-50%) scale(.92);}
+  .cam-cancel{position:absolute;left:32px;bottom:129px;font-size:18px;letter-spacing:-.3px;color:#fff;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;}
+  .cam-switch{position:absolute;right:33px;bottom:123px;width:35px;height:35px;background:none;border:none;padding:0;cursor:pointer;}
+  .cam-switch img{width:35px;height:35px;}
+  .home-ind{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:139px;height:5px;background:#fff;border-radius:100px;}
+  .cam-retake{position:absolute;left:26px;bottom:60px;font-size:18.7px;letter-spacing:-.31px;color:#fff;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;}
+  .cam-use{position:absolute;right:27px;bottom:60px;font-size:18.7px;letter-spacing:-.31px;color:#fff;text-align:right;background:none;border:none;padding:0;cursor:pointer;font-family:inherit;}
+
+  /* toast (background generation finished while shopping) */
+  .toast{position:absolute;left:16px;right:16px;top:176px;background:rgba(255,255,255,.92);backdrop-filter:blur(3.5px);border-radius:8px;box-shadow:0 0 20px rgba(0,0,0,.1);padding:16px;display:flex;align-items:center;justify-content:space-between;z-index:30;opacity:0;transform:translateY(-12px);pointer-events:none;transition:opacity .3s ease,transform .3s var(--ease-sheet);}
+  .toast.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+  .toast .lead{display:flex;gap:8px;align-items:center;flex:1;min-width:0;}
+  .toast .tick{width:16px;height:16px;border-radius:50%;background:var(--cta);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .toast .tick svg{width:10px;height:10px;display:block;}
+  .toast .msg{font-size:14px;font-weight:var(--w-body);color:#000;}
+  .toast .view{font-size:14px;font-weight:600;color:var(--cta);background:none;border:none;padding:0;cursor:pointer;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+
+  <!-- ================= PDP ================= -->
+  <div class="pdp" id="pdp">
+    <div class="hdr">
+      <div class="hdr-left">
+        <div class="ic-hamburger"><img src="assets/icons/hamburger.svg" alt=""></div>
+        <div class="logo"><img id="logoImg" src="assets/brands/boohoo.svg" alt=""></div>
+      </div>
+      <div class="hdr-icons">
+        <div class="hdr-btn"><img src="assets/icons/search.svg" alt=""></div>
+        <div class="hdr-btn"><img src="assets/icons/account.svg" alt=""></div>
+        <div class="hdr-btn"><img src="assets/icons/heart.svg" alt=""></div>
+        <div class="hdr-btn"><img src="assets/icons/bag.svg" alt=""><div class="bag-counter" id="bagCounter"><span id="bagCount">3</span></div></div>
+      </div>
+    </div>
+    <div class="usp-1"><p id="usp1">Free delivery on orders over £50</p></div>
+    <div class="usp-2"><p id="usp2">Up to 60% off everything</p></div>
+    <div class="breadcrumbs" id="crumbs"></div>
+    <div class="carousel" id="carousel"></div>
+    <div class="pag-wrap"><div class="pag-track"><div class="pag-fill" id="pagFill"></div></div></div>
+
+    <div class="pdp-body">
+      <div class="chip-row">
+        <button class="chip" id="vtoChip" onclick="chipTap()">
+          <svg viewBox="0 0 16 16" fill="none"><path transform="translate(0 2.3)" d="M6.02616 1.9C6.02616 1.1268 6.72349 0.5 7.58377 0.5C8.44397 0.5 9.14137 1.1268 9.14137 1.9C9.14137 2.2639 9.00988 2.59537 8.78101 2.84433C8.34269 3.32117 7.68761 3.80144 7.68761 4.42003V4.62859M7.68761 4.62859C8.22404 4.62236 8.7626 4.77137 9.21514 5.07644L14.6656 8.75065C15.6237 9.39642 15.1155 10.7667 13.918 10.7667H1.74838C0.563801 10.7667 0.0475424 9.42084 0.980408 8.76466L6.18391 5.10438C6.62567 4.79366 7.15557 4.63475 7.68761 4.62859Z" stroke="var(--vto)" stroke-linecap="round"/></svg>
+          <p>Virtual Stylist</p>
+          <span class="chip-badge" id="chipBadge"><span>1</span></span>
+        </button>
+      </div>
+      <div class="brand-row">
+        <div class="brand-col">
+          <p class="brand" id="pBrand"></p>
+          <p class="title" id="pTitle"></p>
+        </div>
+        <div class="wishlist-btn"><img src="assets/icons/wishlist-heart.svg" alt=""></div>
+      </div>
+      <div class="stars-row" id="stars">
+        <div class="stars"></div>
+        <span class="count">(888)</span>
+      </div>
+      <div class="price-row">
+        <span class="price-now" id="pPrice"></span>
+        <span class="price-was" id="pWas"></span>
+        <div class="badge-save" id="pSave"><span></span></div>
+      </div>
+      <div class="order-msg">
+        <img src="assets/icons/van.svg" alt="">
+        <p>Order in <b>10 hrs 30 mins</b> for Next Day Delivery</p>
+      </div>
+      <div class="selectors">
+        <p class="colour-line">Colour: <b id="pColour"></b></p>
+        <div class="size-block">
+          <div class="size-head">
+            <p class="lbl">Select a size:</p>
+            <div class="size-guide"><img src="assets/icons/size-guide.svg" alt=""><span>Size Guide</span></div>
+          </div>
+          <div class="size-row" id="sizeRow"></div>
+        </div>
+        <div class="cta-stack">
+          <button class="btn-atb" onclick="addToBag()"><span>Add to bag</span></button>
+          <div class="btn-paypal"><img src="assets/icons/paypal.svg" alt="PayPal"></div>
+          <div class="btn-applepay"><img src="assets/icons/applepay.svg" alt="Apple Pay"></div>
+        </div>
+        <div class="deliver-banner">
+          <div class="deliver-logo" id="deliverLogo"></div>
+          <p class="deliver-title">Elevate your experience</p>
+          <div class="deliver-list">
+            <div class="deliver-item"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5.2L4.6 8.8L12 1" stroke="currentColor" stroke-linecap="round"/></svg><p>+14-day return extension</p></div>
+            <div class="deliver-item"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5.2L4.6 8.8L12 1" stroke="currentColor" stroke-linecap="round"/></svg><p>£5/day late delivery compensation</p></div>
+            <div class="deliver-item"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5.2L4.6 8.8L12 1" stroke="currentColor" stroke-linecap="round"/></svg><p>Full order coverage (lost, stolen, damaged) with instant payout on eligible claims</p></div>
+          </div>
+          <p class="deliver-more">Learn more</p>
+        </div>
+      </div>
+      <div class="pdp-end-pad"></div>
+    </div>
+  </div>
+
+  <!-- ================= VIRTUAL STYLIST ================= -->
+  <div class="vto" id="vto">
+
+    <!-- 1: Add a Photo + consent -->
+    <div class="vto-screen active" id="scrLanding">
+      <div class="grad-bg"><div class="blur-img landing"><img id="landingBlurImg" alt=""></div></div>
+      <div class="vto-sheet" id="landingSheet">
+        <div class="helper">
+          <p class="h1">Add a Photo</p>
+          <p class="sub">A full-length image, plain background and good light works best.</p>
+        </div>
+        <div class="consent">
+          <button class="checkbox" id="consent" onclick="toggleConsent()" aria-label="I consent">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12.5l3.5 3.5 7.5-8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <p>I'm 18 or over and consent to my photo(s) being processed by <span id="consentBrand"></span> and its AI providers to create my virtual try-on. I accept and understand the <a>Terms &amp; Conditions</a> and <a>Privacy Policy</a>.</p>
+        </div>
+        <div class="btn-block">
+          <div class="vto-btn-row">
+            <button class="btn-sheet" id="btnCamera" disabled onclick="openCamera()"><img src="assets/icons/camera.svg" alt=""><span>Camera</span></button>
+            <button class="btn-sheet" id="btnUpload" disabled onclick="openLibrary()"><img src="assets/icons/upload.svg" alt=""><span>Upload</span></button>
+          </div>
+          <p class="tries-note" id="landingTries">Max 5 try-ons per day. Images generated by AI</p>
+        </div>
+      </div>
+      <button class="circle-btn btn-close-vto" onclick="closeVTO()"><img class="ring" src="assets/icons/ring.svg" alt=""><img class="glyph x" src="assets/icons/close.svg" alt=""></button>
+    </div>
+
+    <!-- 2: Camera (native) -->
+    <div class="vto-screen cam-screen" id="scrCamera">
+      <div class="viewfinder">
+        <video id="camVideo" autoplay playsinline muted></video>
+        <img class="mock" id="camMock" style="display:none" src="assets/img/bodyshot.png" alt="">
+      </div>
+      <div class="cam-flash"><img src="assets/icons/cam-flash.svg" alt=""></div>
+      <div class="cam-1x"><img src="assets/icons/cam-1x.svg" alt=""><span>1&times;</span></div>
+      <p class="cam-photo-lbl">PHOTO</p>
+      <button class="cam-shutter" onclick="capturePhoto()"><img src="assets/icons/cam-shutter.svg" alt=""></button>
+      <button class="cam-cancel" onclick="cancelCamera()">Cancel</button>
+      <button class="cam-switch" onclick="switchCamera()"><img src="assets/icons/cam-switch.svg" alt=""></button>
+      <div class="home-ind"></div>
+    </div>
+
+    <!-- 3: Review -->
+    <div class="vto-screen cam-screen" id="scrReview">
+      <div class="viewfinder"><img class="shot" id="reviewImg" alt=""></div>
+      <div class="cam-flash"><img src="assets/icons/cam-flash.svg" alt=""></div>
+      <button class="cam-retake" onclick="retake()">Retake</button>
+      <button class="cam-use" onclick="usePhoto()">Use Photo</button>
+      <div class="home-ind"></div>
+    </div>
+
+    <!-- 4: Analysing / Creating -->
+    <div class="vto-screen" id="scrLoading">
+      <div class="grad-bg"><div class="blur-img loading" id="loadingBlur"><img id="loadingBlurImg" src="assets/img/bodyshot.png" alt=""></div></div>
+      <div class="vto-status">
+        <div class="ic32"><img id="aiIcon" src="assets/icons/ai.svg" alt=""></div>
+        <p class="headline phase-a">Analysing your photo...</p>
+        <p class="headline phase-b">Creating your outfit...</p>
+        <p class="headline phase-c">Nearly ready!</p>
+        <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+        <p class="cap phase-a">We will generate your look shortly...</p>
+        <p class="cap phase-b">Please wait...</p>
+        <p class="cap phase-c">Your look will be ready in a few seconds</p>
+        <p class="tries-line" id="loadingTries"></p>
+      </div>
+      <button class="circle-btn btn-close-vto" onclick="closeVTO()"><img class="ring" src="assets/icons/ring.svg" alt=""><img class="glyph x" src="assets/icons/close.svg" alt=""></button>
+    </div>
+
+    <!-- 5: Result -->
+    <div class="vto-screen result" id="scrResult">
+      <div class="result-canvas"><img id="resultImg" alt=""></div>
+      <div class="watermark"><img id="wmImg" alt=""></div>
+      <div class="result-sheet" id="resultSheet">
+        <div class="result-sizes" id="resultSizes"></div>
+        <button class="btn-atb-vto" onclick="addToBag()"><span>Add to bag</span></button>
+      </div>
+      <div class="rail" id="resultRail">
+        <button class="circle-btn" onclick="closeVTO()"><img class="ring" src="assets/icons/ring.svg" alt=""><img class="glyph x" src="assets/icons/close.svg" alt=""></button>
+        <button class="circle-btn" onclick="shareLook()"><img class="ring" src="assets/icons/ring.svg" alt=""><img class="glyph sh" src="assets/icons/share.svg" alt=""></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- toast: look finished while shopping -->
+  <div class="toast" id="toast">
+    <div class="lead">
+      <div class="tick"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5.2l2.2 2.2L8 3" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <p class="msg">Your Virtual Stylist look is ready</p>
+    </div>
+    <button class="view" onclick="viewResult()">View</button>
+  </div>
+
+  <input type="file" id="libraryInput" accept="image/*" style="display:none">
+
+  <!-- Added to Bag -->
+  <div class="scrim" id="scrim" onclick="closeBag()"></div>
+  <div class="bag-sheet" id="bagSheet">
+    <div class="bag-head">
+      <p class="t">Added to Bag</p>
+      <div class="x" onclick="closeBag()"><img src="assets/icons/close-16.svg" alt=""></div>
+    </div>
+    <div class="bag-prod">
+      <div class="thumb"><img id="bagThumb" alt=""></div>
+      <div class="info">
+        <p class="b" id="bagBrand"></p>
+        <p class="n" id="bagTitle"></p>
+        <p class="v" id="bagVariant"></p>
+        <p class="p"><span class="now" id="bagPrice"></span> <span class="was" id="bagWas"></span></p>
+      </div>
+    </div>
+    <div class="bag-btns">
+      <button class="btn-viewbag" onclick="closeBag()"><span>View Bag</span></button>
+      <button class="btn-contshop" onclick="closeBag()"><span>Continue Shopping</span></button>
+    </div>
+  </div>
+
+  <!-- Daily limit (Figma VTO Error 15341-21026) -->
+  <div class="vto-modal" id="errorModal">
+    <div class="card">
+      <div class="copy">
+        <p class="t">You've used all 5 try-ons today</p>
+        <p class="b">You can generate a maximum of 5 try-ons per day. Your daily limit resets tomorrow.</p>
+      </div>
+      <button class="cta" onclick="closeLimitError()"><span>Continue</span></button>
+    </div>
+  </div>
+</div>
+
+<script src="brands.js"></script>
+<script>
+  /* ---------- brand ---------- */
+  var BRAND = null, B = null, P = null;
+  var qs = new URLSearchParams(location.search);
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function setVar(k, v){ document.documentElement.style.setProperty(k, v); }
+  function applyBrand(key){
+    if (!window.VTO_BRANDS[key]) key = 'boohoo';
+    BRAND = key; B = window.VTO_BRANDS[key]; P = B.product;
+    document.documentElement.setAttribute('data-brand', key);
+    document.title = 'Virtual Stylist · ' + B.name;
+    var t = B.tokens, w = B.weights;
+    setVar('--font', B.font); setVar('--w-body', w.body); setVar('--w-med', w.med); setVar('--w-bold', w.bold); setVar('--w-btn', w.btn);
+    setVar('--case-btn', B.caseBtn); setVar('--radius', B.radius); setVar('--logo-h', B.logoH + 'px');
+    var map = { primary:'--primary', primaryInk:'--primary-ink', cta:'--cta', outline:'--outline', check:'--check', vto:'--vto', bodyBg:'--body-bg', white:'--white', grey05:'--grey-05',
+      badgeBg:'--badge-bg', badgeInk:'--badge-ink', price:'--price', banner1Bg:'--banner1-bg', banner1Ink:'--banner1-ink', banner2Bg:'--banner2-bg', banner2Ink:'--banner2-ink',
+      dplusBg:'--dplus-bg', dplusInk:'--dplus-ink', dplusLink:'--dplus-link',
+      sheetBg:'--sheet-bg', sheetInk:'--sheet-ink', sheetSub:'--sheet-sub', sheetNote:'--sheet-note', sizeBg:'--size-bg', sizeInk:'--size-ink', sizeBorder:'--size-border', oosInk:'--oos-ink', oosStroke:'--oos-stroke',
+      sheetCta:'--sheet-cta', sheetCtaInk:'--sheet-cta-ink', sheetSel:'--sheet-sel', sheetSelInk:'--sheet-sel-ink', sheetLink:'--sheet-link', progress:'--progress' };
+    /* reset the sheet slots to the dark defaults, then apply the brand */
+    var dark = { sheetBg:'linear-gradient(162.7deg,#0f0f0f 3.09%,#131313 100%)', sheetInk:'#fff', sheetSub:'#fff', sheetNote:'#b5b5b5', sizeBg:'#242424', sizeInk:'#fff', sizeBorder:'transparent', oosInk:'#6b6b6b', oosStroke:'#6b6b6b' };
+    var light = { sheetNote:'#6b6b6b', oosStroke:'#b5b5b5' };
+    var base = B.theme === 'light' ? Object.assign({}, dark, light) : dark;
+    Object.keys(map).forEach(function(k){ var v = (t[k] !== undefined) ? t[k] : base[k]; if (v !== undefined) setVar(map[k], v); });
+    vto.classList.toggle('light', B.theme === 'light');
+    vto.setAttribute('data-cta-ink', (t.sheetCtaInk || '#000').toLowerCase() === '#000' ? 'dark' : 'light');
+    /* header + copy */
+    document.getElementById('logoImg').src = 'assets/brands/' + key + '.svg';
+    document.getElementById('logoImg').alt = B.name;
+    document.getElementById('wmImg').src = 'assets/brands/' + key + '.svg';
+    document.getElementById('usp1').textContent = B.usp[0];
+    document.getElementById('usp2').innerHTML = esc(B.usp[1]).replace(/Code: (\S+)/, 'Code: <b>$1</b>');
+    document.getElementById('consentBrand').textContent = B.name;
+    document.getElementById('crumbs').innerHTML = P.crumbs.map(esc).join('<span>/</span>');
+    document.getElementById('carousel').innerHTML = P.images.map(function(s, i){ return '<div class="slide"><img src="' + s + '" alt="' + esc(P.title) + ', view ' + (i + 1) + '"></div>'; }).join('');
+    document.getElementById('pBrand').textContent = P.brand;
+    document.getElementById('pTitle').textContent = P.title;
+    var full = !P.was;
+    var pn = document.getElementById('pPrice'); pn.textContent = P.price; pn.classList.toggle('full', full);
+    document.getElementById('pWas').textContent = P.was || ''; document.getElementById('pWas').style.display = P.was ? '' : 'none';
+    var sv = document.getElementById('pSave'); sv.style.display = P.save ? '' : 'none'; sv.firstElementChild.textContent = P.save || '';
+    document.getElementById('pColour').textContent = P.colour;
+    document.getElementById('stars').classList.toggle('on', !!B.stars);
+    document.querySelector('#stars .stars').innerHTML = [1,2,3,4,5].map(function(i){ return '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.2 6.7.8-5 4.6 1.3 6.7L12 17.5l-5.9 3.3 1.3-6.7-5-4.6 6.7-.8z" fill="' + (i <= 4 ? '#000' : 'none') + '" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg>'; }).join('');
+    document.getElementById('sizeRow').innerHTML = P.sizes.map(function(s){ return '<button class="size-btn' + (s[1] ? ' oos' : '') + (s[0] === P.sel ? ' sel' : '') + '"' + (s[1] ? '' : ' onclick="selSize(this)"') + '><span>' + esc(s[0]) + '</span></button>'; }).join('');
+    document.getElementById('resultSizes').innerHTML = P.sizes.map(function(s){ return '<button class="rsize' + (s[1] ? ' oos' : '') + (s[0] === P.sel ? ' sel' : '') + '"' + (s[1] ? '' : ' onclick="selSize(this)"') + '><span>' + esc(s[0]) + '</span></button>'; }).join('');
+    document.getElementById('deliverLogo').innerHTML = deliverLockup(B.deliver);
+    document.getElementById('resultImg').src = P.result || P.images[0];
+    document.getElementById('landingBlurImg').src = P.images[0];
+    document.getElementById('bagThumb').src = P.images[0];
+    document.getElementById('bagBrand').textContent = P.brand;
+    document.getElementById('bagTitle').textContent = P.title;
+    var bp = document.getElementById('bagPrice'); bp.textContent = P.price; bp.classList.toggle('full', full);
+    document.getElementById('bagWas').textContent = P.was || '';
+    syncBagVariant();
+    postState();
+  }
+  function deliverLockup(k){
+    switch (k){
+      case 'deb': return '<img src="assets/deliver/deb-word.svg" style="height:20px" alt="Debenhams"><img src="assets/deliver/deb-plus.svg" style="height:6px;margin-top:1px" alt="Deliver+">';
+      case 'bh':  return '<img src="assets/deliver/bh.png" style="height:19px" alt="boohoo Deliver+">';
+      case 'bm':  return '<img src="assets/deliver/bm.svg" style="height:15px" alt="DELIVER+">';
+      case 'plt': return '<span style="position:relative;width:113px;height:40px;display:block"><img src="assets/deliver/plt-shield.svg" style="position:absolute;left:0;top:0;height:40px" alt=""><img src="assets/deliver/plt-inner.svg" style="position:absolute;left:6.4px;top:8.3px;height:18px" alt=""><img src="assets/deliver/plt-word.svg" style="position:absolute;left:40.8px;top:11.3px;height:11.8px" alt="Deliver+"></span>';
+      case 'km':  return '<img src="assets/deliver/km-word.svg" style="height:10px;filter:brightness(0) invert(1)" alt="Karen Millen"><img src="assets/deliver/km-plus.svg" style="height:16px;margin-top:4px;filter:brightness(0) invert(1)" alt="Deliver+">';
+      default:    return '<span class="dp-text">' + esc(B.name) + ' <b>Deliver+</b></span>';
+    }
+  }
+  function selectedSize(){ var s = document.querySelector('#resultSizes .rsize.sel span'); return s ? s.textContent : P.sel; }
+  function syncBagVariant(){ document.getElementById('bagVariant').textContent = selectedSize() + ' / ' + P.colour; }
+  function selSize(btn){
+    var label = btn.querySelector('span').textContent;
+    /* the PDP and the result sheet share one selection */
+    document.querySelectorAll('#sizeRow .size-btn, #resultSizes .rsize').forEach(function(b){ b.classList.toggle('sel', b.querySelector('span').textContent === label && !b.classList.contains('oos')); });
+    syncBagVariant();
+  }
+
+  /* ---------- state ---------- */
+  var vto = document.getElementById('vto');
+  var screens = { landing: document.getElementById('scrLanding'), camera: document.getElementById('scrCamera'), review: document.getElementById('scrReview'), loading: document.getElementById('scrLoading'), result: document.getElementById('scrResult') };
+  var progFill = document.getElementById('progFill'), scrLoading = document.getElementById('scrLoading');
+  var scrim = document.getElementById('scrim'), bagSheet = document.getElementById('bagSheet');
+  var bagCount = document.getElementById('bagCount'), bagCounter = document.getElementById('bagCounter');
+  var toast = document.getElementById('toast'), camVideo = document.getElementById('camVideo'), camMock = document.getElementById('camMock');
+  var reviewImg = document.getElementById('reviewImg'), libraryInput = document.getElementById('libraryInput');
+  var loadingBlur = document.getElementById('loadingBlur'), loadingBlurImg = document.getElementById('loadingBlurImg');
+  var landingSheet = document.getElementById('landingSheet'), resultSheet = document.getElementById('resultSheet'), resultRail = document.getElementById('resultRail');
+  var PHASE_A = 4500, GEN_TOTAL = 9000;
+  function rollGenTimings(){ PHASE_A = 3000 + Math.random() * 3000; GEN_TOTAL = PHASE_A + 3000 + Math.random() * 3000; }
+  var genState = 'idle', genStart = 0, rafId = null, doneTimer = null, phaseTimer = null, toastTimer = null;
+  var stream = null, facing = 'user', photoSource = null, consent = false, current = 'pdp', bagN = 3;
+  var TRIES_MAX = 5, triesUsed = 0;
+
+  function syncTries(){
+    var last = triesUsed >= TRIES_MAX, remaining = TRIES_MAX - triesUsed;
+    var line = document.getElementById('loadingTries');
+    line.textContent = last ? 'You’ve used all ' + TRIES_MAX + ' try-ons for today' : triesUsed + ' of ' + TRIES_MAX + ' today';
+    line.classList.toggle('last', last);
+    line.style.display = triesUsed > 0 ? '' : 'none';
+    document.getElementById('landingTries').textContent = (triesUsed === 0 ? 'Max ' + TRIES_MAX + ' try-ons per day.' : remaining + ' try-on' + (remaining === 1 ? '' : 's') + ' left today.') + ' Images generated by AI';
+  }
+  function showLimitError(){ document.getElementById('errorModal').classList.add('on'); setStep('limit'); }
+  function closeLimitError(){ document.getElementById('errorModal').classList.remove('on'); setStep(vto.classList.contains('open') ? current : 'pdp'); }
+
+  function show(name, animDelay){
+    if (animDelay === undefined) animDelay = 120;
+    for (var k in screens){ screens[k].classList.toggle('active', k === name); }
+    landingSheet.classList.remove('in'); resultSheet.classList.remove('in'); resultRail.classList.remove('in');
+    if (name === 'landing'){ setTimeout(function(){ landingSheet.classList.add('in'); }, animDelay); }
+    if (name === 'result'){ setTimeout(function(){ resultSheet.classList.add('in'); }, animDelay); setTimeout(function(){ resultRail.classList.add('in'); }, animDelay + 100); }
+    setStep(name === 'landing' ? 'intro' : name);
+  }
+  function setStep(s){ current = s; postState(); }
+  function postState(){ if (window.parent !== window){ window.parent.postMessage({ vtoState: { brand: BRAND, step: current, tries: triesUsed, look: genState === 'ready' } }, '*'); } }
+
+  /* ---------- consent ---------- */
+  function toggleConsent(){
+    consent = !consent;
+    document.getElementById('consent').classList.toggle('on', consent);
+    document.getElementById('btnCamera').disabled = !consent;
+    document.getElementById('btnUpload').disabled = !consent;
+  }
+
+  /* ---------- open / close ---------- */
+  function chipTap(){
+    if (genState === 'ready'){ openVTO(); return; }
+    if (triesUsed >= TRIES_MAX){ showLimitError(); return; }
+    openVTO();
+  }
+  function openVTO(force){
+    vto.classList.remove('closing'); vto.classList.add('open');
+    if (genState === 'ready' && !force){ show('result', 430); markViewed(); }
+    else if (genState === 'generating' && !force){ scrLoading.classList.add('nearly'); show('loading'); }
+    else { show('landing', 430); }
+  }
+  function closeVTO(){
+    vto.classList.remove('open'); vto.classList.add('closing');
+    stopCamera();
+    setTimeout(function(){ vto.classList.remove('closing'); }, 450);
+    setStep('pdp');
+  }
+
+  /* ---------- camera ---------- */
+  function openCamera(){ photoSource = 'camera'; show('camera'); startCamera(); }
+  function startCamera(){
+    stopCamera(); camVideo.style.display = ''; camMock.style.display = 'none';
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ return cameraFallback(); }
+    /* a pending permission prompt never rejects: if no stream lands within 2.5s, demo with the design's bodyshot */
+    clearTimeout(camTimer); camTimer = setTimeout(function(){ if (!stream) cameraFallback(); }, 2500);
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: facing }, audio: false })
+      .then(function(s){ clearTimeout(camTimer); stream = s; camVideo.srcObject = s; camVideo.style.display = ''; camMock.style.display = 'none'; })
+      .catch(function(){ clearTimeout(camTimer); cameraFallback(); });
+  }
+  var camTimer = null;
+  function cameraFallback(){ camVideo.style.display = 'none'; camMock.style.display = ''; }
+  function stopCamera(){ if (stream){ stream.getTracks().forEach(function(t){ t.stop(); }); stream = null; } camVideo.srcObject = null; }
+  function switchCamera(){ facing = (facing === 'user') ? 'environment' : 'user'; startCamera(); }
+  function cancelCamera(){ stopCamera(); show('landing'); }
+  function capturePhoto(){
+    if (stream && camVideo.videoWidth){
+      var c = document.createElement('canvas'); c.width = camVideo.videoWidth; c.height = camVideo.videoHeight;
+      c.getContext('2d').drawImage(camVideo, 0, 0);
+      reviewImg.src = c.toDataURL('image/jpeg', 0.9);
+    } else { reviewImg.src = camMock.src; }
+    stopCamera(); show('review');
+  }
+  function openLibrary(){ photoSource = 'library'; libraryInput.value = ''; libraryInput.click(); }
+  libraryInput.addEventListener('change', function(){
+    var f = libraryInput.files && libraryInput.files[0]; if (!f) return;
+    var r = new FileReader(); r.onload = function(e){ reviewImg.src = e.target.result; show('review'); }; r.readAsDataURL(f);
+  });
+  function retake(){ if (photoSource === 'library'){ openLibrary(); } else { openCamera(); } }
+
+  /* ---------- generation ---------- */
+  function usePhoto(){
+    if (reviewImg.src){ loadingBlurImg.src = reviewImg.src; loadingBlur.classList.add('userphoto'); }
+    startGenerating();
+  }
+  function startGenerating(){
+    if (triesUsed >= TRIES_MAX){ showLimitError(); return; }
+    rollGenTimings(); triesUsed++; syncTries();
+    scrLoading.classList.remove('nearly', 'creating');
+    genState = 'generating'; genStart = Date.now();
+    show('loading');
+    progFill.style.width = '0'; cancelAnimationFrame(rafId);
+    (function tick(){ var t = Date.now() - genStart; progFill.style.width = Math.min(100, (t / GEN_TOTAL) * 100) + '%'; if (t < GEN_TOTAL){ rafId = requestAnimationFrame(tick); } })();
+    clearTimeout(phaseTimer); clearTimeout(doneTimer);
+    phaseTimer = setTimeout(function(){ scrLoading.classList.add('creating'); }, PHASE_A);
+    doneTimer = setTimeout(generationDone, GEN_TOTAL);
+  }
+  function generationDone(){
+    genState = 'ready';
+    document.getElementById('chipBadge').classList.add('on');
+    cancelAnimationFrame(rafId); progFill.style.width = '100%';
+    if (vto.classList.contains('open')){ setTimeout(function(){ show('result'); markViewed(); }, 350); }
+    else { toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 6000); postState(); }
+  }
+  function viewResult(){ toast.classList.remove('show'); clearTimeout(toastTimer); openVTO(); }
+  function markViewed(){ toast.classList.remove('show'); }
+  function shareLook(){
+    if (navigator.share){ navigator.share({ title: P.title, text: 'My Virtual Stylist look on ' + B.name, url: P.url }).catch(function(){}); }
+  }
+
+  /* ---------- add to bag ---------- */
+  function addToBag(){
+    syncBagVariant();
+    var open = vto.classList.contains('open');
+    if (open){ vto.classList.remove('open'); vto.classList.add('closing'); }
+    setTimeout(function(){ bagN++; bagCount.textContent = bagN; bagCounter.classList.remove('counter-pop'); void bagCounter.offsetWidth; bagCounter.classList.add('counter-pop'); }, open ? 380 : 0);
+    setTimeout(function(){ vto.classList.remove('closing'); scrim.classList.add('on'); bagSheet.classList.add('up'); setStep('bag'); }, open ? 650 : 60);
+  }
+  function closeBag(){ scrim.classList.remove('on'); bagSheet.classList.remove('up'); setStep('pdp'); }
+
+  /* ---------- reset ---------- */
+  function resetAll(){
+    cancelAnimationFrame(rafId); clearTimeout(doneTimer); clearTimeout(phaseTimer); clearTimeout(toastTimer); stopCamera();
+    genState = 'idle'; triesUsed = 0; syncTries(); consent = true; toggleConsent();
+    document.getElementById('chipBadge').classList.remove('on'); document.getElementById('errorModal').classList.remove('on');
+    toast.classList.remove('show'); closeBag(); bagN = 3; bagCount.textContent = bagN;
+    vto.classList.remove('open', 'closing'); scrLoading.classList.remove('creating', 'nearly'); progFill.style.width = '0';
+    loadingBlur.classList.remove('userphoto'); loadingBlurImg.src = 'assets/img/bodyshot.png';
+    for (var k in screens){ screens[k].classList.toggle('active', k === 'landing'); }
+    landingSheet.classList.remove('in'); resultSheet.classList.remove('in'); resultRail.classList.remove('in');
+    document.getElementById('pdp').scrollTop = 0; document.getElementById('carousel').scrollLeft = 0;
+    setStep('pdp');
+  }
+
+  /* ---------- carousel pagination ---------- */
+  var car = document.getElementById('carousel'), pagFill = document.getElementById('pagFill');
+  car.addEventListener('scroll', function(){ var max = car.scrollWidth - car.clientWidth; var pct = max > 0 ? car.scrollLeft / max : 0; pagFill.style.transform = 'translateX(' + (pct * 300) + '%)'; });
+
+  /* ---------- review shell: brand switch + journey jumps ---------- */
+  function jump(step){
+    var mock = 'assets/img/bodyshot.png';
+    switch (step){
+      case 'pdp': if (vto.classList.contains('open')) closeVTO(); closeBag(); document.getElementById('errorModal').classList.remove('on'); break;
+      case 'intro': closeBag(); if (!consent) toggleConsent(); vto.classList.remove('closing'); vto.classList.add('open'); show('landing', 430); break;
+      case 'camera': closeBag(); if (!consent) toggleConsent(); vto.classList.remove('closing'); vto.classList.add('open'); openCamera(); break;
+      case 'review': closeBag(); if (!consent) toggleConsent(); vto.classList.remove('closing'); vto.classList.add('open'); photoSource = 'camera'; reviewImg.src = mock; show('review'); break;
+      case 'loading': closeBag(); if (!consent) toggleConsent(); vto.classList.remove('closing'); vto.classList.add('open'); if (triesUsed >= TRIES_MAX) triesUsed = TRIES_MAX - 1; loadingBlurImg.src = mock; loadingBlur.classList.add('userphoto'); startGenerating(); break;
+      case 'result': closeBag(); cancelAnimationFrame(rafId); clearTimeout(doneTimer); clearTimeout(phaseTimer); if (genState !== 'ready'){ if (triesUsed === 0) triesUsed = 1; syncTries(); } genState = 'ready'; document.getElementById('chipBadge').classList.add('on'); vto.classList.remove('closing'); vto.classList.add('open'); show('result', 430); break;
+      case 'bag': addToBag(); break;
+      case 'limit': closeBag(); if (vto.classList.contains('open')) closeVTO(); triesUsed = TRIES_MAX; syncTries(); showLimitError(); break;
+    }
+  }
+  addEventListener('message', function(e){
+    var d = e.data; if (!d) return;
+    if (d.vtoSet && d.vtoSet.brand){ resetAll(); applyBrand(d.vtoSet.brand); }
+    if (d.vtoJump){ jump(d.vtoJump); }
+    if (d.vtoReset){ resetAll(); }
+    if (d.vtoPing){ window.parent.postMessage({ vtoPong: d.vtoPing }, '*'); }
+  });
+
+  syncTries();
+  applyBrand(qs.get('brand') || 'boohoo');
+  if (qs.get('step')) setTimeout(function(){ jump(qs.get('step')); }, 200);
+  if (window.parent !== window) window.parent.postMessage({ vtoReady: 1 }, '*');
+</script>
+</body>
+</html>
