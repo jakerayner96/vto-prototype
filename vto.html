@@ -9,6 +9,7 @@
 <title>Virtual Stylist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="live-pdp.css">
 <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600&family=Montserrat:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Jost:wght@400;500;600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* ---- brand slots: filled from brands.js at load (applyBrand) ---- */
@@ -33,100 +34,16 @@
   img{object-fit:contain;} /* icons: fixed square boxes, never squished */
   .phone{position:fixed;inset:0;background:var(--body-bg);overflow:hidden;}
 
-  /* ============ PDP ============ */
+  /* ============ PDP: rendered by the shared live-PDP module (live-pdp.js + brands-live.js); only the chip is ours ============ */
   .pdp{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;background:var(--body-bg);scrollbar-width:none;}
   .pdp::-webkit-scrollbar{display:none;}
-  .hdr{background:var(--body-bg);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;}
-  .hdr-left{display:flex;align-items:center;gap:16px;flex:1;min-width:0;}
-  .ic-hamburger{width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .ic-hamburger img{width:22px;height:14px;display:block;}
-  .logo{height:24px;display:flex;align-items:center;min-width:0;}
-  .logo img{display:block;height:var(--logo-h,18px);width:auto;}
-  .hdr-icons{display:flex;align-items:flex-start;flex-shrink:0;}
-  .hdr-btn{width:38px;height:36px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;}
-  .hdr-btn img{width:24px;height:24px;display:block;}
-  .bag-counter{position:absolute;right:4px;top:2px;min-width:14px;height:14px;padding:0 3px;background:#000;border-radius:99px;display:flex;align-items:center;justify-content:center;}
-  .bag-counter span{font-size:9px;font-weight:500;color:#fff;line-height:1;}
-  .usp-1{background:var(--banner1-bg);padding:4px 16px;display:flex;justify-content:center;}
-  .usp-1 p{font-size:12px;font-weight:var(--w-body);color:var(--banner1-ink);white-space:nowrap;}
-  .usp-2{background:var(--banner2-bg);padding:4px 16px;display:flex;gap:8px;align-items:center;justify-content:center;}
-  .usp-2 p{font-size:12px;font-weight:var(--w-body);color:var(--banner2-ink);white-space:nowrap;}
-  .usp-2 b{font-weight:600;}
-  .breadcrumbs{display:flex;gap:8px;padding:16px;font-size:12px;font-weight:var(--w-med);color:#000;overflow-x:auto;scrollbar-width:none;}
-  .breadcrumbs::-webkit-scrollbar{display:none;}
-  .breadcrumbs span{white-space:nowrap;line-height:18px;}
-  .carousel{display:flex;gap:4px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
-  .carousel::-webkit-scrollbar{display:none;}
-  .carousel .slide{flex:0 0 min(60%,280px);aspect-ratio:233/350;scroll-snap-align:start;background:var(--grey-05);position:relative;}
-  .carousel .slide img{width:100%;height:100%;object-fit:cover;display:block;}
-  .pag-wrap{padding:16px 16px 0;}
-  .pag-track{width:100%;height:4px;background:var(--grey-25);border-radius:100px;position:relative;overflow:hidden;}
-  .pag-fill{position:absolute;top:0;bottom:0;left:0;width:25%;background:#000;border-radius:100px;transition:transform .15s linear;}
-  .pdp-body{display:flex;flex-direction:column;gap:16px;padding:16px;width:100%;}
   .chip-row{display:flex;justify-content:var(--chip-align,center);}
-  .chip{background:var(--chip-bg,var(--white));display:flex;gap:6px;align-items:center;padding:9px 14px;border-radius:var(--chip-radius,100px);box-shadow:0 0 14px -4px rgba(0,0,0,.25);cursor:pointer;border:none;position:relative;}
+  .chip{background:var(--chip-bg,var(--white));display:flex;gap:6px;align-items:center;padding:9px 14px;border-radius:var(--chip-radius,100px);box-shadow:0 0 14px -4px rgba(0,0,0,.25);cursor:pointer;border:none;position:relative;font-family:var(--font);}
   .chip svg{width:16px;height:16px;display:block;}
-  .chip p{font-size:var(--chip-size,13px);font-weight:var(--chip-weight,600);line-height:18px;color:var(--chip-ink,#000);text-transform:var(--chip-case,none);white-space:nowrap;}
+  .chip p{font-size:var(--chip-size,13px);font-weight:var(--chip-weight,600);line-height:18px;color:var(--chip-ink,#000);text-transform:var(--chip-case,none);white-space:nowrap;margin:0;}
   .chip-badge{position:absolute;right:-4px;top:-4px;min-width:16px;height:16px;background:var(--cta);border-radius:100px;display:none;align-items:center;justify-content:center;padding:0 4px;}
   .chip-badge span{font-size:10px;font-weight:600;color:#fff;line-height:1;}
   .chip-badge.on{display:flex;}
-  .brand-row{display:flex;gap:8px;align-items:flex-start;}
-  .brand-col{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
-  .brand-col .brand{font-size:16px;font-weight:var(--w-bold);color:#000;}
-  .brand-col .title{font-size:16px;font-weight:var(--w-med);color:#000;}
-  .wishlist-btn{width:44px;height:44px;flex-shrink:0;background:var(--white);border-radius:50%;box-shadow:0 0 14px -4px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;}
-  .wishlist-btn img{width:20px;height:20px;display:block;}
-  .stars-row{display:none;gap:8px;align-items:center;}
-  .stars-row.on{display:flex;}
-  .stars{display:flex;gap:2px;}
-  .stars svg{display:block;width:14px;height:14px;}
-  .stars-row .count{font-size:14px;font-weight:var(--w-body);color:#000;text-decoration:underline;}
-  .price-row{display:flex;gap:12px;align-items:center;}
-  .price-now{font-size:24px;font-weight:var(--w-bold);color:var(--price);}
-  .price-now.full{color:#000;}
-  .price-was{font-size:24px;font-weight:var(--w-body);color:var(--grey-5);text-decoration:line-through;}
-  .badge-save{background:var(--badge-bg);border-radius:var(--radius);padding:4px 8px;display:flex;align-items:center;justify-content:center;}
-  .badge-save span{font-size:14px;font-weight:var(--w-med);color:var(--badge-ink);}
-  .order-msg{display:flex;gap:8px;align-items:center;}
-  .order-msg img{width:20px;height:20px;flex-shrink:0;display:block;}
-  .order-msg p{font-size:14px;font-weight:var(--w-med);color:#000;}
-  .order-msg b{font-weight:var(--w-bold);}
-  .selectors{display:flex;flex-direction:column;gap:16px;}
-  .colour-line{font-size:16px;font-weight:var(--w-med);color:#000;}
-  .colour-line b{font-weight:var(--w-bold);}
-  .size-block{display:flex;flex-direction:column;gap:12px;width:100%;}
-  .size-head{display:flex;align-items:center;justify-content:space-between;}
-  .size-head .lbl{font-size:16px;font-weight:var(--w-med);color:#000;flex:1;}
-  .size-guide{display:flex;gap:4px;align-items:center;}
-  .size-guide img{width:16px;height:16px;display:block;}
-  .size-guide span{font-size:14px;font-weight:var(--w-body);color:#000;}
-  .size-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
-  .size-row::-webkit-scrollbar{display:none;}
-  .size-btn{width:60px;min-width:60px;height:50px;background:var(--white);border:1px solid var(--grey-3);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;}
-  .size-btn span{font-size:16px;font-weight:var(--w-med);color:#000;}
-  .size-btn.sel{border-color:#000;}
-  .size-btn.oos{cursor:default;}
-  .size-btn.oos span{color:var(--grey-3);}
-  .size-btn.oos::after{content:"";position:absolute;left:-6px;right:-6px;top:50%;height:1px;background:var(--grey-3);transform:rotate(-40deg);}
-  .cta-stack{display:flex;flex-direction:column;gap:8px;}
-  .btn-atb{width:100%;height:50px;background:var(--primary);border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;}
-  .btn-atb span{font-size:16px;font-weight:var(--w-btn);line-height:24px;color:var(--primary-ink);text-transform:var(--case-btn);}
-  .btn-paypal{width:100%;height:50px;background:#ffc439;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;}
-  .btn-paypal img{width:75px;height:20px;display:block;}
-  .btn-applepay{width:100%;height:50px;background:#000;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;}
-  .btn-applepay img{width:54px;height:22px;display:block;}
-  .deliver-banner{background:var(--dplus-bg);border-radius:var(--radius);padding:16px 20px;width:100%;display:flex;flex-direction:column;gap:12px;color:var(--dplus-ink);}
-  .deliver-logo{display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-height:19px;}
-  .deliver-logo img{display:block;}
-  .deliver-logo .dp-text{font-size:16px;font-weight:var(--w-bold);letter-spacing:.02em;}
-  .deliver-logo .dp-text b{font-weight:var(--w-bold);}
-  .deliver-title{font-size:14px;font-weight:var(--w-bold);letter-spacing:-0.14px;}
-  .deliver-list{display:flex;flex-direction:column;gap:8px;}
-  .deliver-item{display:flex;gap:8px;align-items:flex-start;}
-  .deliver-item svg{flex-shrink:0;display:block;margin-top:3px;}
-  .deliver-item p{font-size:12px;font-weight:var(--w-body);letter-spacing:-0.12px;flex:1;}
-  .deliver-more{font-size:14px;font-weight:var(--w-bold);letter-spacing:-0.14px;line-height:18.2px;color:var(--dplus-link);}
-  .pdp-end-pad{height:60px;}
 
   /* ============ VIRTUAL STYLIST OVERLAY ============ */
   .vto{position:absolute;inset:0;background:var(--soft-black);transform:translateY(100%);transition:transform .45s var(--ease-sheet);z-index:40;overflow:hidden;will-change:transform;}
@@ -155,7 +72,7 @@
   .vto-sheet .h1{font-size:28px;font-weight:var(--w-bold);color:var(--sheet-ink);line-height:normal;}
   .vto-sheet .helper{display:flex;flex-direction:column;gap:4px;}
   .vto-sheet .sub{font-size:13.5px;font-weight:var(--w-med);color:var(--sheet-sub);line-height:1.35;}
-  .consent{display:flex;gap:16px;align-items:center;width:100%;}
+  .consent{display:flex;gap:16px;align-items:center;width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent;} /* the whole row toggles (Jake 10 Sep); only the T&Cs / Privacy Policy links are exempt */
   .checkbox{width:24px;height:24px;flex-shrink:0;border-radius:3px;background:var(--check-bg);border:1px solid var(--check-border);position:relative;cursor:pointer;padding:0;transition:background .15s,border-color .15s;}
   .checkbox svg{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .15s;}
   .checkbox.on{background:var(--check);border-color:var(--check);}
@@ -291,82 +208,15 @@
 <body>
 <div class="phone" id="phone">
 
-  <!-- ================= PDP ================= -->
-  <div class="pdp" id="pdp">
-    <div class="hdr">
-      <div class="hdr-left">
-        <div class="ic-hamburger"><img src="assets/icons/hamburger.svg" alt=""></div>
-        <div class="logo"><img id="logoImg" src="assets/brands/boohoo.svg" alt=""></div>
-      </div>
-      <div class="hdr-icons">
-        <div class="hdr-btn"><img src="assets/icons/search.svg" alt=""></div>
-        <div class="hdr-btn"><img src="assets/icons/account.svg" alt=""></div>
-        <div class="hdr-btn"><img src="assets/icons/heart.svg" alt=""></div>
-        <div class="hdr-btn"><img src="assets/icons/bag.svg" alt=""><div class="bag-counter" id="bagCounter"><span id="bagCount">3</span></div></div>
-      </div>
-    </div>
-    <div class="usp-1"><p id="usp1">Free delivery on orders over £50</p></div>
-    <div class="usp-2"><p id="usp2">Up to 60% off everything</p></div>
-    <div class="breadcrumbs" id="crumbs"></div>
-    <div class="carousel" id="carousel"></div>
-    <div class="pag-wrap"><div class="pag-track"><div class="pag-fill" id="pagFill"></div></div></div>
-
-    <div class="pdp-body">
-      <div class="chip-row">
+  <!-- ================= PDP (live module) ================= -->
+  <div class="pdp" id="pdp"></div>
+  <template id="chipTpl"><div class="chip-row">
         <button class="chip" id="vtoChip" onclick="chipTap()">
           <svg viewBox="0 0 16 16" fill="none"><path transform="translate(0 2.3)" d="M6.02616 1.9C6.02616 1.1268 6.72349 0.5 7.58377 0.5C8.44397 0.5 9.14137 1.1268 9.14137 1.9C9.14137 2.2639 9.00988 2.59537 8.78101 2.84433C8.34269 3.32117 7.68761 3.80144 7.68761 4.42003V4.62859M7.68761 4.62859C8.22404 4.62236 8.7626 4.77137 9.21514 5.07644L14.6656 8.75065C15.6237 9.39642 15.1155 10.7667 13.918 10.7667H1.74838C0.563801 10.7667 0.0475424 9.42084 0.980408 8.76466L6.18391 5.10438C6.62567 4.79366 7.15557 4.63475 7.68761 4.62859Z" stroke="var(--chip-icon,var(--vto))" stroke-linecap="round"/></svg>
           <p>Virtual Stylist</p>
           <span class="chip-badge" id="chipBadge"><span>1</span></span>
         </button>
-      </div>
-      <div class="brand-row">
-        <div class="brand-col">
-          <p class="brand" id="pBrand"></p>
-          <p class="title" id="pTitle"></p>
-        </div>
-        <div class="wishlist-btn"><img src="assets/icons/wishlist-heart.svg" alt=""></div>
-      </div>
-      <div class="stars-row" id="stars">
-        <div class="stars"></div>
-        <span class="count">(888)</span>
-      </div>
-      <div class="price-row">
-        <span class="price-now" id="pPrice"></span>
-        <span class="price-was" id="pWas"></span>
-        <div class="badge-save" id="pSave"><span></span></div>
-      </div>
-      <div class="order-msg">
-        <img src="assets/icons/van.svg" alt="">
-        <p>Order in <b>10 hrs 30 mins</b> for Next Day Delivery</p>
-      </div>
-      <div class="selectors">
-        <p class="colour-line">Colour: <b id="pColour"></b></p>
-        <div class="size-block">
-          <div class="size-head">
-            <p class="lbl">Select a size:</p>
-            <div class="size-guide"><img src="assets/icons/size-guide.svg" alt=""><span>Size Guide</span></div>
-          </div>
-          <div class="size-row" id="sizeRow"></div>
-        </div>
-        <div class="cta-stack">
-          <button class="btn-atb" onclick="addToBag()"><span>Add to bag</span></button>
-          <div class="btn-paypal"><img src="assets/icons/paypal.svg" alt="PayPal"></div>
-          <div class="btn-applepay"><img src="assets/icons/applepay.svg" alt="Apple Pay"></div>
-        </div>
-        <div class="deliver-banner">
-          <div class="deliver-logo" id="deliverLogo"></div>
-          <p class="deliver-title">Elevate your experience</p>
-          <div class="deliver-list">
-            <div class="deliver-item"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5.2L4.6 8.8L12 1" stroke="currentColor" stroke-linecap="round"/></svg><p>+14-day return extension</p></div>
-            <div class="deliver-item"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5.2L4.6 8.8L12 1" stroke="currentColor" stroke-linecap="round"/></svg><p>£5/day late delivery compensation</p></div>
-            <div class="deliver-item"><svg width="13" height="10" viewBox="0 0 13 10" fill="none"><path d="M1 5.2L4.6 8.8L12 1" stroke="currentColor" stroke-linecap="round"/></svg><p>Full order coverage (lost, stolen, damaged) with instant payout on eligible claims</p></div>
-          </div>
-          <p class="deliver-more">Learn more</p>
-        </div>
-      </div>
-      <div class="pdp-end-pad"></div>
-    </div>
-  </div>
+      </div></template>
 
   <!-- ================= VIRTUAL STYLIST ================= -->
   <div class="vto" id="vto">
@@ -379,11 +229,11 @@
           <p class="h1">Add a Photo</p>
           <p class="sub">A full-length image, plain background and good light works best.</p>
         </div>
-        <div class="consent">
-          <button class="checkbox" id="consent" onclick="toggleConsent()" aria-label="I consent">
+        <div class="consent" onclick="toggleConsent()" role="checkbox" aria-checked="false" id="consentRow">
+          <button class="checkbox" id="consent" tabindex="-1" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12.5l3.5 3.5 7.5-8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <p>I'm 18 or over and consent to my photo(s) being processed by <span id="consentBrand"></span> and its AI providers to create my virtual try-on. I accept and understand the <a>Terms &amp; Conditions</a> and <a>Privacy Policy</a>.</p>
+          <p>I'm 18 or over and consent to my photo(s) being processed by <span id="consentBrand"></span> and its AI providers to create my virtual try-on. I accept and understand the <a href="#" onclick="event.stopPropagation();event.preventDefault()">Terms &amp; Conditions</a> and <a href="#" onclick="event.stopPropagation();event.preventDefault()">Privacy Policy</a>.</p>
         </div>
         <div class="btn-block">
           <div class="vto-btn-row">
@@ -498,6 +348,8 @@
 </div>
 
 <script src="brands.js"></script>
+<script src="brands-live.js"></script>
+<script src="live-pdp.js"></script>
 <script>
   /* ---------- brand ---------- */
   var BRAND = null, B = null, P = null;
@@ -527,28 +379,16 @@
     Object.keys(chip).forEach(function(k){ setVar('--chip-' + k, chip[k]); });
     vto.classList.toggle('light', B.theme === 'light');
     vto.setAttribute('data-cta-ink', (t.sheetCtaInk || '#000').toLowerCase() === '#000' ? 'dark' : 'light');
-    /* header + copy */
-    document.getElementById('logoImg').src = 'assets/brands/' + key + '.svg';
-    document.getElementById('logoImg').alt = B.name;
+    /* PDP: the shared live module renders this fascia's production PDP; the Virtual Stylist chip sits under the gallery.
+       The overlay's product (sizes, images, bag sheet) is the live product; only the try-on result image comes from brands.js. */
+    var LB = window.LIVE_BRANDS && window.LIVE_BRANDS[key];
+    if (LB){ P = Object.assign({}, B.product, LB.product, { result: B.product.result || LB.product.result || LB.product.images[0] }); }
+    if (LB){ LivePDP.render(document.getElementById('pdp'), key, { chip: document.getElementById('chipTpl').innerHTML, sizeSel: P.sel, onSize: function(l){ syncSize(l); }, onAddToBag: function(){ addToBag(); } }); }
     document.getElementById('wmImg').src = 'assets/brands/' + key + '.svg';
-    document.getElementById('usp1').textContent = B.usp[0];
-    document.getElementById('usp2').innerHTML = esc(B.usp[1]).replace(/Code: (\S+)/, 'Code: <b>$1</b>');
     document.getElementById('consentBrand').textContent = B.name;
-    document.getElementById('crumbs').innerHTML = P.crumbs.map(esc).join('<span>/</span>');
-    document.getElementById('carousel').innerHTML = P.images.map(function(s, i){ return '<div class="slide"><img src="' + s + '" alt="' + esc(P.title) + ', view ' + (i + 1) + '"></div>'; }).join('');
-    document.getElementById('pBrand').textContent = P.brand;
-    document.getElementById('pTitle').textContent = P.title;
     var full = !P.was;
-    var pn = document.getElementById('pPrice'); pn.textContent = P.price; pn.classList.toggle('full', full);
-    document.getElementById('pWas').textContent = P.was || ''; document.getElementById('pWas').style.display = P.was ? '' : 'none';
-    var sv = document.getElementById('pSave'); sv.style.display = P.save ? '' : 'none'; sv.firstElementChild.textContent = P.save || '';
-    document.getElementById('pColour').textContent = P.colour;
-    document.getElementById('stars').classList.toggle('on', !!B.stars);
-    document.querySelector('#stars .stars').innerHTML = [1,2,3,4,5].map(function(i){ return '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 6.2 6.7.8-5 4.6 1.3 6.7L12 17.5l-5.9 3.3 1.3-6.7-5-4.6 6.7-.8z" fill="' + (i <= 4 ? '#000' : 'none') + '" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg>'; }).join('');
-    document.getElementById('sizeRow').innerHTML = P.sizes.map(function(s){ return '<button class="size-btn' + (s[1] ? ' oos' : '') + (s[0] === P.sel ? ' sel' : '') + '"' + (s[1] ? '' : ' onclick="selSize(this)"') + '><span>' + esc(s[0]) + '</span></button>'; }).join('');
     document.getElementById('resultSizes').innerHTML = P.sizes.map(function(s){ return '<button class="rsize' + (s[1] ? ' oos' : '') + (s[0] === P.sel ? ' sel' : '') + '"' + (s[1] ? '' : ' onclick="selSize(this)"') + '><span>' + esc(s[0]) + '</span></button>'; }).join('');
-    document.getElementById('deliverLogo').innerHTML = deliverLockup(B.deliver);
-    document.getElementById('resultImg').src = P.result || P.images[0];
+    document.getElementById('resultImg').src = P.result;
     document.getElementById('landingBlurImg').src = P.images[0];
     document.getElementById('bagThumb').src = P.images[0];
     document.getElementById('bagBrand').textContent = P.brand;
@@ -558,24 +398,17 @@
     syncBagVariant();
     postState();
   }
-  function deliverLockup(k){
-    switch (k){
-      case 'deb': return '<img src="assets/deliver/deb-word.svg" style="height:20px" alt="Debenhams"><img src="assets/deliver/deb-plus.svg" style="height:6px;margin-top:1px" alt="Deliver+">';
-      case 'bh':  return '<img src="assets/deliver/bh.png" style="height:19px" alt="boohoo Deliver+">';
-      case 'bm':  return '<img src="assets/deliver/bm.svg" style="height:15px" alt="DELIVER+">';
-      case 'plt': return '<span style="position:relative;width:113px;height:40px;display:block"><img src="assets/deliver/plt-shield.svg" style="position:absolute;left:0;top:0;height:40px" alt=""><img src="assets/deliver/plt-inner.svg" style="position:absolute;left:6.4px;top:8.3px;height:18px" alt=""><img src="assets/deliver/plt-word.svg" style="position:absolute;left:40.8px;top:11.3px;height:11.8px" alt="Deliver+"></span>';
-      case 'km':  return '<img src="assets/deliver/km-word.svg" style="height:10px;filter:brightness(0) invert(1)" alt="Karen Millen"><img src="assets/deliver/km-plus.svg" style="height:16px;margin-top:4px;filter:brightness(0) invert(1)" alt="Deliver+">';
-      default:    return '<span class="dp-text">' + esc(B.name) + ' <b>Deliver+</b></span>';
-    }
-  }
   function selectedSize(){ var s = document.querySelector('#resultSizes .rsize.sel span'); return s ? s.textContent : P.sel; }
   function syncBagVariant(){ document.getElementById('bagVariant').textContent = selectedSize() + ' / ' + P.colour; }
-  function selSize(btn){
-    var label = btn.querySelector('span').textContent;
-    /* the PDP and the result sheet share one selection */
-    document.querySelectorAll('#sizeRow .size-btn, #resultSizes .rsize').forEach(function(b){ b.classList.toggle('sel', b.querySelector('span').textContent === label && !b.classList.contains('oos')); });
+  function syncSize(label){
+    /* the PDP (module) and the result sheet share one selection */
+    document.querySelectorAll('#resultSizes .rsize').forEach(function(b){ b.classList.toggle('sel', b.querySelector('span').textContent === label && !b.classList.contains('oos')); });
+    var pdp = document.getElementById('pdp');
+    pdp.querySelectorAll('.lp-sz[data-size]').forEach(function(b){ b.classList.toggle('on', b.dataset.size === label); });
+    var lbl = pdp.querySelector('.lp-size-head .lbl'); if (lbl) lbl.innerHTML = 'Size: <b>' + esc(label) + '</b>';
     syncBagVariant();
   }
+  function selSize(btn){ syncSize(btn.querySelector('span').textContent); }
 
   /* ---------- state ---------- */
   var vto = document.getElementById('vto');
@@ -619,6 +452,7 @@
   function toggleConsent(){
     consent = !consent;
     document.getElementById('consent').classList.toggle('on', consent);
+    document.getElementById('consentRow').setAttribute('aria-checked', consent);
   }
 
   /* ---------- open / close ---------- */
@@ -721,13 +555,9 @@
     loadingBlur.classList.remove('userphoto'); loadingBlurImg.src = 'assets/img/bodyshot.png';
     for (var k in screens){ screens[k].classList.toggle('active', k === 'landing'); }
     landingSheet.classList.remove('in'); resultSheet.classList.remove('in'); resultRail.classList.remove('in');
-    document.getElementById('pdp').scrollTop = 0; document.getElementById('carousel').scrollLeft = 0;
+    document.getElementById('pdp').scrollTop = 0;
     setStep('pdp');
   }
-
-  /* ---------- carousel pagination ---------- */
-  var car = document.getElementById('carousel'), pagFill = document.getElementById('pagFill');
-  car.addEventListener('scroll', function(){ var max = car.scrollWidth - car.clientWidth; var pct = max > 0 ? car.scrollLeft / max : 0; pagFill.style.transform = 'translateX(' + (pct * 300) + '%)'; });
 
   /* ---------- review shell: brand switch + journey jumps ---------- */
   function jump(step){
@@ -745,7 +575,7 @@
   }
   addEventListener('message', function(e){
     var d = e.data; if (!d) return;
-    if (d.vtoSet && d.vtoSet.brand){ resetAll(); applyBrand(d.vtoSet.brand); }
+    if (d.vtoSet && d.vtoSet.brand){ applyBrand(d.vtoSet.brand); } /* brand switch keeps the current screen and state (Jake 10 Sep): re-skins in place, no reset to the PDP */
     if (d.vtoJump){ jump(d.vtoJump); }
     if (d.vtoReset){ resetAll(); }
     if (d.vtoPing){ window.parent.postMessage({ vtoPong: d.vtoPing }, '*'); }

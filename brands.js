@@ -21,8 +21,8 @@ window.VTO_BRANDS = {
     product: { brand: 'Wallis', title: 'Floral Satin Midi Dress', price: '£39.00', was: '£65.00', save: 'Save 40%', colour: 'Brown',
       sizes: [['8', 0], ['10', 1], ['12', 0], ['14', 0], ['16', 0], ['18', 0], ['20', 0], ['22', 0]], sel: '12',
       crumbs: ['Womens', 'Womens Clothing', 'Dresses', 'Floral Midi Dresses'],
-      images: ['assets/products/debenhams/01.jpg', 'assets/products/debenhams/02.jpg', 'assets/products/debenhams/03.jpg', 'assets/products/debenhams/04.jpg'],
-      result: 'assets/products/debenhams/04.jpg',
+      images: ['assets/live/products/debenhams/01.jpg', 'assets/live/products/debenhams/02.jpg', 'assets/live/products/debenhams/03.jpg', 'assets/live/products/debenhams/04.jpg'],
+      result: 'assets/live/products/debenhams/04.jpg',
       url: 'https://www.debenhams.com/product/wallis-floral-satin-midi-dress_byy17851?colour=brown' }
   },
   boohoo: {
@@ -41,7 +41,7 @@ window.VTO_BRANDS = {
     product: { brand: 'DSGN Studio', title: 'DSGN Studio Stripe Football Jersey', price: '£12.00', was: '£15.00', save: '-20%', colour: 'Light Blue',
       sizes: [['XS', 0], ['S', 0], ['M', 1], ['L', 1], ['XL', 1]], sel: 'S',
       crumbs: ['Home', 'Womens', 'Womens Clothing', 'Tops', 'T-Shirts'],
-      images: ['assets/products/boohoo/01.jpg', 'assets/products/boohoo/02.jpg', 'assets/products/boohoo/03.jpg', 'assets/products/boohoo/04.jpg'],
+      images: ['assets/live/products/boohoo/01.jpg', 'assets/live/products/boohoo/02.jpg', 'assets/live/products/boohoo/03.jpg', 'assets/live/products/boohoo/04.jpg'],
       result: 'assets/img/result-jersey.png',
       url: 'https://www.boohoo.com/product/dsgn-studio-dsgn-studio-stripe-football-jersey_xtt01659?colour=light+blue' }
   },
@@ -58,8 +58,8 @@ window.VTO_BRANDS = {
     product: { brand: 'boohooMAN', title: 'Muscle Fit Long Sleeve Shirt', price: '£16.00', was: '£20.00', save: '-20%', colour: 'White',
       sizes: [['XS', 0], ['S', 0], ['M', 0], ['L', 0], ['XL', 0], ['2XL', 0], ['3XL', 0], ['4XL', 0], ['5XL', 0]], sel: 'M',
       crumbs: ['Home', 'Mens', 'Shirts'],
-      images: ['assets/products/boohooman/01.jpg', 'assets/products/boohooman/02.jpg', 'assets/products/boohooman/03.jpg', 'assets/products/boohooman/04.jpg'],
-      result: 'assets/products/boohooman/04.jpg',
+      images: ['assets/live/products/boohooman/01.jpg', 'assets/live/products/boohooman/02.jpg', 'assets/live/products/boohooman/03.jpg', 'assets/live/products/boohooman/04.jpg'],
+      result: 'assets/live/products/boohooman/04.jpg',
       url: 'https://www.boohooman.com/product/boohooman-muscle-fit-long-sleeve-shirt_cmm23021?colour=white' }
   },
   plt: {
@@ -79,8 +79,8 @@ window.VTO_BRANDS = {
     product: { brand: 'PrettyLittleThing', title: 'Chocolate Satin Lace Cup Detail Midi Dress', price: '£20.00', was: '£25.00', save: '-20%', colour: 'Chocolate',
       sizes: [['4', 0], ['6', 0], ['8', 1], ['10', 0], ['12', 0], ['14', 0], ['16', 0]], sel: '10',
       crumbs: ['Home', 'Dresses', 'Midi Dresses'],
-      images: ['assets/products/plt/01.jpg', 'assets/products/plt/02.jpg', 'assets/products/plt/03.jpg', 'assets/products/plt/04.jpg'],
-      result: 'assets/products/plt/01.jpg',
+      images: ['assets/live/products/plt/01.jpg', 'assets/live/products/plt/02.jpg', 'assets/live/products/plt/03.jpg', 'assets/live/products/plt/04.jpg'],
+      result: 'assets/live/products/plt/01.jpg',
       url: 'https://www.prettylittlething.com/product/satin-lace-cup-detail-midi-dress_plt01593?colour=chocolate' }
   },
   karenmillen: {
@@ -99,8 +99,8 @@ window.VTO_BRANDS = {
     product: { brand: 'KarenMillen', title: 'Tailored Printed Satin Viscose Belted Maxi Shirt Dress', price: '£249.00', was: '', save: '', colour: 'Multi',
       sizes: [['6', 0], ['8', 0], ['10', 0], ['12', 0], ['14', 0], ['16', 0], ['18', 0]], sel: '10',
       crumbs: ['Satin Dresses', 'Long Sleeve Satin Dresses'],
-      images: ['assets/products/karenmillen/01.jpg', 'assets/products/karenmillen/02.jpg', 'assets/products/karenmillen/03.jpg', 'assets/products/karenmillen/04.jpg'],
-      result: 'assets/products/karenmillen/03.jpg',
+      images: ['assets/live/products/karenmillen/01.jpg', 'assets/live/products/karenmillen/02.jpg', 'assets/live/products/karenmillen/03.jpg', 'assets/live/products/karenmillen/04.jpg'],
+      result: 'assets/live/products/karenmillen/03.jpg',
       url: 'https://www.karenmillen.com/product/karen-millen-tailored-printed-satin-viscose-belted-maxi-shirt-dress_bkk31510?colour=multi' }
   },
   dorothyperkins: {
@@ -118,8 +118,8 @@ window.VTO_BRANDS = {
     product: { brand: 'Dorothy Perkins', title: 'Petite Berry Ditsy Flutter Sleeve Frill Yoke Printed Chiffon Midaxi Dress', price: '£22.00', was: '£45.00', save: 'Save 51%', colour: 'Berry',
       sizes: [['8', 0], ['10', 0], ['12', 0], ['14', 0], ['16', 0], ['18', 0]], sel: '12',
       crumbs: ['Dresses', 'Chiffon Dresses'],
-      images: ['assets/products/dorothyperkins/01.jpg', 'assets/products/dorothyperkins/02.jpg', 'assets/products/dorothyperkins/03.jpg', 'assets/products/dorothyperkins/04.jpg'],
-      result: 'assets/products/dorothyperkins/01.jpg',
+      images: ['assets/live/products/dorothyperkins/01.jpg', 'assets/live/products/dorothyperkins/02.jpg', 'assets/live/products/dorothyperkins/03.jpg', 'assets/live/products/dorothyperkins/04.jpg'],
+      result: 'assets/live/products/dorothyperkins/01.jpg',
       url: 'https://www.dorothyperkins.com/product/dorothy-perkins-petite-berry-ditsy-flutter-sleeve-frill-yoke-printed-chiffon-midaxi-dress_bqq23692?colour=berry' }
   },
   coast: {
@@ -137,8 +137,8 @@ window.VTO_BRANDS = {
     product: { brand: 'Coast', title: 'Pleat Detail Lace Trim Maxi Dress', price: '£50.00', was: '£129.00', save: 'Save 61%', colour: 'Flame Red',
       sizes: [['8', 0], ['10', 0], ['12', 1], ['14', 1], ['16', 0], ['18', 1]], sel: '10',
       crumbs: ['Summer Dresses', 'Long Summer Dresses'],
-      images: ['assets/products/coast/01.jpg', 'assets/products/coast/02.jpg', 'assets/products/coast/03.jpg', 'assets/products/coast/04.jpg'],
-      result: 'assets/products/coast/01.jpg',
+      images: ['assets/live/products/coast/01.jpg', 'assets/live/products/coast/02.jpg', 'assets/live/products/coast/03.jpg', 'assets/live/products/coast/04.jpg'],
+      result: 'assets/live/products/coast/01.jpg',
       url: 'https://www.coastfashion.com/product/coast-pleat-detail-lace-trim-maxi-dress_bcc12445?colour=flame%20red' }
   }
 };
