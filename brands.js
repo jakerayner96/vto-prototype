@@ -65,6 +65,8 @@ window.VTO_BRANDS = {
   plt: {
     name: 'PrettyLittleThing', domain: 'prettylittlething.com', logoH: 22, font: "'Roboto', sans-serif", theme: 'light',
     weights: { body: 400, med: 400, bold: 700, btn: 600 }, caseBtn: 'uppercase', radius: '0px', stars: false,
+    /* PLT chip (Figma 15203-71920): filled primary rectangle, left-aligned under the gallery, Roboto 12px uppercase white, white hanger */
+    chip: { bg: '#550503', ink: '#fff', icon: '#fff', radius: '0', size: '12px', weight: 400, case: 'uppercase', align: 'flex-start' },
     tokens: { primary: '#550503', primaryInk: '#fff', cta: '#550503', outline: '#360502', check: '#550503', vto: '#550503',
       bodyBg: '#fffdf7', white: '#fffdf7', grey05: '#faf5e7', badgeBg: 'transparent', badgeInk: '#c90000', price: '#c90000',
       banner1Bg: '#f1c59e', banner1Ink: '#000', banner2Bg: '#ffe4d2', banner2Ink: '#000',

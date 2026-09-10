@@ -15,6 +15,8 @@ Read `README.md` first. Multi-fascia Virtual Try On journey, re-cut on 10 Sep 20
 - Icons render in fixed square boxes (12/16/20/24/32) with `object-fit: contain`; Figma SVG exports have `preserveAspectRatio="none"` stripped at ingest.
 - Camera screens use the system font on purpose (native iOS UI). Everything else uses the fascia font.
 - No emojis. No em dashes in copy. Copy is instructional, not marketing.
+- The consent checkbox never disables Camera / Upload (Jake, 10 Sep).
+- PDP chip treatment is per fascia (`chip` in brands.js): PLT filled primary rectangle, left-aligned, 12px uppercase; the others a centred white pill.
 - Five try-ons a day, one photo per try-on. No Add Another Photo, no Virtual Wardrobe, no account page. Do not bring them back without a brief.
 - Result image = `product.result` (a full-length model shot) or the first product image. boohoo keeps the real generated look from Figma (`assets/img/result-jersey.png`).
 - Camera: real `getUserMedia`; a pending permission prompt falls back to `assets/img/bodyshot.png` after 2.5s so the flow demos headless and on desktop.
