@@ -16,7 +16,9 @@ Read `README.md` first. Multi-fascia Virtual Try On journey, re-cut on 10 Sep 20
 - Icons render in fixed square boxes (12/16/20/24/32) with `object-fit: contain`; Figma SVG exports have `preserveAspectRatio="none"` stripped at ingest.
 - Camera screens use the system font on purpose (native iOS UI). Everything else uses the fascia font.
 - No emojis. No em dashes in copy. Copy is instructional, not marketing.
-- The consent checkbox never disables Camera / Upload; the whole consent row is the tap target, only the T&Cs / Privacy links are exempt (Jake, 10 Sep).
+- Add a Photo carries the AI disclaimer ("You are interacting with generative AI technology. By continuing...", links in the button colour) instead of the 18+ consent checkbox, plus the 5-a-day line (Jake, 22 Oct 2026; core-brand frames Section 1, Figma 15694-22630). No My Wardrobe copy, no add-photo rail button.
+- Core-brand overlay colours follow Section 1: boohoo pink #F8B5CC with black ink, Debenhams aqua, PLT garnet on a square cream sheet, boohooMAN white. KM buttons are black (DS rule, 21 Oct). The loading progress fill is always the button colour (`--sheet-cta`).
+- Result watermark: white, 70%, 103px wide, Figma 15550-23882 slot (x 143 / y 632 of 390 x 844 = centred, 180px off the bottom), every fascia.
 - Switching fascia in the shell re-skins in place — never reset the journey to the PDP (Jake, 10 Sep).
 - Size and swatch rows run edge to edge and scroll off the right margin — never clipped (Jake, 10 Sep).
 - PDP chip treatment is per fascia (`chip` in brands.js): PLT filled primary rectangle, left-aligned, 12px uppercase; the others a centred white pill.

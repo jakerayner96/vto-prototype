@@ -10,11 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="live-pdp.css">
-<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;600&family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Jost:wght@400;500;600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Jost:wght@400;500;600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* ---- brand slots: filled from brands.js at load (applyBrand) ---- */
   :root{
-    --font:'Montserrat',sans-serif; --w-body:400; --w-med:500; --w-bold:700; --w-btn:600; --case-btn:uppercase; --radius:4px;
+    --font:'Montserrat',sans-serif; --w-body:400; --w-med:500; --w-bold:700; --w-btn:600; --w-size:500; --case-btn:uppercase; --radius:4px; --sheet-radius:12px;
     --primary:#000; --primary-ink:#fff; --cta:#000; --outline:#000; --check:#000; --vto:#000;
     --body-bg:#fff; --white:#fff; --grey-05:#fafafa; --grey-1:#f2f2f2; --grey-2:#e7e7e7; --grey-25:#d6d6d6; --grey-3:#b5b5b5; --grey-4:#767676; --grey-5:#6b6b6b; --grey-6:#323232; --soft-black:#242424;
     --red:#d33f3f; --badge-bg:#fff2f2; --badge-ink:#d33f3f; --price:#d33f3f;
@@ -23,7 +23,7 @@
     /* VTO overlay sheet (dark theme defaults; light theme overrides below) */
     --sheet-bg:linear-gradient(162.7deg,#0f0f0f 3.09%,#131313 100%); --sheet-ink:#fff; --sheet-sub:#fff; --sheet-note:#b5b5b5;
     --size-bg:#242424; --size-ink:#fff; --size-border:transparent; --oos-ink:#6b6b6b; --oos-stroke:#6b6b6b;
-    --sheet-cta:#fff; --sheet-cta-ink:#000; --sheet-sel:#fff; --sheet-sel-ink:#000; --sheet-link:#fff; --progress:#fff;
+    --sheet-cta:#fff; --sheet-cta-ink:#000; --sheet-sel:#fff; --sheet-sel-ink:#000; --sheet-link:#fff;
     --check-bg:#fff; --check-border:#b5b5b5;
     --ease-sheet:cubic-bezier(0.32,0.72,0,1);
   }
@@ -54,6 +54,7 @@
   .grad-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.8),rgba(0,0,0,.8)),linear-gradient(90deg,#e0dedc,#e0dedc);overflow:hidden;}
   .blur-img{position:absolute;left:calc(50% - 14px);top:calc(50% + 1px);transform:translate(-50%,-50%);opacity:.2;filter:blur(10.5px);}
   .blur-img.landing{width:148%;height:102%;}
+  .vto.light #scrLanding .grad-bg{background:var(--grey-05);}
   .blur-img.loading{width:156%;height:108%;}
   .blur-img img{width:100%;height:100%;object-fit:cover;display:block;}
   .circle-btn{position:absolute;width:32px;height:32px;cursor:pointer;backdrop-filter:blur(2px);border:none;background:transparent;padding:0;border-radius:50%;}
@@ -67,19 +68,14 @@
   .vto.light .circle-btn .ring{display:none;}
   .vto.light .circle-btn .glyph{filter:brightness(0);}
 
-  /* intro sheet: Add a Photo + consent (Figma 15578-1559) */
-  .vto-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:12px 12px 0 0;background:var(--sheet-bg);display:flex;flex-direction:column;gap:16px;padding:20px 24px calc(24px + env(safe-area-inset-bottom, 0px));}
+  /* intro sheet: Add a Photo + AI disclaimer (core-brand frames, Section 1 15694-22630, 22 Oct 2026) */
+  .vto-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;background:var(--sheet-bg);display:flex;flex-direction:column;gap:20px;padding:20px 24px calc(24px + env(safe-area-inset-bottom, 0px));}
   .vto-sheet .h1{font-size:28px;font-weight:var(--w-bold);color:var(--sheet-ink);line-height:normal;}
   .vto-sheet .helper{display:flex;flex-direction:column;gap:4px;}
   .vto-sheet .sub{font-size:13.5px;font-weight:var(--w-med);color:var(--sheet-sub);line-height:1.35;}
-  .consent{display:flex;gap:16px;align-items:center;width:100%;cursor:pointer;-webkit-tap-highlight-color:transparent;} /* the whole row toggles (Jake 10 Sep); only the T&Cs / Privacy Policy links are exempt */
-  .checkbox{width:24px;height:24px;flex-shrink:0;border-radius:3px;background:var(--check-bg);border:1px solid var(--check-border);position:relative;cursor:pointer;padding:0;transition:background .15s,border-color .15s;}
-  .checkbox svg{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .15s;}
-  .checkbox.on{background:var(--check);border-color:var(--check);}
-  .checkbox.on svg{opacity:1;}
-  .consent p{flex:1;font-size:12px;font-weight:var(--w-body);color:var(--sheet-note);line-height:normal;}
-  .consent a{color:var(--sheet-link);text-decoration:none;cursor:pointer;}
-  .vto-sheet .btn-block{display:flex;flex-direction:column;gap:12px;width:100%;}
+  .disclaimer{width:100%;font-size:12px;font-weight:var(--w-body);color:var(--sheet-note);text-align:center;line-height:normal;}
+  .disclaimer a{color:var(--sheet-link);text-decoration:none;cursor:pointer;}
+  .vto-sheet .btn-block{display:flex;flex-direction:column;gap:20px;width:100%;}
   .vto-btn-row{display:flex;gap:8px;width:100%;}
   .btn-sheet{flex:1;height:50px;background:var(--sheet-cta);border:none;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 24px;cursor:pointer;transition:opacity .2s;}
   .btn-sheet img{width:20px;height:20px;display:block;flex-shrink:0;}
@@ -96,7 +92,7 @@
   @keyframes aiPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.55;transform:scale(.92);}}
   .vto-status .headline{font-size:20px;font-weight:var(--w-bold);color:#fff;text-align:center;width:100%;}
   .prog-track{width:240px;height:6px;background:var(--grey-5);border-radius:100px;overflow:hidden;}
-  .prog-fill{height:6px;width:0;background:var(--progress);border-radius:100px;transition:width .35s ease;}
+  .prog-fill{height:6px;width:0;background:var(--sheet-cta);border-radius:100px;transition:width .35s ease;}
   .vto-status .cap{font-size:11.5px;font-weight:var(--w-body);color:var(--grey-3);text-align:center;line-height:normal;}
   .tries-line{font-size:11.5px;font-weight:var(--w-body);color:var(--grey-3);text-align:center;line-height:normal;}
   .tries-line.last{color:#fff;}
@@ -113,16 +109,16 @@
   .result-canvas img{width:100%;height:100%;object-fit:cover;display:block;}
   .vto-screen.result.active .result-canvas img{animation:reveal .5s ease both;}
   @keyframes reveal{from{transform:scale(1.03);opacity:.4;}to{transform:scale(1);opacity:1;}}
-  .watermark{position:absolute;left:50%;bottom:180px;transform:translateX(-50%);height:32px;width:116px;display:flex;align-items:center;justify-content:center;opacity:.7;pointer-events:none;}
-  .watermark img{max-width:100%;max-height:100%;height:auto;filter:brightness(0) invert(1);}
-  .vto.light .watermark img{filter:brightness(0) saturate(0) brightness(.25);}
-  .result-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:12px 12px 0 0;background:var(--sheet-bg);display:flex;flex-direction:column;gap:20px;padding:20px 24px calc(24px + env(safe-area-inset-bottom, 0px));}
+  /* watermark (Figma 15550-23882): 103 x 32 slot at x 143 / y 632 of the 390 x 844 result = centred, 180px above the bottom; logo 103px wide, white, 70% — every fascia */
+  .watermark{position:absolute;left:50%;bottom:180px;transform:translateX(-50%);height:32px;width:103px;display:flex;align-items:center;justify-content:center;opacity:.7;pointer-events:none;}
+  .watermark img{width:103px;max-height:32px;height:auto;filter:brightness(0) invert(1);}
+  .result-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:var(--sheet-radius) var(--sheet-radius) 0 0;background:var(--sheet-bg);display:flex;flex-direction:column;gap:20px;padding:20px 24px calc(24px + env(safe-area-inset-bottom, 0px));}
   .vto-sheet,.result-sheet{transform:translateY(110%);transition:transform .42s var(--ease-sheet);will-change:transform;}
   .vto-sheet.in,.result-sheet.in{transform:translateY(0);}
   .result-sizes{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
   .result-sizes::-webkit-scrollbar{display:none;}
   .rsize{flex:1 1 0;min-width:52px;height:50px;background:var(--size-bg);border:1px solid var(--size-border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;}
-  .rsize span{font-size:16px;font-weight:var(--w-med);color:var(--size-ink);}
+  .rsize span{font-size:16px;font-weight:var(--w-size);color:var(--size-ink);}
   .rsize.sel{background:var(--sheet-sel);border-color:var(--sheet-sel);}
   .rsize.sel span{color:var(--sheet-sel-ink);}
   .rsize.oos{cursor:default;}
@@ -221,7 +217,7 @@
   <!-- ================= VIRTUAL STYLIST ================= -->
   <div class="vto" id="vto">
 
-    <!-- 1: Add a Photo + consent -->
+    <!-- 1: Add a Photo + AI disclaimer -->
     <div class="vto-screen active" id="scrLanding">
       <div class="grad-bg"><div class="blur-img landing"><img id="landingBlurImg" alt=""></div></div>
       <div class="vto-sheet" id="landingSheet">
@@ -229,17 +225,12 @@
           <p class="h1">Add a Photo</p>
           <p class="sub">A full-length image, plain background and good light works best.</p>
         </div>
-        <div class="consent" onclick="toggleConsent()" role="checkbox" aria-checked="false" id="consentRow">
-          <button class="checkbox" id="consent" tabindex="-1" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12.5l3.5 3.5 7.5-8" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <p>I'm 18 or over and consent to my photo(s) being processed by <span id="consentBrand"></span> and its AI providers to create my virtual try-on. I accept and understand the <a href="#" onclick="event.stopPropagation();event.preventDefault()">Terms &amp; Conditions</a> and <a href="#" onclick="event.stopPropagation();event.preventDefault()">Privacy Policy</a>.</p>
-        </div>
         <div class="btn-block">
           <div class="vto-btn-row">
             <button class="btn-sheet" id="btnCamera" onclick="openCamera()"><img src="assets/icons/camera.svg" alt=""><span>Camera</span></button>
             <button class="btn-sheet" id="btnUpload" onclick="openLibrary()"><img src="assets/icons/upload.svg" alt=""><span>Upload</span></button>
           </div>
+          <p class="disclaimer">You are interacting with generative AI technology.<br>By continuing, you confirm that you accept and understand the <a href="#" onclick="event.preventDefault()">Terms &amp; Conditions</a> and <a href="#" onclick="event.preventDefault()">Privacy Policy</a>.</p>
           <p class="tries-note" id="landingTries">Max 5 try-ons per day. Images generated by AI</p>
         </div>
       </div>
@@ -362,13 +353,13 @@
     document.documentElement.setAttribute('data-brand', key);
     document.title = 'Virtual Stylist · ' + B.name;
     var t = B.tokens, w = B.weights;
-    setVar('--font', B.font); setVar('--w-body', w.body); setVar('--w-med', w.med); setVar('--w-bold', w.bold); setVar('--w-btn', w.btn);
-    setVar('--case-btn', B.caseBtn); setVar('--radius', B.radius); setVar('--logo-h', B.logoH + 'px');
+    setVar('--font', B.font); setVar('--w-body', w.body); setVar('--w-med', w.med); setVar('--w-bold', w.bold); setVar('--w-btn', w.btn); setVar('--w-size', w.size || w.med);
+    setVar('--case-btn', B.caseBtn); setVar('--radius', B.radius); setVar('--sheet-radius', B.sheetRadius || '12px'); setVar('--logo-h', B.logoH + 'px');
     var map = { primary:'--primary', primaryInk:'--primary-ink', cta:'--cta', outline:'--outline', check:'--check', vto:'--vto', bodyBg:'--body-bg', white:'--white', grey05:'--grey-05',
       badgeBg:'--badge-bg', badgeInk:'--badge-ink', price:'--price', banner1Bg:'--banner1-bg', banner1Ink:'--banner1-ink', banner2Bg:'--banner2-bg', banner2Ink:'--banner2-ink',
       dplusBg:'--dplus-bg', dplusInk:'--dplus-ink', dplusLink:'--dplus-link',
       sheetBg:'--sheet-bg', sheetInk:'--sheet-ink', sheetSub:'--sheet-sub', sheetNote:'--sheet-note', sizeBg:'--size-bg', sizeInk:'--size-ink', sizeBorder:'--size-border', oosInk:'--oos-ink', oosStroke:'--oos-stroke',
-      sheetCta:'--sheet-cta', sheetCtaInk:'--sheet-cta-ink', sheetSel:'--sheet-sel', sheetSelInk:'--sheet-sel-ink', sheetLink:'--sheet-link', progress:'--progress' };
+      sheetCta:'--sheet-cta', sheetCtaInk:'--sheet-cta-ink', sheetSel:'--sheet-sel', sheetSelInk:'--sheet-sel-ink', sheetLink:'--sheet-link' };
     /* reset the sheet slots to the dark defaults, then apply the brand */
     var dark = { sheetBg:'linear-gradient(162.7deg,#0f0f0f 3.09%,#131313 100%)', sheetInk:'#fff', sheetSub:'#fff', sheetNote:'#b5b5b5', sizeBg:'#242424', sizeInk:'#fff', sizeBorder:'transparent', oosInk:'#6b6b6b', oosStroke:'#6b6b6b' };
     var light = { sheetNote:'#6b6b6b', oosStroke:'#b5b5b5' };
@@ -385,7 +376,6 @@
     if (LB){ P = Object.assign({}, B.product, LB.product, { result: B.product.result || LB.product.result || LB.product.images[0] }); }
     if (LB){ LivePDP.render(document.getElementById('pdp'), key, { chip: document.getElementById('chipTpl').innerHTML, sizeSel: P.sel, onSize: function(l){ syncSize(l); }, onAddToBag: function(){ addToBag(); } }); }
     document.getElementById('wmImg').src = 'assets/brands/' + key + '.svg';
-    document.getElementById('consentBrand').textContent = B.name;
     var full = !P.was;
     document.getElementById('resultSizes').innerHTML = P.sizes.map(function(s){ return '<button class="rsize' + (s[1] ? ' oos' : '') + (s[0] === P.sel ? ' sel' : '') + '"' + (s[1] ? '' : ' onclick="selSize(this)"') + '><span>' + esc(s[0]) + '</span></button>'; }).join('');
     document.getElementById('resultImg').src = P.result;
@@ -448,12 +438,8 @@
   function setStep(s){ current = s; postState(); }
   function postState(){ if (window.parent !== window){ window.parent.postMessage({ vtoState: { brand: BRAND, step: current, tries: triesUsed, look: genState === 'ready' } }, '*'); } }
 
-  /* ---------- consent ---------- */
-  function toggleConsent(){
-    consent = !consent;
-    document.getElementById('consent').classList.toggle('on', consent);
-    document.getElementById('consentRow').setAttribute('aria-checked', consent);
-  }
+  /* ---------- consent: the AI disclaimer replaced the 18+ checkbox (Jake 22 Oct 2026); continuing = accepting, so it is always on ---------- */
+  function toggleConsent(){ consent = true; }
 
   /* ---------- open / close ---------- */
   function chipTap(){

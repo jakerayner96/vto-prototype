@@ -10,13 +10,13 @@
 window.VTO_BRANDS = {
   debenhams: {
     name: 'Debenhams', domain: 'debenhams.com', logoH: 16, font: "'Geologica', sans-serif", theme: 'dark',
-    weights: { body: 300, med: 300, bold: 600, btn: 600 }, caseBtn: 'uppercase', radius: '4px', stars: true,
+    weights: { body: 300, med: 300, bold: 600, btn: 600, size: 500 }, caseBtn: 'uppercase', radius: '4px', stars: true, /* Section 1 15694-22280: sizes Medium */
     tokens: { primary: '#7be7d8', primaryInk: '#000', cta: '#00787d', outline: '#70beb3', check: '#00787d', vto: '#00787d',
       bodyBg: '#fff', white: '#fff', grey05: '#fafafa', badgeBg: '#fff2f2', badgeInk: '#d33f3f', price: '#d33f3f',
       banner1Bg: '#fafafa', banner1Ink: '#000', banner2Bg: '#000', banner2Ink: '#fff',
       dplusBg: '#e8f4f2', dplusInk: '#000', dplusLink: '#00787d',
       /* dark sheet (Figma 15534-23066): aqua selected size + CTA with black ink; live CTA is #7BE7D8 / #000 too */
-      sheetCta: '#7be7d8', sheetCtaInk: '#000', sheetSel: '#7be7d8', sheetSelInk: '#000', sheetLink: '#7be7d8', progress: '#7be7d8' },
+      sheetCta: '#7be7d8', sheetCtaInk: '#000', sheetSel: '#7be7d8', sheetSelInk: '#000', sheetLink: '#7be7d8' },
     usp: ['Free standard delivery on orders over £40', 'Up to 50% off in the Blue Cross Sale'],
     deliver: 'deb',
     product: { brand: 'Wallis', title: 'Floral Satin Midi Dress', price: '£39.00', was: '£65.00', save: 'Save 40%', colour: 'Brown',
@@ -34,8 +34,8 @@ window.VTO_BRANDS = {
       bodyBg: '#fff', white: '#fff', grey05: '#fafafa', badgeBg: '#fff2f2', badgeInk: '#d33f3f', price: '#d33f3f',
       banner1Bg: '#fafafa', banner1Ink: '#000', banner2Bg: '#000', banner2Ink: '#fff',
       dplusBg: '#ffe0eb', dplusInk: '#000', dplusLink: '#000',
-      /* mono fascia on the dark sheet: white CTA + white selected size (the boohooMAN Figma treatment, 15534-23067) */
-      sheetCta: '#fff', sheetCtaInk: '#000', sheetSel: '#fff', sheetSelInk: '#000', sheetLink: '#fff', progress: '#fff' },
+      /* core-brand frames (Section 1, 15694-22278/22277/22279, Jake 22 Oct 2026): boohoo pink #F8B5CC buttons, selected size, progress + links, black ink */
+      sheetCta: '#f8b5cc', sheetCtaInk: '#000', sheetSel: '#f8b5cc', sheetSelInk: '#000', sheetLink: '#f8b5cc' },
     usp: ['Free delivery on orders over £50', 'Up to 60% off everything · Code: FAST'],
     deliver: 'bh',
     /* the Figma product — keeps the real generated try-on result (result-jersey.png) */
@@ -48,12 +48,12 @@ window.VTO_BRANDS = {
   },
   boohooman: {
     name: 'boohooMAN', domain: 'boohooman.com', logoH: 10, font: "'Montserrat', sans-serif", theme: 'dark',
-    weights: { body: 400, med: 500, bold: 700, btn: 600 }, caseBtn: 'uppercase', radius: '4px', stars: false,
+    weights: { body: 400, med: 500, bold: 600, btn: 600 }, /* Section 1 15694-22283: title SemiBold */ caseBtn: 'uppercase', radius: '4px', stars: false,
     tokens: { primary: '#000', primaryInk: '#fff', cta: '#000', outline: '#000', check: '#000', vto: '#000',
       bodyBg: '#fff', white: '#fff', grey05: '#fafafa', badgeBg: '#fff2f2', badgeInk: '#d33f3f', price: '#d33f3f',
       banner1Bg: '#fafafa', banner1Ink: '#000', banner2Bg: '#000', banner2Ink: '#fff',
       dplusBg: '#101010', dplusInk: '#fff', dplusLink: '#fff',
-      sheetCta: '#fff', sheetCtaInk: '#000', sheetSel: '#fff', sheetSelInk: '#000', sheetLink: '#fff', progress: '#fff' },
+      sheetCta: '#fff', sheetCtaInk: '#000', sheetSel: '#fff', sheetSelInk: '#000', sheetLink: '#fff' },
     usp: ['Free UK delivery on orders over £50', 'Extra 15% off · Code: TAKE15'],
     deliver: 'bm',
     product: { brand: 'boohooMAN', title: 'Muscle Fit Long Sleeve Shirt', price: '£16.00', was: '£20.00', save: '-20%', colour: 'White',
@@ -65,7 +65,7 @@ window.VTO_BRANDS = {
   },
   plt: {
     name: 'PrettyLittleThing', domain: 'prettylittlething.com', logoH: 22, font: "'Roboto', sans-serif", theme: 'light',
-    weights: { body: 400, med: 400, bold: 700, btn: 600 }, caseBtn: 'uppercase', radius: '0px', stars: false,
+    weights: { body: 400, med: 500, bold: 700, btn: 600, size: 500 }, caseBtn: 'uppercase', radius: '0px', sheetRadius: '0px', stars: false, /* Section 1 15694-22285/22284: square sheet, Medium helper + sizes */
     /* PLT chip (Figma 15203-71920): filled primary rectangle, left-aligned under the gallery, Roboto 12px uppercase white, white hanger */
     chip: { bg: '#550503', ink: '#fff', icon: '#fff', radius: '0', size: '12px', weight: 400, case: 'uppercase', align: 'flex-start' },
     tokens: { primary: '#550503', primaryInk: '#fff', cta: '#550503', outline: '#360502', check: '#550503', vto: '#550503',
@@ -74,7 +74,7 @@ window.VTO_BRANDS = {
       dplusBg: '#e7ada2', dplusInk: '#000', dplusLink: '#000',
       /* light sheet (Figma 15534-23068): warm-white sheet, garnet selected size + CTA, grey-3 size borders */
       sheetBg: '#fffdf7', sheetInk: '#000', sheetSub: '#000', sizeBg: '#fffdf7', sizeInk: '#000', sizeBorder: '#b5b5b5', oosInk: '#b5b5b5',
-      sheetCta: '#550503', sheetCtaInk: '#fff', sheetSel: '#550503', sheetSelInk: '#fff', sheetLink: '#550503', progress: '#550503' },
+      sheetCta: '#550503', sheetCtaInk: '#fff', sheetSel: '#550503', sheetSelInk: '#fff', sheetLink: '#550503' },
     usp: ['Free next day delivery on orders over £60', 'Up to 70% off · Ends midnight'],
     deliver: 'plt',
     product: { brand: 'PrettyLittleThing', title: 'Chocolate Satin Lace Cup Detail Midi Dress', price: '£20.00', was: '£25.00', save: '-20%', colour: 'Chocolate',
@@ -87,14 +87,14 @@ window.VTO_BRANDS = {
   karenmillen: {
     name: 'Karen Millen', domain: 'karenmillen.com', logoH: 9, font: "'Jost', sans-serif", theme: 'light',
     weights: { body: 400, med: 500, bold: 600, btn: 400 }, caseBtn: 'none', radius: '4px', stars: true,
-    /* signed-off KM: Primary orange #D24508 primary CTAs (live still renders black); links/ticks #892D05; black outlines; black hanger */
-    tokens: { primary: '#d24508', primaryInk: '#fff', cta: '#892d05', outline: '#000', check: '#892d05', vto: '#000',
+    /* DS tokens.css (21 Oct 2026): every KM button is black (#000 / #242424 pressed), orange #D24508 stays the brand accent; links #892D05; black hanger */
+    tokens: { primary: '#000', primaryInk: '#fff', cta: '#000', outline: '#000', check: '#892d05', vto: '#000',
       bodyBg: '#fff', white: '#fff', grey05: '#fafafa', badgeBg: '#fff2f2', badgeInk: '#d33f3f', price: '#d33f3f',
       banner1Bg: '#fafafa', banner1Ink: '#000', banner2Bg: '#000', banner2Ink: '#fff',
       dplusBg: 'linear-gradient(90deg,#000 36%,#161616 100%)', dplusInk: '#fff', dplusLink: '#fff',
       /* light sheet (Figma 15534-23118: white sheet, grey-2 size borders, black selected size) */
       sheetBg: '#fff', sheetInk: '#000', sheetSub: '#000', sizeBg: '#fff', sizeInk: '#000', sizeBorder: '#e7e7e7', oosInk: '#b5b5b5',
-      sheetCta: '#d24508', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#892d05', progress: '#d24508' },
+      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#892d05' },
     usp: ['Complimentary delivery on orders over £100', 'Extra 10% off · Code: KMEXTRA10'],
     deliver: 'km',
     product: { brand: 'KarenMillen', title: 'Tailored Printed Satin Viscose Belted Maxi Shirt Dress', price: '£249.00', was: '', save: '', colour: 'Multi',
@@ -113,7 +113,7 @@ window.VTO_BRANDS = {
       banner1Bg: '#f8f8f8', banner1Ink: '#000', banner2Bg: '#000', banner2Ink: '#fff',
       dplusBg: '#f2f2f2', dplusInk: '#000', dplusLink: '#000',
       sheetBg: '#fff', sheetInk: '#000', sheetSub: '#000', sizeBg: '#fff', sizeInk: '#000', sizeBorder: '#e7e7e7', oosInk: '#b5b5b5',
-      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000', progress: '#000' },
+      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000' },
     usp: ['New Season: Up To 30% Off | Shop Now', 'Free standard delivery on orders over £50'],
     deliver: 'text',
     product: { brand: 'Dorothy Perkins', title: 'Petite Berry Ditsy Flutter Sleeve Frill Yoke Printed Chiffon Midaxi Dress', price: '£22.00', was: '£45.00', save: 'Save 51%', colour: 'Berry',
@@ -132,7 +132,7 @@ window.VTO_BRANDS = {
       banner1Bg: '#f8f8f8', banner1Ink: '#000', banner2Bg: '#000', banner2Ink: '#fff',
       dplusBg: '#f2f2f2', dplusInk: '#000', dplusLink: '#000',
       sheetBg: '#fff', sheetInk: '#000', sheetSub: '#000', sizeBg: '#fff', sizeInk: '#000', sizeBorder: '#e7e7e7', oosInk: '#b5b5b5',
-      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000', progress: '#000' },
+      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000' },
     usp: ['At Least 30% Off Shoes & Boots', 'Free UK delivery on orders over £75'],
     deliver: 'text',
     product: { brand: 'Coast', title: 'Pleat Detail Lace Trim Maxi Dress', price: '£50.00', was: '£129.00', save: 'Save 61%', colour: 'Flame Red',
@@ -151,7 +151,7 @@ window.VTO_BRANDS = {
       banner1Bg: '#313131', banner1Ink: '#f8f8f8', banner2Bg: '#323232', banner2Ink: '#fff',
       dplusBg: '#fdfff5', dplusInk: '#000', dplusLink: '#000',
       sheetBg: '#fff', sheetInk: '#000', sheetSub: '#000', sizeBg: '#fff', sizeInk: '#000', sizeBorder: '#e7e7e7', oosInk: '#b5b5b5',
-      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000', progress: '#000' },
+      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000' },
     usp: ['10% off your first order · Code: WH10', '15% off almost everything'],
     deliver: 'text',
     /* DS templates/products.js (captured 16 Oct 2026) */
