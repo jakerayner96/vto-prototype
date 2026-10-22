@@ -1,6 +1,6 @@
 /* Live PDP facts per fascia — generated from the 10 Sep 2026 live captures (DOM + computed styles + Algolia) by the session's build script;
    hand-tuned where the DOM lacked it (DP/Coast ticker strips from screenshots, membership art + Deliver+ lockups pulled from mediahub, PLT colour dots).
-   Products are real SKUs; prices/stock drift. Identical copies live in core-pdp-2026 and vto-prototype. */
+   Warehouse (22 Oct 2026) is built from debenhamsgroup.design: tokens.css, header.js, usp-live.js, footer.js, templates/products.js, PLP data. Products are real SKUs; prices/stock drift. Identical copies live in core-pdp-2026 and vto-prototype. */
 window.LIVE_BRANDS={
  "debenhams": {
   "name": "Debenhams",
@@ -2554,6 +2554,309 @@ window.LIVE_BRANDS={
    "copyright": "COAST",
    "legalName": "Coast"
   }
+ },
+ "warehouse": {
+  "name": "Warehouse",
+  "domain": "warehousefashion.com",
+  "font": "'Roboto', sans-serif",
+  "weights": {
+   "light": 300,
+   "reg": 300,
+   "med": 400,
+   "bold": 400,
+   "btn": 300
+  },
+  "caseBtn": "none",
+  "logo": "assets/live/brands/warehouse.svg",
+  "logoH": 16,
+  "ftLogoH": 20,
+  "wishIcon": "heart",
+  "oosBell": false,
+  "tokens": {
+   "primary": "#000",
+   "primaryInk": "#fff",
+   "radius": "4px",
+   "sale": "#d33f3f",
+   "was": "#000",
+   "navBg": "#fff",
+   "navFg": "#000",
+   "sizeBorder": "#e7e7e7"
+  },
+  "nav": [
+   "NEW ARRIVALS",
+   "CLOTHING",
+   "DRESSES",
+   "DAYWEAR",
+   "FORMAL",
+   "OUTLET"
+  ],
+  "banners": [
+   {
+    "text": "10% off your first order · Code: WH10",
+    "bg": "#313131",
+    "fg": "#f8f8f8"
+   }
+  ],
+  "card": {
+   "brand": true,
+   "pct": true
+  },
+  "product": {
+   "brand": "Warehouse",
+   "title": "Premium Blend Satin Tie Neck Bias Midaxi Dress",
+   "price": "£67.15",
+   "was": "£79.00",
+   "save": "Save 15%",
+   "colour": "Wine",
+   "crumbs": [
+    "Dresses",
+    "Satin Dresses"
+   ],
+   "sizes": [
+    [
+     "6",
+     0
+    ],
+    [
+     "8",
+     0
+    ],
+    [
+     "10",
+     0
+    ],
+    [
+     "12",
+     0
+    ],
+    [
+     "14",
+     0
+    ],
+    [
+     "16",
+     0
+    ],
+    [
+     "18",
+     0
+    ]
+   ],
+   "sel": "10",
+   "images": [
+    "assets/live/products/warehouse/01.jpg",
+    "assets/live/products/warehouse/02.jpg",
+    "assets/live/products/warehouse/03.jpg",
+    "assets/live/products/warehouse/04.jpg"
+   ],
+   "ndd": "11 hrs 22 mins",
+   "url": "https://www.warehousefashion.com/product/warehouse-premium-blend-satin-tie-neck-bias-midaxi-dress_bww09622?colour=wine",
+   "promo": [
+    "10% off your first order with code: WH10"
+   ],
+   "glance": [
+    "Self-tie choker neckline",
+    "Bias cut for fluid movement",
+    "Single dramatic fluted sleeve",
+    "Light-catching satin finish",
+    "Asymmetric bare shoulder detail"
+   ],
+   "desc": [
+    "Self-tie choker neckline",
+    "Bias cut for fluid movement",
+    "Single dramatic fluted sleeve",
+    "Light-catching satin finish",
+    "Asymmetric bare shoulder detail"
+   ],
+   "sku": "BWW09622",
+   "accordions": {
+    "Product Details & Care": "See the label for composition and care.",
+    "Delivery": "Standard delivery from £3.99 (4 working days). Next Day Delivery from £5.99 - order by midnight.",
+    "Returns": "Eligible for return within 21 days. Exclusions apply - see our returns policy."
+   }
+  },
+  "membership": null,
+  "deliver": {
+   "lockupImg": "assets/live/misc/seel-warehouse.svg",
+   "lockupH": 28,
+   "bg": "#FDFFF5",
+   "fg": "#000000",
+   "rule": "rgba(0,0,0,.15)",
+   "title": "Peace of mind, guaranteed",
+   "bullets": [
+    "Free & simple resale - recover value and give your items a second life",
+    "+14-day return extension",
+    "£5/day late delivery compensation",
+    "Full order coverage (lost, stolen, damaged) with instant payout on eligible claims"
+   ],
+   "more": "Learn More",
+   "quote": "“Refund was approved and back in my account the same day.” - Deliver+ customer",
+   "powered": false
+  },
+  "uspbox": [
+   {
+    "icon": "assets/live/icons/icons-order.svg",
+    "t14": "Delivery from 99p or Next Day from £5.99"
+   },
+   {
+    "icon": "assets/live/misc/calendar.png",
+    "t14": "Eligible for return within 21 days",
+    "t12": "Exclusions apply. Please see our <u>returns policy</u>"
+   }
+  ],
+  "bnpl": {
+   "badges": [
+    "paypal",
+    "klarna",
+    "clearpay"
+   ],
+   "terms": "18+, T&C apply. Credit subject to status.",
+   "more": "See more"
+  },
+  "recsAbove": [
+   {
+    "title": "Handpicked For You",
+    "type": "grid",
+    "items": [
+     {
+      "brand": "Warehouse",
+      "name": "Real Suede Oversized Blazer",
+      "price": "£249.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/01.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Jacquard Blouson Sleeve Mini Dress",
+      "price": "£89.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/02.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Viscose Draped Scarf Detail Cut-out Midaxi Dress",
+      "price": "£79.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/03.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Contrast Collar Corded Waist Detail Jacket",
+      "price": "£69.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/04.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Self Stripe Chiffon Sheer Layered Maxi Dress",
+      "price": "£55.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/05.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Tailored Duster Longline Coat",
+      "price": "£99.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/06.jpg"
+     }
+    ]
+   }
+  ],
+  "recsBelow": [
+   {
+    "title": "We Think You'll Like",
+    "type": "carousel",
+    "items": [
+     {
+      "brand": "Warehouse",
+      "name": "Satin Asymmetric Hem Scarf Neck Top",
+      "price": "£49.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/07.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Premium Dispersed Floral Beaded Maxi Dress",
+      "price": "£109.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/08.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Asymmetric One Shoulder Tie Neck Mini",
+      "price": "£65.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/09.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Print Mix Tie Neck Chiffon Panelled Maxi Dress",
+      "price": "£79.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/10.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Premium Satin Draped Cape Mini Dress",
+      "price": "£59.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/11.jpg"
+     },
+     {
+      "brand": "Warehouse",
+      "name": "Dropped Waist Fringed Hem Satin Midaxi Dress",
+      "price": "£75.00",
+      "was": null,
+      "img": "assets/live/recs/warehouse/12.jpg"
+     }
+    ]
+   }
+  ],
+  "reclinks": null,
+  "footer": {
+   "title": "Let's get to know each other",
+   "copy": "Sign up to receive emails from us, so you never miss out on the good stuff.",
+   "cta": "Subscribe",
+   "accordions": [
+    "Shopping with Warehouse",
+    "Customer Care",
+    "Privacy & Legal"
+   ],
+   "pay": [
+    "visa",
+    "mastercard",
+    "amex",
+    "maestro",
+    "visa-electron",
+    "apple-pay",
+    "payplus",
+    "paypal",
+    "klarna",
+    "clearpay",
+    "google-pay"
+   ],
+   "brandLogos": [
+    "debenhams",
+    "dorothyperkins",
+    "wallis",
+    "oasis",
+    "coast",
+    "burton",
+    "misspap"
+   ],
+   "apps": [
+    "appstore",
+    "googleplay"
+   ],
+   "social": [
+    "instagram",
+    "pintrest",
+    "facebook"
+   ],
+   "copyright": "WAREHOUSE",
+   "legalName": "Warehouse"
+  }
  }
 };
-window.LIVE_ORDER=['debenhams','boohoo','boohooman','plt','karenmillen','dorothyperkins','coast'];
+window.LIVE_ORDER=['debenhams','boohoo','boohooman','plt','karenmillen','dorothyperkins','coast','warehouse'];

@@ -5,6 +5,7 @@
    + 15578-1559 (Add a Photo with the consent checkbox).
    The overlay has two themes per Figma: dark sheet (Debenhams, boohoo, boohooMAN) and light sheet (PLT, Karen Millen).
    Dorothy Perkins and Coast are new (no Figma yet): mono live palette on the light sheet, like Karen Millen.
+   Warehouse (22 Oct 2026) follows the design system (debenhamsgroup.design tokens.css + templates/products.js) on the light sheet.
    Products are real live SKUs captured 10 Sep 2026 (prices/stock will drift); images are mediahub exports at w=800. */
 window.VTO_BRANDS = {
   debenhams: {
@@ -140,6 +141,26 @@ window.VTO_BRANDS = {
       images: ['assets/live/products/coast/01.jpg', 'assets/live/products/coast/02.jpg', 'assets/live/products/coast/03.jpg', 'assets/live/products/coast/04.jpg'],
       result: 'assets/live/products/coast/01.jpg',
       url: 'https://www.coastfashion.com/product/coast-pleat-detail-lace-trim-maxi-dress_bcc12445?colour=flame%20red' }
+  },
+  warehouse: {
+    name: 'Warehouse', domain: 'warehousefashion.com', logoH: 16, font: "'Roboto', sans-serif", theme: 'light',
+    weights: { body: 300, med: 400, bold: 400, btn: 300 }, caseBtn: 'none', radius: '4px', stars: false,
+    /* DS tokens.css (22 Oct 2026): Roboto 300 / 400, buttons 300 (Jake 12 Oct), black action, sentence-case CTAs, Deliver+ #FDFFF5; no membership */
+    tokens: { primary: '#000', primaryInk: '#fff', cta: '#000', outline: '#000', check: '#000', vto: '#000',
+      bodyBg: '#fff', white: '#fff', grey05: '#fafafa', badgeBg: '#fff2f2', badgeInk: '#d33f3f', price: '#d33f3f',
+      banner1Bg: '#313131', banner1Ink: '#f8f8f8', banner2Bg: '#323232', banner2Ink: '#fff',
+      dplusBg: '#fdfff5', dplusInk: '#000', dplusLink: '#000',
+      sheetBg: '#fff', sheetInk: '#000', sheetSub: '#000', sizeBg: '#fff', sizeInk: '#000', sizeBorder: '#e7e7e7', oosInk: '#b5b5b5',
+      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000', progress: '#000' },
+    usp: ['10% off your first order · Code: WH10', '15% off almost everything'],
+    deliver: 'text',
+    /* DS templates/products.js (captured 16 Oct 2026) */
+    product: { brand: 'Warehouse', title: 'Premium Blend Satin Tie Neck Bias Midaxi Dress', price: '£67.15', was: '£79.00', save: 'Save 15%', colour: 'Wine',
+      sizes: [['6', 0], ['8', 0], ['10', 0], ['12', 0], ['14', 0], ['16', 0], ['18', 0]], sel: '10',
+      crumbs: ['Dresses', 'Satin Dresses'],
+      images: ['assets/live/products/warehouse/01.jpg', 'assets/live/products/warehouse/02.jpg', 'assets/live/products/warehouse/03.jpg', 'assets/live/products/warehouse/04.jpg'],
+      result: 'assets/live/products/warehouse/04.jpg',
+      url: 'https://www.warehousefashion.com/product/warehouse-premium-blend-satin-tie-neck-bias-midaxi-dress_bww09622?colour=wine' }
   }
 };
-window.VTO_ORDER = ['debenhams', 'boohoo', 'boohooman', 'plt', 'karenmillen', 'dorothyperkins', 'coast'];
+window.VTO_ORDER = ['debenhams', 'boohoo', 'boohooman', 'plt', 'karenmillen', 'dorothyperkins', 'coast', 'warehouse'];

@@ -28,4 +28,4 @@ Read `README.md` first. Multi-fascia Virtual Try On journey, re-cut on 10 Sep 20
 
 - `python3 -m http.server 8000` (or `npm run serve`) — assets need HTTP.
 - `npm run tunnel` — HTTPS URL for on-device camera testing.
-- QA: headless Chrome against the local server, `vto.html?brand=<key>&step=<step>` at 390×844 with `--virtual-time-budget`, contact-sheet the seven fascias per step.
+- QA: headless Chrome against the local server, `vto.html?brand=<key>&step=<step>` at 390×844 with `--virtual-time-budget`, contact-sheet every fascia per step.
