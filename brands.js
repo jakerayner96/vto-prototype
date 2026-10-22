@@ -87,14 +87,14 @@ window.VTO_BRANDS = {
   karenmillen: {
     name: 'Karen Millen', domain: 'karenmillen.com', logoH: 9, font: "'Jost', sans-serif", theme: 'light',
     weights: { body: 400, med: 500, bold: 600, btn: 400 }, caseBtn: 'none', radius: '4px', stars: true,
-    /* DS tokens.css (21 Oct 2026): every KM button is black (#000 / #242424 pressed), orange #D24508 stays the brand accent; links #892D05; black hanger */
-    tokens: { primary: '#000', primaryInk: '#fff', cta: '#000', outline: '#000', check: '#892d05', vto: '#000',
+    /* DS tokens.css (22 Oct 2026): no orange on any KM button, link or control: buttons black (#242424 pressed), links black like the CTAs; orange #D24508 is the brand colour only; black hanger */
+    tokens: { primary: '#000', primaryInk: '#fff', cta: '#000', outline: '#000', check: '#000', vto: '#000',
       bodyBg: '#fff', white: '#fff', grey05: '#fafafa', badgeBg: '#fff2f2', badgeInk: '#d33f3f', price: '#d33f3f',
       banner1Bg: '#fafafa', banner1Ink: '#000', banner2Bg: '#000', banner2Ink: '#fff',
       dplusBg: 'linear-gradient(90deg,#000 36%,#161616 100%)', dplusInk: '#fff', dplusLink: '#fff',
       /* light sheet (Figma 15534-23118: white sheet, grey-2 size borders, black selected size) */
       sheetBg: '#fff', sheetInk: '#000', sheetSub: '#000', sizeBg: '#fff', sizeInk: '#000', sizeBorder: '#e7e7e7', oosInk: '#b5b5b5',
-      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#892d05' },
+      sheetCta: '#000', sheetCtaInk: '#fff', sheetSel: '#000', sheetSelInk: '#fff', sheetLink: '#000' },
     usp: ['Complimentary delivery on orders over £100', 'Extra 10% off · Code: KMEXTRA10'],
     deliver: 'km',
     product: { brand: 'KarenMillen', title: 'Tailored Printed Satin Viscose Belted Maxi Shirt Dress', price: '£249.00', was: '', save: '', colour: 'Multi',

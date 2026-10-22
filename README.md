@@ -42,7 +42,7 @@ Tokens come from the signed-off Colour Alignment set (colour-alignment-prototype
 | boohoo | PDP black / white; overlay pink `#F8B5CC` / black (core-brand frames, Figma 15694-22630) | `#444444` / white | Montserrat | dark, pink CTA |
 | boohooMAN | black / white | same | Montserrat | dark, white CTA |
 | PLT | `#550503` / white, 0px radius | same | Roboto | light (warm white) |
-| Karen Millen | black / white, sentence case, 400 (DS tokens.css 21 Oct 2026; orange stays the accent) | black / white | Jost | light |
+| Karen Millen | black / white, sentence case, 400; links black too, no orange on buttons or links (DS tokens.css 22 Oct 2026; orange is the brand colour only) | black / white | Jost | light |
 | Dorothy Perkins | black / white | same | Public Sans | light |
 | Coast | black / white | same | Roboto | light |
 | Warehouse | black / white, uppercase, 300 (DS tokens.css) | n/a: from the DS | Roboto 300/400 | light |
