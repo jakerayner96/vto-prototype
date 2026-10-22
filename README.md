@@ -1,9 +1,9 @@
 # Virtual Stylist (VTO) prototype
 
-The Virtual Try On journey as the **Virtual Stylist** entry point, built for eight fascias: Debenhams, boohoo, boohooMAN, PrettyLittleThing, Karen Millen, Dorothy Perkins, Coast and Warehouse. No build step.
+The Virtual Try On journey as the **Virtual Stylist** entry point, built for all 17 design-system fascias: Debenhams, boohoo, boohooMAN, PrettyLittleThing, Karen Millen, Dorothy Perkins, Coast, Warehouse, Debenhams Outlet, Wallis, Burton, Principles, Oasis, Misspap, DSGN Studio, Training Dept and The Brand Room. No build step.
 
 - **Review shell:** `index.html` — Jake's standard review format: fascia chips across the top bar with Desktop / Mobile, width presets, Full page / Fold, Restart, Screenshot and Export (zip with full-page 390 and 1440 PNGs of the current step). The left panel holds the journey steps (click to jump), the live product and notes. Fold view = iOS Safari frame (mobile widths only).
-- **Page:** `vto.html?brand=<key>[&step=<step>]` — PDP + the Virtual Stylist flow for one fascia. Brand keys: `debenhams boohoo boohooman plt karenmillen dorothyperkins coast warehouse`. Steps: `pdp intro camera review loading result bag limit`.
+- **Page:** `vto.html?brand=<key>[&step=<step>]` — PDP + the Virtual Stylist flow for one fascia. Brand keys: `debenhams boohoo boohooman plt karenmillen dorothyperkins coast warehouse debenhamsoutlet wallis burton principles oasis misspap dsgnstudio trainingdept brandroom`. Steps: `pdp intro camera review loading result bag limit`.
 - **Overlay config:** `brands.js` — one entry per fascia for the Virtual Stylist overlay: tokens, font, theme (dark/light sheet), chip treatment, result image.
 - **PDP:** rendered by the shared **live-PDP module** — `live-pdp.css` + `live-pdp.js` + `brands-live.js` (per-fascia live facts: chrome, USP strips, product, membership box, Deliver+, delivery & returns, BNPL, recommendation modules, description, footer) with assets under `assets/live/`. Identical copies live in core-pdp-2026 (`live.html`), so a change to the live PDP is made once and copied. The Virtual Stylist chip is injected under the gallery; sizes on the PDP and the try-on result share one selection.
 - **Repo:** github.com/jakerayner96/vto-prototype · **Pages:** jakerayner96.github.io/vto-prototype
@@ -45,7 +45,8 @@ Tokens come from the signed-off Colour Alignment set (colour-alignment-prototype
 | Karen Millen | black / white, sentence case, 400 (DS tokens.css 21 Oct 2026; orange stays the accent) | black / white | Jost | light |
 | Dorothy Perkins | black / white | same | Public Sans | light |
 | Coast | black / white | same | Roboto | light |
-| Warehouse | black / white, sentence case, 300 (DS tokens.css) | n/a: from the DS | Roboto 300/400 | light |
+| Warehouse | black / white, uppercase, 300 (DS tokens.css) | n/a: from the DS | Roboto 300/400 | light |
+| Outlet · Wallis · Burton · Principles · Oasis · Misspap · DSGN Studio · Training Dept · Brand Room | DS `--surface-action` / `--text-on-action` per fascia (Wallis + Principles #444444, Misspap #101820, the rest black), DS `--case-btn1` | live 22 Oct 2026 (Burton live #284D7B, DS wins) | DS font per fascia (Geologica, Urbanist, Montserrat, Lato, Hanken Grotesk, Archivo) | light |
 
 On the dark sheet a mono fascia's CTA and selected size render white with black ink (the boohooMAN Figma treatment). Where signed-off and live disagree (boohoo grey, Karen Millen black) the signed-off value is used and noted in `brands.js`.
 
