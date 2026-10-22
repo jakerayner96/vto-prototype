@@ -23,7 +23,7 @@
     /* VTO overlay sheet (dark theme defaults; light theme overrides below) */
     --sheet-bg:linear-gradient(162.7deg,#0f0f0f 3.09%,#131313 100%); --sheet-ink:#fff; --sheet-sub:#fff; --sheet-note:#b5b5b5;
     --size-bg:#242424; --size-ink:#fff; --size-border:transparent; --oos-ink:#6b6b6b; --oos-stroke:#6b6b6b;
-    --sheet-cta:#fff; --sheet-cta-ink:#000; --sheet-sel:#fff; --sheet-sel-ink:#000; --sheet-link:#fff;
+    --sheet-cta:#fff; --sheet-cta-ink:#000; --sheet-sel:#fff; --sheet-sel-ink:#000; --sheet-link:#fff; --loader:#fff;
     --check-bg:#fff; --check-border:#b5b5b5;
     --ease-sheet:cubic-bezier(0.32,0.72,0,1);
   }
@@ -93,14 +93,19 @@
   /* loading */
   .vto-status{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:16px;align-items:center;padding:8px 18px 18px;}
   .vto-status .ic32{width:32px;height:32px;position:relative;}
-  .vto-status .ic32 img{position:absolute;inset:9.38%;width:81.24%;height:81.24%;animation:aiPulse 1.8s ease-in-out infinite;}
+  .vto-status .ic32 .ai-glyph{position:absolute;inset:9.38%;width:81.24%;height:81.24%;color:var(--loader);animation:aiPulse 1.8s ease-in-out infinite;} /* AI sparkle = the fascia button colour (was the pink asset on every fascia) */
   @keyframes aiPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.55;transform:scale(.92);}}
   .vto-status .headline{font-size:20px;font-weight:var(--w-bold);color:#fff;text-align:center;width:100%;}
   .prog-track{width:240px;height:6px;background:var(--grey-5);border-radius:100px;overflow:hidden;}
-  .prog-fill{height:6px;width:0;background:var(--sheet-cta);border-radius:100px;transition:width .35s ease;}
+  .prog-fill{height:6px;width:0;background:var(--loader);border-radius:100px;transition:width .35s ease;}
   .vto-status .cap{font-size:11.5px;font-weight:var(--w-body);color:var(--grey-3);text-align:center;line-height:normal;}
   .tries-line{font-size:11.5px;font-weight:var(--w-body);color:var(--grey-3);text-align:center;line-height:normal;}
   .tries-line.last{color:#fff;}
+  /* light-sheet fascias: light loading ground (as their Add a Photo screen), so the button colour reads on it */
+  .vto.light #scrLoading .grad-bg{background:var(--grey-05);}
+  .vto.light .vto-status .headline,.vto.light .tries-line.last{color:var(--sheet-ink);}
+  .vto.light .vto-status .cap,.vto.light .tries-line{color:var(--sheet-note);}
+  .vto.light .prog-track{background:var(--grey-2);}
   #scrLoading .phase-b,#scrLoading .phase-c{display:none;}
   #scrLoading.creating .phase-a{display:none;}
   #scrLoading.creating .phase-b{display:block;}
@@ -275,7 +280,7 @@
     <div class="vto-screen" id="scrLoading">
       <div class="grad-bg"><div class="blur-img loading" id="loadingBlur"><img id="loadingBlurImg" src="assets/img/bodyshot.png" alt=""></div></div>
       <div class="vto-status">
-        <div class="ic32"><img id="aiIcon" src="assets/icons/ai.svg" alt=""></div>
+        <div class="ic32"><svg class="ai-glyph" id="aiIcon" viewBox="0 0 25.9979 25.9977" fill="none" aria-hidden="true"><path d="M6.59147 0.791395C6.5437 0.567446 6.42052 0.366674 6.24251 0.222631C6.06451 0.0785881 5.84246 0 5.61347 0C5.38448 0 5.16243 0.0785881 4.98442 0.222631C4.80642 0.366674 4.68324 0.567446 4.63547 0.791395C4.32614 2.25273 3.90213 3.23806 3.31547 3.9394C2.74347 4.6274 1.94347 5.13006 0.715468 5.49406C0.508816 5.5554 0.327515 5.68186 0.198585 5.85462C0.0696552 6.02737 0 6.23717 0 6.45273C0 6.66829 0.0696552 6.87808 0.198585 7.05084C0.327515 7.22359 0.508816 7.35006 0.715468 7.41139C1.89547 7.76073 2.6888 8.23406 3.27014 8.9114C3.86214 9.5994 4.3128 10.5914 4.63547 12.1141C4.68324 12.338 4.80642 12.5388 4.98442 12.6828C5.16243 12.8269 5.38448 12.9055 5.61347 12.9055C5.84246 12.9055 6.06451 12.8269 6.24251 12.6828C6.42052 12.5388 6.5437 12.338 6.59147 12.1141C6.91414 10.5901 7.3648 9.5994 7.9568 8.9114C8.53813 8.23406 9.33013 7.76073 10.5128 7.41139C10.7195 7.35006 10.9008 7.22359 11.0297 7.05084C11.1586 6.87808 11.2283 6.66829 11.2283 6.45273C11.2283 6.23717 11.1586 6.02737 11.0297 5.85462C10.9008 5.68186 10.7195 5.5554 10.5128 5.49406C9.33147 5.14473 8.53813 4.6714 7.9568 3.99406C7.3648 3.30606 6.91414 2.31406 6.59147 0.791395ZM17.6621 5.12606C17.6094 4.908 17.4849 4.71399 17.3086 4.57524C17.1323 4.43648 16.9145 4.36104 16.6901 4.36104C16.4658 4.36104 16.248 4.43648 16.0717 4.57524C15.8954 4.71399 15.7709 4.908 15.7181 5.12606C14.9795 8.18206 14.1968 10.0247 13.0888 11.3101C11.9955 12.5794 10.4928 13.4114 8.06214 14.2327C7.86399 14.2997 7.69184 14.4271 7.5699 14.5971C7.44797 14.767 7.38238 14.9709 7.38238 15.1801C7.38238 15.3892 7.44797 15.5931 7.5699 15.7631C7.69184 15.933 7.86399 16.0604 8.06214 16.1274C10.6008 16.9847 12.1235 17.8901 13.1981 19.1834C14.2901 20.4981 15.0141 22.3234 15.7181 25.2327C15.7709 25.4508 15.8954 25.6448 16.0717 25.7836C16.248 25.9223 16.4658 25.9977 16.6901 25.9977C16.9145 25.9977 17.1323 25.9223 17.3086 25.7836C17.4849 25.6448 17.6094 25.4508 17.6621 25.2327C18.4008 22.1781 19.1848 20.3354 20.2915 19.0501C21.3848 17.7807 22.8875 16.9487 25.3181 16.1274C25.5163 16.0604 25.6884 15.933 25.8104 15.7631C25.9323 15.5931 25.9979 15.3892 25.9979 15.1801C25.9979 14.9709 25.9323 14.767 25.8104 14.5971C25.6884 14.4271 25.5163 14.2997 25.3181 14.2327C22.7755 13.3741 21.2555 12.4727 20.1821 11.1794C19.0915 9.8674 18.3688 8.0434 17.6621 5.12606Z" fill="currentColor"/></svg></div>
         <p class="headline phase-a">Analysing your photo...</p>
         <p class="headline phase-b">Creating your outfit...</p>
         <p class="headline phase-c">Nearly ready!</p>
@@ -379,6 +384,11 @@
     var chip = Object.assign({}, chipDefaults, B.chip || {});
     Object.keys(chip).forEach(function(k){ setVar('--chip-' + k, chip[k]); });
     vto.classList.toggle('light', B.theme === 'light');
+    /* loader (progress fill + AI sparkle) = the fascia button colour, kept only if it clears 3:1 (WCAG non-text) against the loading ground */
+    var lum = function(h){ h = String(h).replace('#',''); if (h.length === 3) h = h.replace(/./g, '$&$&'); return [0,2,4].map(function(i){ var c = parseInt(h.substr(i,2),16)/255; return c <= .03928 ? c/12.92 : Math.pow((c+.055)/1.055, 2.4); }).reduce(function(a,c,i){ return a + c*[.2126,.7152,.0722][i]; }, 0); };
+    var ratio = function(a,b){ var x = lum(a), y = lum(b); return (Math.max(x,y)+.05)/(Math.min(x,y)+.05); };
+    var isLight = B.theme === 'light', ground = isLight ? (t.grey05 || '#fafafa') : '#2b2b2b', btn = t.sheetCta || (isLight ? '#000' : '#fff');
+    setVar('--loader', /^#[0-9a-f]{3,6}$/i.test(btn) && ratio(btn, ground) >= 3 ? btn : (isLight ? (t.sheetInk || '#000') : '#fff'));
     vto.setAttribute('data-cta-ink', (t.sheetCtaInk || '#000').toLowerCase() === '#000' ? 'dark' : 'light');
     /* PDP: the shared live module renders this fascia's production PDP; the Virtual Stylist chip sits under the gallery.
        The overlay's product (sizes, images, bag sheet) is the live product; only the try-on result image comes from brands.js. */
