@@ -3450,10 +3450,10 @@ window.LIVE_BRANDS={
   "wishIcon": "heart",
   "oosBell": false,
   "tokens": {
-   "primary": "#000000",
-   "primaryInk": "#ffffff",
+   "primary": "#284d7b",
+   "primaryInk": "#fff",
    "radius": "4px",
-   "link": "#000000",
+   "link": "#284d7b",
    "sale": "#d33f3f",
    "was": "#000",
    "navBg": "#333333",

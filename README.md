@@ -46,7 +46,7 @@ Tokens come from the signed-off Colour Alignment set (colour-alignment-prototype
 | Dorothy Perkins | black / white | same | Public Sans | light |
 | Coast | black / white | same | Roboto | light |
 | Warehouse | black / white, uppercase, 300 (DS tokens.css) | n/a: from the DS | Roboto 300/400 | light |
-| Outlet · Wallis · Burton · Principles · Oasis · DSGN Studio · Training Dept · Brand Room | DS `--surface-action` / `--text-on-action` per fascia (Wallis + Principles #444444, the rest black), DS `--case-btn1` | live 22 Oct 2026 (Burton live #284D7B, DS wins) | DS font per fascia (Geologica, Urbanist, Montserrat, Lato, Hanken Grotesk, Archivo) | light |
+| Outlet · Wallis · Burton · Principles · Oasis · DSGN Studio · Training Dept · Brand Room | DS `--surface-action` / `--text-on-action` per fascia (Burton navy #284D7B as live, DS 23 Oct; Wallis + Principles #444444; the rest black), DS `--case-btn1` | live 22 Oct 2026 | DS font per fascia (Geologica, Urbanist, Montserrat, Lato, Hanken Grotesk, Archivo) | light |
 
 On the dark sheet a mono fascia's CTA and selected size render white with black ink (the boohooMAN Figma treatment). Where signed-off and live disagree (boohoo grey, Karen Millen black) the signed-off value is used and noted in `brands.js`.
 
