@@ -71,7 +71,7 @@
     container.className = 'lpdp'; container.setAttribute('data-brand', key);
     var css = { '--lp-font': B.font, '--lp-w-light': B.weights.light, '--lp-w-reg': B.weights.reg, '--lp-w-med': B.weights.med, '--lp-w-bold': B.weights.bold, '--lp-w-btn': B.weights.btn, '--lp-case-btn': B.caseBtn || 'uppercase', '--lp-case-title': B.caseTitle || 'none',
       '--lp-primary': T.primary, '--lp-primary-ink': T.primaryInk, '--lp-radius': T.radius || '4px', '--lp-link': T.link || T.primary, '--lp-bg': T.bodyBg || '#fff', '--lp-surface': T.surface || '#fafafa', '--lp-media': T.media || '#f2f2f2',
-      '--lp-sale': T.sale || '#d33f3f', '--lp-was': T.was || '#6b6b6b', '--lp-badge-bg': T.badgeBg || '#fff2f2', '--lp-badge-ink': T.badgeInk || '#d33f3f', '--lp-size-border': T.sizeBorder || '#e5e7eb', '--lp-ft-band': T.ftBand || '#f8f8f8',
+      '--lp-sale': T.sale || '#c90000', '--lp-was': T.was || '#6b6b6b', '--lp-badge-bg': T.badgeBg || '#fff2f2', '--lp-badge-ink': T.badgeInk || '#c90000', '--lp-size-border': T.sizeBorder || '#e5e7eb', '--lp-ft-band': T.ftBand || '#f8f8f8',
       '--lp-logo-h': (B.logoH || 16) + 'px', '--lp-ft-logo-h': (B.ftLogoH || 20) + 'px', '--lp-hd-icon': (B.iconSize || 24) + 'px', '--lp-nav-bg': T.navBg || 'transparent', '--lp-nav-fg': T.navFg || '#000' };
     Object.keys(css).forEach(function(k){ if (css[k] !== undefined && css[k] !== null) container.style.setProperty(k, css[k]); });
 

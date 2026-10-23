@@ -9,7 +9,7 @@
   --lp-font:'Montserrat',sans-serif; --lp-w-light:300; --lp-w-reg:400; --lp-w-med:500; --lp-w-bold:600; --lp-w-btn:600; --lp-case-btn:uppercase; --lp-case-title:none;
   --lp-primary:#000; --lp-primary-ink:#fff; --lp-radius:4px; --lp-link:#000;
   --lp-bg:#fff; --lp-surface:#fafafa; --lp-media:#f2f2f2; --lp-grey-1:#f2f2f2; --lp-grey-2:#e7e7e7; --lp-grey-25:#d6d6d6; --lp-grey-3:#b5b5b5; --lp-grey-4:#767676; --lp-grey-5:#6b6b6b;
-  --lp-sale:#d33f3f; --lp-was:#6b6b6b; --lp-badge-bg:#fff2f2; --lp-badge-ink:#d33f3f; --lp-size-border:#e5e7eb;
+  --lp-sale:#c90000; --lp-was:#6b6b6b; --lp-badge-bg:#fff2f2; --lp-badge-ink:#c90000; --lp-size-border:#e5e7eb;
   --lp-ft-band:#f8f8f8; --lp-m:16px;
   font-family:var(--lp-font);color:#000;background:var(--lp-bg);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
 }
