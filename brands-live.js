@@ -1,6 +1,6 @@
 /* Live PDP facts per fascia — generated from the 10 Sep 2026 live captures (DOM + computed styles + Algolia) by the session's build script;
    hand-tuned where the DOM lacked it (DP/Coast ticker strips from screenshots, membership art + Deliver+ lockups pulled from mediahub, PLT colour dots).
-   Warehouse and the nine estate fascias added 22 Oct 2026 (Outlet, Wallis, Burton, Principles, Oasis, Misspap, DSGN Studio, Training Dept, Brand Room: live captures, DS products + tokens) are built from debenhamsgroup.design: tokens.css, header.js, usp-live.js, footer.js, templates/products.js, PLP data. Products are real SKUs; prices/stock drift. Identical copies live in core-pdp-2026 and vto-prototype. */
+   Warehouse and the nine estate fascias added 22 Oct 2026 (Outlet, Wallis, Burton, Principles, Oasis, DSGN Studio, Training Dept, Brand Room; Misspap removed 23 Oct 2026, gone from the Brand Centre: live captures, DS products + tokens) are built from debenhamsgroup.design: tokens.css, header.js, usp-live.js, footer.js, templates/products.js, PLP data. Products are real SKUs; prices/stock drift. Identical copies live in core-pdp-2026 and vto-prototype. */
 window.LIVE_BRANDS={
  "debenhams": {
   "name": "Debenhams",
@@ -345,7 +345,6 @@ window.LIVE_BRANDS={
     "oasis",
     "coast",
     "burton",
-    "misspap",
     "warehouse",
     "nastygal"
    ],
@@ -2203,7 +2202,6 @@ window.LIVE_BRANDS={
     "oasis",
     "coast",
     "burton",
-    "misspap",
     "warehouse",
     "nastygal"
    ],
@@ -2537,7 +2535,6 @@ window.LIVE_BRANDS={
     "wallis",
     "oasis",
     "burton",
-    "misspap",
     "warehouse",
     "nastygal"
    ],
@@ -2842,8 +2839,7 @@ window.LIVE_BRANDS={
     "wallis",
     "oasis",
     "coast",
-    "burton",
-    "misspap"
+    "burton"
    ],
    "apps": [
     "appstore",
@@ -3123,7 +3119,6 @@ window.LIVE_BRANDS={
     "oasis",
     "coast",
     "burton",
-    "misspap",
     "warehouse"
    ],
    "apps": [
@@ -3423,7 +3418,6 @@ window.LIVE_BRANDS={
     "oasis",
     "coast",
     "burton",
-    "misspap",
     "warehouse"
    ],
    "apps": [
@@ -3721,7 +3715,6 @@ window.LIVE_BRANDS={
     "wallis",
     "oasis",
     "coast",
-    "misspap",
     "warehouse"
    ],
    "apps": [
@@ -4026,7 +4019,6 @@ window.LIVE_BRANDS={
     "oasis",
     "coast",
     "burton",
-    "misspap",
     "warehouse"
    ],
    "apps": [
@@ -4333,7 +4325,6 @@ window.LIVE_BRANDS={
     "wallis",
     "coast",
     "burton",
-    "misspap",
     "warehouse"
    ],
    "apps": [
@@ -4348,302 +4339,6 @@ window.LIVE_BRANDS={
    ],
    "copyright": "OASIS",
    "legalName": "Oasis"
-  }
- },
- "misspap": {
-  "name": "Misspap",
-  "domain": "misspap.com",
-  "font": "'Montserrat', sans-serif",
-  "weights": {
-   "light": 300,
-   "reg": 500,
-   "med": 400,
-   "bold": 700,
-   "btn": 600
-  },
-  "caseBtn": "uppercase",
-  "logo": "assets/live/brands/misspap.svg",
-  "logoH": 16,
-  "ftLogoH": 20,
-  "wishIcon": "heart",
-  "oosBell": false,
-  "tokens": {
-   "primary": "#101820",
-   "primaryInk": "#ffffff",
-   "radius": "4px",
-   "link": "#101820",
-   "sale": "#d33f3f",
-   "was": "#000",
-   "navBg": "#000000",
-   "navFg": "#ffffff",
-   "sizeBorder": "#e7e7e7"
-  },
-  "nav": [
-   "New In",
-   "Clothing",
-   "Dresses",
-   "Shoes & Accessories",
-   "Going Out",
-   "Occasion",
-   "Sale",
-   "Beauty"
-  ],
-  "banners": [
-   {
-    "text": "Extra 15% Off For New Customers!* Use Code: NEW15",
-    "bg": "#E7D5C6",
-    "fg": "#000000"
-   }
-  ],
-  "card": {
-   "brand": true,
-   "pct": true
-  },
-  "product": {
-   "brand": "MissPap",
-   "title": "Square Neck A Line Midi Dress",
-   "price": "£42.00",
-   "was": "£60.00",
-   "save": "Save 30%",
-   "colour": "Black",
-   "crumbs": [
-    "Womens",
-    "Wedding Guest Dresses",
-    "Midi Wedding Guest Dresses"
-   ],
-   "sizes": [
-    [
-     "6",
-     0
-    ],
-    [
-     "8",
-     0
-    ],
-    [
-     "10",
-     0
-    ],
-    [
-     "12",
-     0
-    ],
-    [
-     "14",
-     0
-    ],
-    [
-     "16",
-     0
-    ]
-   ],
-   "sel": "12",
-   "images": [
-    "assets/live/products/misspap/01.jpg",
-    "assets/live/products/misspap/02.jpg",
-    "assets/live/products/misspap/03.jpg",
-    "assets/live/products/misspap/04.jpg"
-   ],
-   "ndd": false,
-   "url": "https://www.misspap.com/product/misspap-square-neck-a-line-midi-dress_bpp06256?colour=black",
-   "promo": [
-    "30% Off + An Extra 10% off With Code: MP10"
-   ],
-   "glance": [
-    "Flattering A-line silhouette",
-    "Chic square neckline",
-    "Elegant midi length",
-    "Versatile occasion dress",
-    "Textured woven fabric"
-   ],
-   "desc": [
-    "Flattering A-line silhouette",
-    "Chic square neckline",
-    "Elegant midi length",
-    "Versatile occasion dress",
-    "Textured woven fabric"
-   ],
-   "accordions": {
-    "Product Details & Care": "See the label for composition and care.",
-    "Delivery": "Standard delivery from £3.99 (4 working days). Next Day Delivery from £5.99 - order by midnight.",
-    "Returns": "Eligible for return within 21 days. Exclusions apply - see our returns policy."
-   }
-  },
-  "membership": null,
-  "deliver": {
-   "lockupImg": "assets/live/misc/seel-misspap.svg",
-   "lockupH": 44,
-   "bg": "#E7D5C6",
-   "fg": "#000000",
-   "rule": "rgba(0,0,0,.15)",
-   "title": "Peace of mind, guaranteed",
-   "bullets": [
-    "Free & simple resale - recover value and give your items a second life",
-    "+14-day return extension",
-    "£5/day late delivery compensation",
-    "Full order coverage (lost, stolen, damaged) with instant payout on eligible claims"
-   ],
-   "more": "Learn More",
-   "quote": "“Refund was approved and back in my account the same day.” - Deliver+ customer",
-   "powered": true
-  },
-  "uspbox": [
-   {
-    "icon": "assets/live/icons/icons-order.svg",
-    "t14": "Delivery from 99p or Next Day from £5.99"
-   },
-   {
-    "icon": "assets/live/misc/calendar.png",
-    "t14": "Eligible for return within 21 days",
-    "t12": "Exclusions apply. Please see our <u>returns policy</u>"
-   }
-  ],
-  "bnpl": {
-   "badges": [
-    "paypal",
-    "klarna",
-    "clearpay"
-   ],
-   "terms": "18+, T&C apply. Credit subject to status.",
-   "more": "See more"
-  },
-  "recsAbove": [
-   {
-    "title": "Handpicked For You",
-    "type": "grid",
-    "items": [
-     {
-      "brand": "MissPap",
-      "name": "Square Neck A Line Midi Dress",
-      "price": "£42.00",
-      "was": "£60.00",
-      "img": "assets/live/recs/misspap/01.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Bardot Ruched Satin Bridesmaid Dress",
-      "price": "£23.00",
-      "was": "£70.00",
-      "img": "assets/live/recs/misspap/02.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Premium Tulle Lace trim Maxi Dress",
-      "price": "£25.00",
-      "was": "£99.00",
-      "img": "assets/live/recs/misspap/03.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "One Shoulder Drape Mini Dress",
-      "price": "£11.00",
-      "was": "£35.00",
-      "img": "assets/live/recs/misspap/04.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Satin Extreme Draped Mini Dress",
-      "price": "£27.00",
-      "was": "£45.00",
-      "img": "assets/live/recs/misspap/05.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Premium Shirred Bust Mini Dress",
-      "price": "£31.00",
-      "was": "£79.00",
-      "img": "assets/live/recs/misspap/06.jpg"
-     }
-    ]
-   }
-  ],
-  "recsBelow": [
-   {
-    "title": "We Think You'll Like",
-    "type": "carousel",
-    "items": [
-     {
-      "brand": "MissPap",
-      "name": "Structured Babydoll Mini Dress",
-      "price": "£38.00",
-      "was": "£55.00",
-      "img": "assets/live/recs/misspap/07.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Halter Neck Split Hem Maxi Dress",
-      "price": "£17.00",
-      "was": "£55.00",
-      "img": "assets/live/recs/misspap/08.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Premium Chiffon Godet Dress",
-      "price": "£18.00",
-      "was": "£49.00",
-      "img": "assets/live/recs/misspap/09.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Satin Keyhole Halter Detail Maxi",
-      "price": "£22.00",
-      "was": "£55.00",
-      "img": "assets/live/recs/misspap/10.jpg"
-     },
-     {
-      "brand": "MissPap",
-      "name": "Premium Satin Bandeau Overlay Bridesmaid Dress",
-      "price": "£45.00",
-      "was": "£65.00",
-      "img": "assets/live/recs/misspap/11.jpg"
-     }
-    ]
-   }
-  ],
-  "reclinks": null,
-  "footer": {
-   "title": "Let's get to know each other",
-   "copy": "Sign up to receive emails from us, so you never miss out on the good stuff.",
-   "cta": "Subscribe",
-   "accordions": [
-    "Shopping with Misspap",
-    "Customer Care",
-    "Privacy & Legal",
-    "More From Misspap"
-   ],
-   "pay": [
-    "visa",
-    "mastercard",
-    "amex",
-    "maestro",
-    "visa-electron",
-    "apple-pay",
-    "payplus",
-    "paypal",
-    "klarna",
-    "clearpay",
-    "google-pay"
-   ],
-   "brandLogos": [
-    "debenhams",
-    "dorothyperkins",
-    "wallis",
-    "oasis",
-    "coast",
-    "burton",
-    "warehouse"
-   ],
-   "apps": [
-    "appstore",
-    "googleplay"
-   ],
-   "social": [
-    "instagram",
-    "pintrest",
-    "facebook"
-   ],
-   "copyright": "MISSPAP",
-   "legalName": "Misspap"
   }
  },
  "dsgnstudio": {
@@ -5390,4 +5085,4 @@ window.LIVE_BRANDS={
   }
  }
 };
-window.LIVE_ORDER=['debenhams','boohoo','boohooman','plt','karenmillen','dorothyperkins','coast','warehouse','debenhamsoutlet','wallis','burton','principles','oasis','misspap','dsgnstudio','trainingdept','brandroom'];
+window.LIVE_ORDER=['debenhams','boohoo','boohooman','plt','karenmillen','dorothyperkins','coast','warehouse','debenhamsoutlet','wallis','burton','principles','oasis','dsgnstudio','trainingdept','brandroom'];
