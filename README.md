@@ -1,5 +1,7 @@
 # Virtual Stylist (VTO) prototype
 
+> **v2 (2 Nov 2026):** [`v2/`](v2/README.md): the DS master PDP, the new DS Virtual Stylist intro modal and a native Move and Scale crop step. This page documents v1.
+
 The Virtual Try On journey as the **Virtual Stylist** entry point, built for the 16 Brand Centre fascias: Debenhams, boohoo, boohooMAN, PrettyLittleThing, Karen Millen, Dorothy Perkins, Coast, Warehouse, Debenhams Outlet, Wallis, Burton, Principles, Oasis, DSGN Studio, Training Dept and The Brand Room. No build step.
 
 - **Review shell:** `index.html` — Jake's standard review format: fascia chips across the top bar with Desktop / Mobile, width presets, Full page / Fold, Restart, Screenshot, Export (zip with full-page 390 and 1440 PNGs of the current step) and **All watermarks** (zip of every fascia's result watermark). The left panel's Watermark card exports the current fascia's: white, 70%, logo 103px wide (max 32 tall) centred in 103 x 32, as SVG + transparent PNG at 1x / 2x / 3x. The left panel holds the journey steps (click to jump), the live product and notes. Fold view = iOS Safari frame (mobile widths only).

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Virtual Stylist v2</title>
+</head>
+<body>
+<script>
+/* Virtual Stylist v2 — the page. It has no PDP of its own: it opens the DS master PDP (debenhamsgroup.design templates/pdp.html) AS IT STANDS,
+   fetched fresh every load, exactly as the Master prototype does (projects/master/page.html), then adds v2/vs.js: the Virtual Stylist layer
+   (DS Virtual Stylist intro modal → native camera → native Move and Scale crop → loading → result) wired to the template's own chip.
+   Both sites are on jakerayner96.github.io, so the template is same-origin. Locally, serve the folder that holds both clones
+   (…/vto-prototype and …/debenhamsgroup.design) and open /vto-prototype/v2/.
+   in: ?brand=<slug>&step=<step>&crop=portrait|square. */
+(function(){
+  const VT=new URL('../',location.href).href,                                   // vto-prototype root (brands.js, icons, watermarks)
+        DS=new URL('../../debenhamsgroup.design/',location.href).href;          // the design system
+  fetch(DS+'templates/pdp.html',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.text()}).then(h=>{
+    h=h.replace('<base href="../">','<base href="'+DS+'">');
+    const pre=`<script>window.VS2=${JSON.stringify({vt:VT,ds:DS})}<\/script>`;
+    const post=`<script src="${DS}assets/ds/vs-intro.js"><\/script><script src="${VT}brands.js"><\/script><script src="${VT}v2/vs.js"><\/script>`;
+    h=h.replace(/<\/head>/i,pre+'</head>').replace(/<\/body>(?![\s\S]*<\/body>)/i,post+'</body>');
+    document.open();document.write(h);document.close();
+  }).catch(e=>{document.body.innerHTML='<p style="font:14px system-ui;padding:24px">Could not load the DS PDP template ('+e.message+') from '+DS+'</p>'});
+})();
+</script>
+</body>
+</html>
