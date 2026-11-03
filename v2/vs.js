@@ -1,9 +1,11 @@
 /* Virtual Stylist v2 — the layer over the DS master PDP (v2/vto.html writes debenhamsgroup.design templates/pdp.html into this document first).
    The PDP is the template as it stands; this file only wires its own Virtual Stylist chip (.pdp-chips .ai-pill--tag) and its Add to bag, and adds:
      1 intro   DS Virtual Stylist intro, slide up (assets/ds/vs-intro.js): Jake's six start screen layouts, ?layout=1..6
-     2 camera  native iOS camera (real getUserMedia; a pending permission prompt falls back to the bodyshot after 2.5s)
-     3 crop    native iOS second step, Move and Scale: drag, pinch / wheel / double-tap zoom under a fixed frame. Camera: Retake / Use Photo ·
-               library: Cancel / Choose. Frame 2:3 portrait (the result shape) or square (what UIImagePickerController allowsEditing gives) — ?crop=
+     2 photo   as live (debenhams.com VirtualTryOnFlow, 3 Nov 2026): Camera = <input type=file accept=image/jpeg capture=user> (the phone's own
+               camera app, front camera; iOS adds its Retake / Use Photo) · Upload = <input type=file accept=image/jpeg> (the phone's photo picker).
+               The photo is scaled to 2000px max and re-encoded as a JPEG under 5MB, as live.
+     3 crop    OPTIONAL (?crop=off|portrait|square, default off = live: the photo goes straight to loading). On: our Move and Scale step,
+               drag, pinch / wheel / double-tap zoom under a fixed frame; Camera: Retake / Use Photo · Upload: Cancel / Choose; 2:3 or square frame.
      4 loading Analysing your photo → Creating your outfit, over the cropped photo, blurred
      5 result  full-bleed look, fascia watermark, sizes (shared with the PDP's size selector), Add to bag
      bag       DS toast (Top, actionable) “Item added to bag · View”, header bag count +1 (as the Master prototype)
@@ -16,7 +18,7 @@
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const desk=()=>innerWidth>=600;
-  let B=null,P=null,CROP=qs.get('crop')==='square'?'square':'portrait',LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'1';
+  let B=null,P=null,CROP=['portrait','square'].includes(qs.get('crop'))?qs.get('crop'):'off',LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'1';
   let step='pdp',consent=false,source='camera',stream=null,facing='user',camTimer=null;
   let gen='idle',genStart=0,raf=0,tPhase=0,tDone=0,tToast=0,PHASE_A=4500,GEN_TOTAL=9000,tries=0;const MAX=5;
   let photo=MOCK,cropped=MOCK;
@@ -30,20 +32,6 @@
   #vs .scr{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s ease}
   #vs .scr.on{opacity:1;pointer-events:auto}
   #vs .sys{font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;color:#fff;background:#000}
-  /* camera (as v1) */
-  #vs .vf{position:absolute;left:0;right:0;top:79px;bottom:182px;overflow:hidden;background:#000}
-  #vs .vf video,#vs .vf img{width:100%;height:100%;object-fit:cover;display:block}
-  #vs .c-flash{position:absolute;left:16px;top:40px;width:20px;height:20px}
-  #vs .c-1x{position:absolute;left:50%;bottom:245px;transform:translateX(-50%);width:38px;height:38px}
-  #vs .c-1x img{position:absolute;inset:0;width:100%;height:100%}
-  #vs .c-1x span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;font-weight:600;letter-spacing:-.3px}
-  #vs .c-lbl{position:absolute;left:50%;bottom:191px;transform:translateX(-50%);font-size:13px;letter-spacing:-.3px;color:#ffd60a}
-  #vs .c-shutter{position:absolute;left:50%;bottom:106px;transform:translateX(-50%);width:70px;height:70px}
-  #vs .c-shutter img{width:100%;height:100%;display:block}
-  #vs .c-shutter:active{transform:translateX(-50%) scale(.92)}
-  #vs .c-cancel{position:absolute;left:32px;bottom:129px;font-size:18px;letter-spacing:-.3px}
-  #vs .c-switch{position:absolute;right:33px;bottom:123px;width:35px;height:35px}
-  #vs .c-switch img{width:35px;height:35px;display:block}
   #vs .home-ind{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:139px;height:5px;background:#fff;border-radius:100px}
   /* crop: the native Move and Scale step */
   #vs .cr-stage{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}
@@ -116,16 +104,6 @@
   const RB=(cls,g,fn)=>`<button class="cb ${cls}" data-vs="${fn}" aria-label="${fn==='share'?'Share':'Close'}"><img class="ring" src="${IC}ring.svg" alt=""><img class="g ${g}" src="${IC}${g==='sh'?'share':'close'}.svg" alt=""></button>`;
   document.body.insertAdjacentHTML('beforeend',`
   <div id="vs" aria-hidden="true">
-    <div class="scr sys" data-scr="camera">
-      <div class="vf"><video id="vsVideo" autoplay playsinline muted></video><img id="vsMock" src="${MOCK}" alt="" style="display:none"></div>
-      <div class="c-flash"><img src="${IC}cam-flash.svg" alt=""></div>
-      <div class="c-1x"><img src="${IC}cam-1x.svg" alt=""><span>1&times;</span></div>
-      <p class="c-lbl">PHOTO</p>
-      <button class="c-shutter" data-vs="shoot" aria-label="Take photo"><img src="${IC}cam-shutter.svg" alt=""></button>
-      <button class="c-cancel" data-vs="camCancel">Cancel</button>
-      <button class="c-switch" data-vs="flip" aria-label="Switch camera"><img src="${IC}cam-switch.svg" alt=""></button>
-      <div class="home-ind"></div>
-    </div>
     <div class="scr sys" data-scr="crop">
       <div class="cr-stage" id="vsStage"><img class="cr-img" id="vsCropImg" alt="Your photo" draggable="false"><i class="cr-dim"></i><i class="cr-dim"></i><i class="cr-dim"></i><i class="cr-dim"></i><div class="cr-frame" id="vsFrame"><div class="cr-grid"></div></div></div>
       <p class="cr-title">Move and Scale</p>
@@ -150,8 +128,8 @@
       <div class="rail" id="vsRail">${RB('','x','close')}${RB('','sh','share')}</div>
     </div>
   </div>
-  <input type="file" id="vsFile" accept="image/*" hidden>`);
-  const vs=$('#vs'),video=$('#vsVideo'),mock=$('#vsMock'),file=$('#vsFile'),ld=$('#vsLd'),fill=$('#vsFill');
+  <input type="file" id="vsCam" accept="image/jpeg" capture="user" hidden><input type="file" id="vsFile" accept="image/jpeg" hidden>`);   /* the live inputs */
+  const vs=$('#vs'),video=$('#vsVideo'),mock=$('#vsMock'),file=$('#vsFile'),camFile=$('#vsCam'),ld=$('#vsLd'),fill=$('#vsFill');
   const SCR={};$$('#vs [data-scr]').forEach(s=>SCR[s.dataset.scr]=s);
 
   /* ---------- fascia ---------- */
@@ -197,7 +175,7 @@
   function intro(){closeIntro();closeOverlay();
     document.body.insertAdjacentHTML('beforeend',DG_vsIntro.layer({fascia:B.name,desk:desk(),left:MAX-tries,consent,layout:LAYOUT}));
     const el=$('[data-vs-intro]');lock(true);
-    DG_vsIntro.wire(el,{onClose:()=>{closeIntro();lock(false);setStep('pdp')},onConsent:on=>{consent=on},onCamera:()=>{closeIntro();camera()},onUpload:()=>upload()});
+    DG_vsIntro.wire(el,{onClose:()=>{closeIntro();lock(false);setStep('pdp')},onConsent:on=>{consent=on},onCamera:()=>camera(),onUpload:()=>upload()});
     setStep('intro')}
   const closeIntro=()=>$$('[data-vs-intro]').forEach(x=>x.remove());
   function chip(){if(gen==='ready'){closeIntro();show('result',430);toastOff();return}
@@ -205,21 +183,17 @@
     if(tries>=MAX){limit();return}
     intro()}
 
-  /* 2 camera (native) */
-  function camera(){source='camera';show('camera');startCam()}
-  function startCam(){stopCam();video.style.display='';mock.style.display='none';
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return camFallback();
-    clearTimeout(camTimer);camTimer=setTimeout(()=>{if(!stream)camFallback()},2500);
-    navigator.mediaDevices.getUserMedia({video:{facingMode:facing},audio:false}).then(s=>{clearTimeout(camTimer);
-      if(step!=='camera'){s.getTracks().forEach(t=>t.stop());return}stream=s;video.srcObject=s}).catch(()=>{clearTimeout(camTimer);camFallback()})}
-  const camFallback=()=>{video.style.display='none';mock.style.display=''};
-  function stopCam(){clearTimeout(camTimer);if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}video.srcObject=null}
-  function shoot(){let src=MOCK;
-    if(stream&&video.videoWidth){const c=document.createElement('canvas');c.width=video.videoWidth;c.height=video.videoHeight;const x=c.getContext('2d');
-      if(facing==='user'){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(video,0,0);src=c.toDataURL('image/jpeg',.92)}
-    stopCam();crop(src)}
+  /* 2 photo: the phone's own camera / picker, as live */
+  function camera(){source='camera';camFile.value='';camFile.click()}
   function upload(){source='library';file.value='';file.click()}
-  file.addEventListener('change',()=>{const f=file.files&&file.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{closeIntro();crop(e.target.result)};r.readAsDataURL(f)});
+  const stopCam=()=>{};
+  /* as live: scale to 2000px max, JPEG 0.9 stepping down until under 5MB */
+  async function prep(f){const bm=await createImageBitmap(f),k=Math.min(1,2000/Math.max(bm.width,bm.height)),c=document.createElement('canvas');
+    c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
+    let q=.9,u=c.toDataURL('image/jpeg',q);while(u.length*.75>5242880&&q>.4){q-=.1;u=c.toDataURL('image/jpeg',q)}return u}
+  const picked=inp=>async()=>{const f=inp.files&&inp.files[0];if(!f)return;let src;try{src=await prep(f)}catch(e){src=MOCK}
+    closeIntro();photo=src;if(CROP==='off'){cropped=src;$('#vsLdImg').src=src;generate()}else crop(src)};
+  camFile.addEventListener('change',picked(camFile));file.addEventListener('change',picked(file));
 
   /* 3 crop — the native Move and Scale step: the photo moves and scales under a fixed frame; it always covers the frame */
   const stage=$('#vsStage'),cimg=$('#vsCropImg'),frame=$('#vsFrame');
@@ -230,7 +204,7 @@
     cimg.onload=()=>{C.iw=cimg.naturalWidth;C.ih=cimg.naturalHeight;cimg.style.width=C.iw+'px';cimg.style.height=C.ih+'px';fit()};
     cimg.src=src;if(cimg.complete&&cimg.naturalWidth)cimg.onload()}
   function layoutFrame(){const W=stage.clientWidth||innerWidth,H=stage.clientHeight||innerHeight,top=92,bottom=140,avH=H-top-bottom,avW=W-(CROP==='square'?0:32);
-    const r=CROP==='square'?1:2/3;let w=Math.min(avW,avH*r,560),h=w/r;
+    const r=CROP==='square'?1:2/3;   /* off (jumped to from the shell) shows the 2:3 frame */let w=Math.min(avW,avH*r,560),h=w/r;
     C.f={x:Math.round((W-w)/2),y:Math.round(top+(avH-h)/2),w:Math.round(w),h:Math.round(h)};
     const f=C.f,px=v=>v+'px';Object.assign(frame.style,{left:px(f.x),top:px(f.y),width:px(f.w),height:px(f.h)});
     const d=stage.querySelectorAll('.cr-dim');
@@ -258,7 +232,7 @@
   function cropOut(){const f=C.f,sx=(f.x-C.x)/C.s,sy=(f.y-C.y)/C.s,sw=f.w/C.s,sh=f.h/C.s,k=Math.min(1,1200/sw);
     const c=document.createElement('canvas');c.width=Math.round(sw*k);c.height=Math.round(sh*k);
     try{c.getContext('2d').drawImage(cimg,sx,sy,sw,sh,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.9)}catch(e){return photo}}
-  function cropBack(){if(source==='library'){closeOverlay();intro()}else camera()}
+  function cropBack(){if(source==='library'){closeOverlay();intro()}else camera()}   /* Retake reopens the phone's camera */
   function cropUse(){cropped=cropOut();$('#vsLdImg').src=cropped;generate()}
 
   /* 4 loading */
@@ -290,8 +264,7 @@
     lock(true);$$('[data-vs-intro] [data-vs-close]').forEach(b=>b.onclick=()=>{closeIntro();lock(false);setStep('pdp')});setStep('limit')}
   function share(){if(navigator.share)navigator.share({title:P.name,text:'My Virtual Stylist look on '+B.name,url:P.url}).catch(()=>{})}
 
-  const ACT={shoot,camCancel:()=>{stopCam();closeOverlay();intro()},flip:()=>{facing=facing==='user'?'environment':'user';startCam()},
-    cropBack,cropUse,close:()=>{closeOverlay();setStep('pdp')},atb,share};
+  const ACT={cropBack,cropUse,close:()=>{closeOverlay();setStep('pdp')},atb,share};
   vs.addEventListener('click',e=>{const b=e.target.closest('[data-vs]');if(b&&ACT[b.dataset.vs]){e.preventDefault();ACT[b.dataset.vs]()}});
 
   /* ---------- review shell: reset, jumps, fascia + crop switch (re-skins in place, never resets the journey) ---------- */
@@ -301,14 +274,13 @@
     switch(s){
       case 'pdp':closeOverlay();setStep('pdp');break;
       case 'intro':consent=false;intro();break;
-      case 'camera':consent=true;camera();break;
       case 'crop':consent=true;source='camera';crop(MOCK);break;
       case 'loading':consent=true;if(tries>=MAX)tries=MAX-1;$('#vsLdImg').src=cropped;generate();break;
       case 'result':cancelAnimationFrame(raf);clearTimeout(tPhase);clearTimeout(tDone);if(!tries){tries=1;syncTries()}gen='ready';show('result',430);break;
       case 'bag':closeOverlay();added();break;
       case 'limit':closeOverlay();tries=MAX;syncTries();limit();break}}
   function setBrand(k){if(k&&k!==S.brand&&window.DG_PDP_PRODUCTS[k]){S.brand=k;render()}skin();if(step==='intro')intro()}
-  function setCrop(c){if(!c||c===CROP)return;CROP=c==='square'?'square':'portrait';if(step==='crop')fit();post()}
+  function setCrop(c){if(!c||c===CROP)return;CROP=['portrait','square'].includes(c)?c:'off';if(step==='crop')fit();post()}
   addEventListener('message',e=>{const d=e.data||{};
     if(d.vtoSet){setCrop(d.vtoSet.crop);const v=d.vtoSet;if(v.layout&&String(v.layout)!==LAYOUT){LAYOUT=String(v.layout);if(step==='intro'){setBrand(v.brand);intro();return}}setBrand(d.vtoSet.brand)}
     if(d.vtoJump)jump(d.vtoJump);

@@ -168,13 +168,14 @@ body.dragging iframe{pointer-events:none}
   <div class="card"><h3>Start screen <span class="tag" id="introTag"></span></h3><p>Your six final layouts (Figma 15898-33012). <b>Slide up</b> on phones, hugging the content; centred on desktop.</p>
     <span class="seg" id="layoutSeg"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button></span>
     <p style="margin:8px 0 0" id="layoutName"></p></div>
-  <div class="card"><h3>Crop frame <span class="tag" id="cropTag">2:3</span></h3><p>The native second step (Move and Scale) after Camera or Upload. <b>2:3 portrait</b> = the result shape (needs a custom crop view). <b>Square</b> = what the iOS picker gives with editing on.</p>
-    <span class="seg" id="cropSeg"><button data-c="portrait" class="on">2:3 portrait</button><button data-c="square">Square (iOS native)</button></span></div>
+  <div class="card"><h3>Crop step <span class="tag" id="cropTag">Off</span></h3><p><b>Off</b> = live today: Camera opens the phone’s own camera, Upload its photo picker, and the photo goes straight to the try-on. <b>On</b> adds our Move and Scale step after the photo: the 2:3 frame is the result shape; square is what the iOS app picker gives natively.</p>
+    <span class="seg" id="cropSeg"><button data-c="off" class="on">Off (as live)</button><button data-c="portrait">On · 2:3</button><button data-c="square">On · square</button></span></div>
   <div class="card"><h3>What's new in v2</h3>
     <ul class="notes">
       <li><b>PDP</b> is the DS master PDP (debenhamsgroup.design <b>templates/pdp.html</b>, the Master prototype's PDP), loaded fresh, so it always has the latest DS components: buy stack, Ask Deb prompts, membership, Deliver+, delivery grid, BNPL, Subscribe &amp; Save, Bundling, recommendation rails. Its own Virtual Stylist chip opens the flow.</li>
       <li><b>Intro</b> is the new DS <b>Virtual Stylist intro</b> modal: How it works (3 steps), photo tips, the 18+ consent row (a record, not a gate), Camera / Upload side by side with their icons (as v1), the 5-a-day note. Slide up on phones, centred from 600px; six layouts to compare (Start screen card).</li>
-      <li><b>Crop</b>: after the photo, the native Move and Scale step. Drag to move, pinch, scroll or double-tap to zoom; the photo always fills the frame. Camera: Retake / Use Photo. Library: Cancel / Choose. The crop feeds the loading screen.</li>
+      <li><b>Camera / Upload</b> work as live (debenhams.com): the phone’s own camera (front camera) or photo picker, the photo scaled to 2000px as a JPEG under 5MB. On a phone, open this page directly to get the real camera. The consent box has to be ticked first, as live.</li>
+      <li><b>Crop</b> (Crop step card): off = live; on = our Move and Scale step after the photo. Drag to move, pinch, scroll or double-tap to zoom; the photo always fills the frame. Camera: Retake / Use Photo. Upload: Cancel / Choose.</li>
       <li><b>Loading + result</b> as v1 (signed-off VTO overlay colours). Add to bag and the PDP's Add to bag use the DS toast with the bag count, as the Master prototype.</li>
       <li>Fascias = the ones the DS PDP template has (Dorothy Perkins and Coast have no DS product yet). v1 stays at <a href="../" target="_blank">/vto-prototype/</a>.</li>
     </ul>
@@ -207,9 +208,8 @@ body.dragging iframe{pointer-events:none}
 <script>
 const STEPS=[
   ['pdp','PDP','DS master PDP with the Virtual Stylist chip'],
-  ['intro','Intro','How it works, photo tips, consent, Camera or Upload'],
-  ['camera','Camera','Native camera (real on device, bodyshot fallback)'],
-  ['crop','Move and Scale','Native second step: crop, then Use Photo'],
+  ['intro','Intro','How it works, photo tips, consent, Camera or Upload (the phone\u2019s own camera / picker, as live)'],
+  ['crop','Crop (option)','Our Move and Scale step, only when Crop step is on'],
   ['loading','Generating','Analysing your photo → Creating your outfit'],
   ['result','Try-on result','Brand watermark, sizes, Add to bag'],
   ['bag','Added to bag','DS toast over the PDP, bag count +1'],
@@ -220,7 +220,7 @@ const $=s=>document.querySelector(s);
 const frame=$('#frame'),stage=$('#stage'),win=$('#win'),preset=$('#preset'),sizebox=$('#sizebox');
 const qs=new URLSearchParams(location.search);
 let BRAND=qs.get('brand')||localStorage.getItem('vs-brand')||'debenhams'; if(!ORDER.includes(BRAND))BRAND='debenhams';
-let CROP=qs.get('crop')==='square'?'square':'portrait';
+let CROP=['portrait','square'].includes(qs.get('crop'))?qs.get('crop'):'off';
 let LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'1';
 const LAYOUTS={1:'Step cards + pills',2:'Step cards + tip cards, centred',3:'Timeline + tip cards, centred',4:'Timeline + tip cards',5:'Timeline + pills',6:'Welcome, timeline + pills'};
 let W=390,FOLD=true,STATE={step:'pdp',tries:0};
@@ -316,13 +316,13 @@ addEventListener('resize',apply);
 $('#ttlBrand').textContent=VTO_BRANDS[BRAND].name;$('#urltxt').textContent=VTO_BRANDS[BRAND].domain;
 renderBrands();renderSteps();renderProd();renderWatermark();apply();
 frame.src='vto.html?brand='+BRAND+'&crop='+CROP+'&layout='+LAYOUT+'&_='+Date.now();
-const qsSync=()=>history.replaceState(null,'','?brand='+BRAND+(CROP==='square'?'&crop=square':'')+(LAYOUT!=='1'?'&layout='+LAYOUT:''));
+const qsSync=()=>history.replaceState(null,'','?brand='+BRAND+(CROP!=='off'?'&crop='+CROP:'')+(LAYOUT!=='1'?'&layout='+LAYOUT:''));
 function renderIntro(){document.querySelectorAll('#layoutSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===LAYOUT));
   $('#introTag').textContent='Layout '+LAYOUT;$('#layoutName').textContent=LAYOUT+' · '+LAYOUTS[LAYOUT];}
 document.querySelectorAll('#layoutSeg button').forEach(b=>b.onclick=()=>{LAYOUT=b.dataset.v;renderIntro();qsSync();
   frame.contentWindow.postMessage({vtoSet:{brand:BRAND,crop:CROP,layout:LAYOUT}},'*');if(STATE.step!=='intro')frame.contentWindow.postMessage({vtoJump:'intro'},'*');});
 renderIntro();
-function renderCrop(){document.querySelectorAll('#cropSeg button').forEach(b=>b.classList.toggle('on',b.dataset.c===CROP));$('#cropTag').textContent=CROP==='square'?'1:1':'2:3';}
+function renderCrop(){document.querySelectorAll('#cropSeg button').forEach(b=>b.classList.toggle('on',b.dataset.c===CROP));$('#cropTag').textContent=CROP==='off'?'Off':CROP==='square'?'On · 1:1':'On · 2:3';}
 document.querySelectorAll('#cropSeg button').forEach(b=>b.onclick=()=>{CROP=b.dataset.c;renderCrop();qsSync();frame.contentWindow.postMessage({vtoSet:{brand:BRAND,crop:CROP,layout:LAYOUT}},'*');});
 renderCrop();
 
