@@ -168,14 +168,12 @@ body.dragging iframe{pointer-events:none}
   <div class="card"><h3>Start screen <span class="tag" id="introTag"></span></h3><p>Your six final layouts (Figma 15898-33012). <b>Slide up</b> on phones, hugging the content; centred on desktop.</p>
     <span class="seg" id="layoutSeg"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button></span>
     <p style="margin:8px 0 0" id="layoutName"></p></div>
-  <div class="card"><h3>Crop step <span class="tag" id="cropTag">Off</span></h3><p><b>Off</b> = live today: Camera opens the phone’s own camera, Upload its photo picker, and the photo goes straight to the try-on. <b>On</b> adds our Move and Scale step after the photo: the 2:3 frame is the result shape; square is what the iOS app picker gives natively.</p>
-    <span class="seg" id="cropSeg"><button data-c="off" class="on">Off (as live)</button><button data-c="portrait">On · 2:3</button><button data-c="square">On · square</button></span></div>
   <div class="card"><h3>What's new in v2</h3>
     <ul class="notes">
       <li><b>PDP</b> is the DS master PDP (debenhamsgroup.design <b>templates/pdp.html</b>, the Master prototype's PDP), loaded fresh, so it always has the latest DS components: buy stack, Ask Deb prompts, membership, Deliver+, delivery grid, BNPL, Subscribe &amp; Save, Bundling, recommendation rails. Its own Virtual Stylist chip opens the flow.</li>
       <li><b>Intro</b> is the new DS <b>Virtual Stylist intro</b> modal: How it works (3 steps), photo tips, the 18+ consent row (a record, not a gate), Camera / Upload side by side with their icons (as v1), the 5-a-day note. Slide up on phones, centred from 600px; six layouts to compare (Start screen card).</li>
       <li><b>Camera / Upload</b> work as live (debenhams.com): the phone’s own camera (front camera) or photo picker, the photo scaled to 2000px as a JPEG under 5MB. On a phone, open this page directly to get the real camera. The consent box has to be ticked first, as live.</li>
-      <li><b>Crop</b> (Crop step card): off = live; on = our Move and Scale step after the photo. Drag to move, pinch, scroll or double-tap to zoom; the photo always fills the frame. Camera: Retake / Use Photo. Upload: Cancel / Choose.</li>
+      <li><b>Crop</b>: new in v2 (live has no crop step). After the photo, our Move and Scale step with a 2:3 frame, the shape of the result. Drag to move, pinch, scroll or double-tap to zoom; the photo always fills the frame. Camera: Retake / Use Photo. Upload: Cancel / Choose.</li>
       <li><b>Loading + result</b> as v1 (signed-off VTO overlay colours). Add to bag and the PDP's Add to bag use the DS toast with the bag count, as the Master prototype.</li>
       <li>Fascias = the ones the DS PDP template has (Dorothy Perkins and Coast have no DS product yet). v1 stays at <a href="../" target="_blank">/vto-prototype/</a>.</li>
     </ul>
@@ -209,7 +207,7 @@ body.dragging iframe{pointer-events:none}
 const STEPS=[
   ['pdp','PDP','DS master PDP with the Virtual Stylist chip'],
   ['intro','Intro','How it works, photo tips, consent, Camera or Upload (the phone\u2019s own camera / picker, as live)'],
-  ['crop','Crop (option)','Our Move and Scale step, only when Crop step is on'],
+  ['crop','Crop','Move and Scale: 2:3 frame, then Use Photo / Choose'],
   ['loading','Generating','Analysing your photo → Creating your outfit'],
   ['result','Try-on result','Brand watermark, sizes, Add to bag'],
   ['bag','Added to bag','DS toast over the PDP, bag count +1'],
@@ -220,7 +218,6 @@ const $=s=>document.querySelector(s);
 const frame=$('#frame'),stage=$('#stage'),win=$('#win'),preset=$('#preset'),sizebox=$('#sizebox');
 const qs=new URLSearchParams(location.search);
 let BRAND=qs.get('brand')||localStorage.getItem('vs-brand')||'debenhams'; if(!ORDER.includes(BRAND))BRAND='debenhams';
-let CROP=['portrait','square'].includes(qs.get('crop'))?qs.get('crop'):'off';
 let LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
 const LAYOUTS={1:'Step cards + pills',2:'Step cards + tip cards, centred',3:'Timeline + tip cards, centred',4:'Timeline + tip cards',5:'Timeline + pills',6:'Welcome, timeline + pills'};
 let W=390,FOLD=true,STATE={step:'pdp',tries:0};
@@ -281,7 +278,7 @@ function setBrand(k){
   $('#ttlBrand').textContent=VTO_BRANDS[k].name;$('#urltxt').textContent=VTO_BRANDS[k].domain;
   BRAND=k;qsSync();
   renderBrands();renderProd();renderWatermark();
-  frame.contentWindow.postMessage({vtoSet:{brand:k,crop:CROP,layout:LAYOUT}},'*');
+  frame.contentWindow.postMessage({vtoSet:{brand:k,layout:LAYOUT}},'*');
 }
 function apply(){
   if(matchMedia('(max-width:760px)').matches){frame.style.width='100%';win.style.width='100%';document.body.classList.remove('fold');return;}
@@ -295,7 +292,7 @@ function apply(){
 }
 addEventListener('message',e=>{
   const d=e.data;if(!d||e.source!==frame.contentWindow)return;
-  if(d.vtoReady){frame.contentWindow.postMessage({vtoSet:{brand:BRAND,crop:CROP,layout:LAYOUT}},'*');}
+  if(d.vtoReady){frame.contentWindow.postMessage({vtoSet:{brand:BRAND,layout:LAYOUT}},'*');}
   if(d.vtoState){STATE=d.vtoState;renderSteps();$('#status').textContent='';}
 });
 preset.onchange=()=>{W=+preset.value;apply();};
@@ -315,22 +312,19 @@ $('#hr').addEventListener('pointerdown',e=>{
 addEventListener('resize',apply);
 $('#ttlBrand').textContent=VTO_BRANDS[BRAND].name;$('#urltxt').textContent=VTO_BRANDS[BRAND].domain;
 renderBrands();renderSteps();renderProd();renderWatermark();apply();
-frame.src='vto.html?brand='+BRAND+'&crop='+CROP+'&layout='+LAYOUT+'&_='+Date.now();
-const qsSync=()=>history.replaceState(null,'','?brand='+BRAND+(CROP!=='off'?'&crop='+CROP:'')+(LAYOUT!=='6'?'&layout='+LAYOUT:''));
+frame.src='vto.html?brand='+BRAND+'&layout='+LAYOUT+'&_='+Date.now();
+const qsSync=()=>history.replaceState(null,'','?brand='+BRAND+(LAYOUT!=='6'?'&layout='+LAYOUT:''));
 function renderIntro(){document.querySelectorAll('#layoutSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===LAYOUT));
   $('#introTag').textContent='Layout '+LAYOUT;$('#layoutName').textContent=LAYOUT+' · '+LAYOUTS[LAYOUT];}
 document.querySelectorAll('#layoutSeg button').forEach(b=>b.onclick=()=>{LAYOUT=b.dataset.v;renderIntro();qsSync();
-  frame.contentWindow.postMessage({vtoSet:{brand:BRAND,crop:CROP,layout:LAYOUT}},'*');if(STATE.step!=='intro')frame.contentWindow.postMessage({vtoJump:'intro'},'*');});
+  frame.contentWindow.postMessage({vtoSet:{brand:BRAND,layout:LAYOUT}},'*');if(STATE.step!=='intro')frame.contentWindow.postMessage({vtoJump:'intro'},'*');});
 renderIntro();
-function renderCrop(){document.querySelectorAll('#cropSeg button').forEach(b=>b.classList.toggle('on',b.dataset.c===CROP));$('#cropTag').textContent=CROP==='off'?'Off':CROP==='square'?'On · 1:1':'On · 2:3';}
-document.querySelectorAll('#cropSeg button').forEach(b=>b.onclick=()=>{CROP=b.dataset.c;renderCrop();qsSync();frame.contentWindow.postMessage({vtoSet:{brand:BRAND,crop:CROP,layout:LAYOUT}},'*');});
-renderCrop();
 
 /* ---------- Export: one zip — full-page 390 + 1440 PNGs of the current step, config.json, the page code ---------- */
 const exp=$('#exp'),exptxt=$('#exptxt');
 const FILES=['vto.html','vs.js','../brands.js',DSR+'assets/ds/vs-intro.js',DSR+'templates/pdp.html'];
 function loadFrame(w){return new Promise((res,rej)=>{const f=document.createElement('iframe');f.style.cssText=`width:${w}px;height:${w<600?844:900}px;border:0`;
-  const st=STATE.step||'pdp';f.src=`vto.html?brand=${BRAND}&crop=${CROP}&layout=${LAYOUT}${st==='pdp'?'':'&step='+st}&_=${Date.now()}`;$('#hidden').appendChild(f);
+  const st=STATE.step||'pdp';f.src=`vto.html?brand=${BRAND}&layout=${LAYOUT}${st==='pdp'?'':'&step='+st}&_=${Date.now()}`;$('#hidden').appendChild(f);
   const t=setTimeout(()=>rej(new Error('page did not load')),25000);
   const ok=e=>{if(e.source!==f.contentWindow||!(e.data&&e.data.vtoReady))return;removeEventListener('message',ok);
     setTimeout(()=>{clearTimeout(t);const d=f.contentDocument;
@@ -348,7 +342,7 @@ async function doExport(){const btns=[$('#exportbtn'),$('#exportbtn2')];btns.for
     exptxt.textContent='Rendering desktop (1440) full page…';const d=await shot(1440);
     exptxt.textContent='Packaging…';const zip=new JSZip(),root=zip.folder(name);
     root.file(`${name}-mobile-390.png`,m);root.file(`${name}-desktop-1440.png`,d);
-    root.file('config.json',JSON.stringify({brand:BRAND,step:STATE.step||'pdp',crop:CROP,layout:LAYOUT,tries:STATE.tries,exportedAt:new Date().toISOString()},null,2));
+    root.file('config.json',JSON.stringify({brand:BRAND,step:STATE.step||'pdp',layout:LAYOUT,tries:STATE.tries,exportedAt:new Date().toISOString()},null,2));
     for(const f of FILES){try{const r=await fetch(f);if(r.ok)root.file(f.replace(/^(\.\.\/)+/,''),await r.blob())}catch(e){}}
     root.file('README.txt',`Virtual Stylist — ${VTO_BRANDS[BRAND].name}, step ${STATE.step||'pdp'}\nExported ${new Date().toISOString()}\n\n${name}-mobile-390.png / -desktop-1440.png = full-page renders of this step.\nconfig.json = the decision record. Open vto.html?brand=${BRAND}&step=${STATE.step||'pdp'} over HTTP to reproduce it.\n`);
     const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});

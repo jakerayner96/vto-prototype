@@ -4,8 +4,8 @@
      2 photo   as live (debenhams.com VirtualTryOnFlow, 3 Nov 2026): Camera = <input type=file accept=image/jpeg capture=user> (the phone's own
                camera app, front camera; iOS adds its Retake / Use Photo) · Upload = <input type=file accept=image/jpeg> (the phone's photo picker).
                The photo is scaled to 2000px max and re-encoded as a JPEG under 5MB, as live.
-     3 crop    OPTIONAL (?crop=off|portrait|square, default off = live: the photo goes straight to loading). On: our Move and Scale step,
-               drag, pinch / wheel / double-tap zoom under a fixed frame; Camera: Retake / Use Photo · Upload: Cancel / Choose; 2:3 or square frame.
+     3 crop    v2 adds our Move and Scale step after the photo (live has none): drag, pinch / wheel / double-tap zoom under a fixed
+               2:3 frame (the result shape); Camera: Retake / Use Photo · Upload: Cancel / Choose. Always on (Jake, 3 Nov).
      4 loading Analysing your photo → Creating your outfit, over the cropped photo, blurred
      5 result  full-bleed look, fascia watermark, sizes (shared with the PDP's size selector), Add to bag
      bag       DS toast (Top, actionable) “Item added to bag · View”, header bag count +1 (as the Master prototype)
@@ -18,7 +18,7 @@
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const desk=()=>innerWidth>=600;
-  let B=null,P=null,CROP=['portrait','square'].includes(qs.get('crop'))?qs.get('crop'):'off',LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
+  let B=null,P=null,LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
   let step='pdp',consent=false,source='camera',stream=null,facing='user',camTimer=null;
   let gen='idle',genStart=0,raf=0,tPhase=0,tDone=0,tToast=0,PHASE_A=4500,GEN_TOTAL=9000,tries=0;const MAX=5;
   let photo=MOCK,cropped=MOCK;
@@ -169,7 +169,7 @@
   function closeOverlay(){vs.classList.remove('open');vs.setAttribute('aria-hidden','true');stopCam();lock(false)}
   const lock=on=>{document.documentElement.style.overflow=on?'hidden':''};
   function setStep(s){step=s;post()}
-  function post(){if(parent!==window)parent.postMessage({vtoState:{brand:S.brand,step,tries,look:gen==='ready',crop:CROP,layout:LAYOUT}},'*')}
+  function post(){if(parent!==window)parent.postMessage({vtoState:{brand:S.brand,step,tries,look:gen==='ready',layout:LAYOUT}},'*')}
 
   /* 1 intro — the DS Virtual Stylist intro modal */
   function intro(){closeIntro();closeOverlay();
@@ -192,7 +192,7 @@
     c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);
     let q=.9,u=c.toDataURL('image/jpeg',q);while(u.length*.75>5242880&&q>.4){q-=.1;u=c.toDataURL('image/jpeg',q)}return u}
   const picked=inp=>async()=>{const f=inp.files&&inp.files[0];if(!f)return;let src;try{src=await prep(f)}catch(e){src=MOCK}
-    closeIntro();photo=src;if(CROP==='off'){cropped=src;$('#vsLdImg').src=src;generate()}else crop(src)};
+    closeIntro();photo=src;crop(src)};
   camFile.addEventListener('change',picked(camFile));file.addEventListener('change',picked(file));
 
   /* 3 crop — the native Move and Scale step: the photo moves and scales under a fixed frame; it always covers the frame */
@@ -203,8 +203,8 @@
     $('#vsHint').classList.remove('off');show('crop');
     cimg.onload=()=>{C.iw=cimg.naturalWidth;C.ih=cimg.naturalHeight;cimg.style.width=C.iw+'px';cimg.style.height=C.ih+'px';fit()};
     cimg.src=src;if(cimg.complete&&cimg.naturalWidth)cimg.onload()}
-  function layoutFrame(){const W=stage.clientWidth||innerWidth,H=stage.clientHeight||innerHeight,top=92,bottom=140,avH=H-top-bottom,avW=W-(CROP==='square'?0:32);
-    const r=CROP==='square'?1:2/3;   /* off (jumped to from the shell) shows the 2:3 frame */let w=Math.min(avW,avH*r,560),h=w/r;
+  function layoutFrame(){const W=stage.clientWidth||innerWidth,H=stage.clientHeight||innerHeight,top=92,bottom=140,avH=H-top-bottom,avW=W-32;
+    const r=2/3;let w=Math.min(avW,avH*r,560),h=w/r;
     C.f={x:Math.round((W-w)/2),y:Math.round(top+(avH-h)/2),w:Math.round(w),h:Math.round(h)};
     const f=C.f,px=v=>v+'px';Object.assign(frame.style,{left:px(f.x),top:px(f.y),width:px(f.w),height:px(f.h)});
     const d=stage.querySelectorAll('.cr-dim');
@@ -280,9 +280,8 @@
       case 'bag':closeOverlay();added();break;
       case 'limit':closeOverlay();tries=MAX;syncTries();limit();break}}
   function setBrand(k){if(k&&k!==S.brand&&window.DG_PDP_PRODUCTS[k]){S.brand=k;render()}skin();if(step==='intro')intro()}
-  function setCrop(c){if(!c||c===CROP)return;CROP=['portrait','square'].includes(c)?c:'off';if(step==='crop')fit();post()}
   addEventListener('message',e=>{const d=e.data||{};
-    if(d.vtoSet){setCrop(d.vtoSet.crop);const v=d.vtoSet;if(v.layout&&String(v.layout)!==LAYOUT){LAYOUT=String(v.layout);if(step==='intro'){setBrand(v.brand);intro();return}}setBrand(d.vtoSet.brand)}
+    if(d.vtoSet){const v=d.vtoSet;if(v.layout&&String(v.layout)!==LAYOUT){LAYOUT=String(v.layout);if(step==='intro'){setBrand(v.brand);intro();return}}setBrand(d.vtoSet.brand)}
     if(d.vtoJump)jump(d.vtoJump);
     if(d.vtoReset)reset();
     if(d.vtoPing)parent.postMessage({vtoPong:d.vtoPing,h:document.documentElement.scrollHeight},'*')});
