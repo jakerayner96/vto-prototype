@@ -18,7 +18,7 @@
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const desk=()=>innerWidth>=600;
-  let B=null,P=null,CROP=['portrait','square'].includes(qs.get('crop'))?qs.get('crop'):'off',LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'1';
+  let B=null,P=null,CROP=['portrait','square'].includes(qs.get('crop'))?qs.get('crop'):'off',LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
   let step='pdp',consent=false,source='camera',stream=null,facing='user',camTimer=null;
   let gen='idle',genStart=0,raf=0,tPhase=0,tDone=0,tToast=0,PHASE_A=4500,GEN_TOTAL=9000,tries=0;const MAX=5;
   let photo=MOCK,cropped=MOCK;

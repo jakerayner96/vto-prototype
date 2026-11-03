@@ -221,7 +221,7 @@ const frame=$('#frame'),stage=$('#stage'),win=$('#win'),preset=$('#preset'),size
 const qs=new URLSearchParams(location.search);
 let BRAND=qs.get('brand')||localStorage.getItem('vs-brand')||'debenhams'; if(!ORDER.includes(BRAND))BRAND='debenhams';
 let CROP=['portrait','square'].includes(qs.get('crop'))?qs.get('crop'):'off';
-let LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'1';
+let LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
 const LAYOUTS={1:'Step cards + pills',2:'Step cards + tip cards, centred',3:'Timeline + tip cards, centred',4:'Timeline + tip cards',5:'Timeline + pills',6:'Welcome, timeline + pills'};
 let W=390,FOLD=true,STATE={step:'pdp',tries:0};
 
@@ -316,7 +316,7 @@ addEventListener('resize',apply);
 $('#ttlBrand').textContent=VTO_BRANDS[BRAND].name;$('#urltxt').textContent=VTO_BRANDS[BRAND].domain;
 renderBrands();renderSteps();renderProd();renderWatermark();apply();
 frame.src='vto.html?brand='+BRAND+'&crop='+CROP+'&layout='+LAYOUT+'&_='+Date.now();
-const qsSync=()=>history.replaceState(null,'','?brand='+BRAND+(CROP!=='off'?'&crop='+CROP:'')+(LAYOUT!=='1'?'&layout='+LAYOUT:''));
+const qsSync=()=>history.replaceState(null,'','?brand='+BRAND+(CROP!=='off'?'&crop='+CROP:'')+(LAYOUT!=='6'?'&layout='+LAYOUT:''));
 function renderIntro(){document.querySelectorAll('#layoutSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===LAYOUT));
   $('#introTag').textContent='Layout '+LAYOUT;$('#layoutName').textContent=LAYOUT+' · '+LAYOUTS[LAYOUT];}
 document.querySelectorAll('#layoutSeg button').forEach(b=>b.onclick=()=>{LAYOUT=b.dataset.v;renderIntro();qsSync();
