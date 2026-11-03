@@ -1,6 +1,6 @@
 /* Virtual Stylist v2 — the layer over the DS master PDP (v2/vto.html writes debenhamsgroup.design templates/pdp.html into this document first).
    The PDP is the template as it stands; this file only wires its own Virtual Stylist chip (.pdp-chips .ai-pill--tag) and its Add to bag, and adds:
-     1 intro   DS Virtual Stylist intro, full screen (assets/ds/vs-intro.js): How it works ?steps=cards|timeline · tips ?tips=cards|pills
+     1 intro   DS Virtual Stylist intro, slide up (assets/ds/vs-intro.js): Jake's six start screen layouts, ?layout=1..6
      2 camera  native iOS camera (real getUserMedia; a pending permission prompt falls back to the bodyshot after 2.5s)
      3 crop    native iOS second step, Move and Scale: drag, pinch / wheel / double-tap zoom under a fixed frame. Camera: Retake / Use Photo ·
                library: Cancel / Choose. Frame 2:3 portrait (the result shape) or square (what UIImagePickerController allowsEditing gives) — ?crop=
@@ -16,7 +16,7 @@
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const desk=()=>innerWidth>=600;
-  let B=null,P=null,CROP=qs.get('crop')==='square'?'square':'portrait',IN={steps:qs.get('steps')==='timeline'?'timeline':'cards',tips:qs.get('tips')==='pills'?'pills':'cards'};
+  let B=null,P=null,CROP=qs.get('crop')==='square'?'square':'portrait',LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'1';
   let step='pdp',consent=false,source='camera',stream=null,facing='user',camTimer=null;
   let gen='idle',genStart=0,raf=0,tPhase=0,tDone=0,tToast=0,PHASE_A=4500,GEN_TOTAL=9000,tries=0;const MAX=5;
   let photo=MOCK,cropped=MOCK;
@@ -191,11 +191,11 @@
   function closeOverlay(){vs.classList.remove('open');vs.setAttribute('aria-hidden','true');stopCam();lock(false)}
   const lock=on=>{document.documentElement.style.overflow=on?'hidden':''};
   function setStep(s){step=s;post()}
-  function post(){if(parent!==window)parent.postMessage({vtoState:{brand:S.brand,step,tries,look:gen==='ready',crop:CROP,steps:IN.steps,tips:IN.tips}},'*')}
+  function post(){if(parent!==window)parent.postMessage({vtoState:{brand:S.brand,step,tries,look:gen==='ready',crop:CROP,layout:LAYOUT}},'*')}
 
   /* 1 intro — the DS Virtual Stylist intro modal */
   function intro(){closeIntro();closeOverlay();
-    document.body.insertAdjacentHTML('beforeend',DG_vsIntro.layer({fascia:B.name,desk:desk(),left:MAX-tries,consent,steps:IN.steps,tips:IN.tips}));
+    document.body.insertAdjacentHTML('beforeend',DG_vsIntro.layer({fascia:B.name,desk:desk(),left:MAX-tries,consent,layout:LAYOUT}));
     const el=$('[data-vs-intro]');lock(true);
     DG_vsIntro.wire(el,{onClose:()=>{closeIntro();lock(false);setStep('pdp')},onConsent:on=>{consent=on},onCamera:()=>{closeIntro();camera()},onUpload:()=>upload()});
     setStep('intro')}
@@ -310,7 +310,7 @@
   function setBrand(k){if(k&&k!==S.brand&&window.DG_PDP_PRODUCTS[k]){S.brand=k;render()}skin();if(step==='intro')intro()}
   function setCrop(c){if(!c||c===CROP)return;CROP=c==='square'?'square':'portrait';if(step==='crop')fit();post()}
   addEventListener('message',e=>{const d=e.data||{};
-    if(d.vtoSet){setCrop(d.vtoSet.crop);const v=d.vtoSet;if((v.steps&&v.steps!==IN.steps)||(v.tips&&v.tips!==IN.tips)){IN={steps:v.steps||IN.steps,tips:v.tips||IN.tips};if(step==='intro'){setBrand(v.brand);intro();return}}setBrand(d.vtoSet.brand)}
+    if(d.vtoSet){setCrop(d.vtoSet.crop);const v=d.vtoSet;if(v.layout&&String(v.layout)!==LAYOUT){LAYOUT=String(v.layout);if(step==='intro'){setBrand(v.brand);intro();return}}setBrand(d.vtoSet.brand)}
     if(d.vtoJump)jump(d.vtoJump);
     if(d.vtoReset)reset();
     if(d.vtoPing)parent.postMessage({vtoPong:d.vtoPing,h:document.documentElement.scrollHeight},'*')});
