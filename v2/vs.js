@@ -49,7 +49,6 @@
   #vs .cr-hint.off{opacity:0}
   #vs .cr-bar{position:absolute;left:0;right:0;bottom:0;height:96px;display:flex;justify-content:space-between;align-items:flex-start;padding:22px 26px 0;background:rgba(0,0,0,.35)}
   #vs .cr-bar button{font-size:18px;letter-spacing:-.3px;padding:6px 0}
-  #vs .cr-bar .use{font-weight:600}
   /* loading (as v1) */
   #vs .ld-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.8),rgba(0,0,0,.8)),#e0dedc;overflow:hidden}
   #vs.light .ld-bg{background:var(--vs-ground)}
