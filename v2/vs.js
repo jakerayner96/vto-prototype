@@ -245,16 +245,15 @@
     clearTimeout(tPhase);clearTimeout(tDone);tPhase=setTimeout(()=>ld.classList.add('creating'),PHASE_A);tDone=setTimeout(done,GEN_TOTAL)}
   function done(){gen='ready';cancelAnimationFrame(raf);fill.style.width='100%';
     if(vs.classList.contains('open'))setTimeout(()=>show('result'),350);
-    else toast('Your Virtual Stylist look is ready',()=>{toastOff();show('result',430)});post()}
+    else toast('Your look is ready',()=>show('result',430));post()}
 
   /* 5 result · bag · limit */
   function atb(){closeOverlay();setTimeout(added,380)}
-  let tt=0;
-  function toast(msg,act){toastOff();clearTimeout(tt);
-    document.body.insertAdjacentHTML('beforeend',`<div class="toast toast--top" data-vs-toast role="status"><span style="flex:1">${esc(msg)}</span><button class="act">View</button></div>`);
-    const el=$('[data-vs-toast]');el.style.zIndex='calc(var(--z-modal,500) + 40)';el.querySelector('.act').onclick=act||toastOff;tt=setTimeout(toastOff,6000)}
-  const toastOff=()=>$$('[data-vs-toast]').forEach(x=>x.remove());
-  function added(){$$('.hd-count').forEach(b=>b.setAttribute('data-n',(+b.getAttribute('data-n')||0)+1));toast('Item added to bag');setStep('bag')}
+  /* the DS top toast (assets/ds/toast.js, Figma DS 5146-559): under the USP banners, follows the sticky bar while it shows */
+  let T=null;
+  function toast(msg,act,label){toastOff();T=DG_toast({msg,action:label||'View',onAction:act||(()=>{})});T.el.style.zIndex='calc(var(--z-modal,500) + 40)'}
+  const toastOff=()=>{if(T){T.close(true);T=null}};
+  function added(){$$('.hd-count').forEach(b=>b.setAttribute('data-n',(+b.getAttribute('data-n')||0)+1));toast('Added to Bag',null,'View Bag');setStep('bag')}
   function limit(){closeIntro();
     document.body.insertAdjacentHTML('beforeend',`<div class="vs-layer" data-vs-intro><div class="mdl-scrim" data-vs-close></div><div class="mdl mdl--alert" role="alertdialog" aria-modal="true" aria-labelledby="vs-lim">
       <div class="modal-hd"><span class="mt" id="vs-lim">You’ve used all ${MAX} try-ons today</span><button class="modal-x" data-vs-close aria-label="Close"></button></div>
