@@ -165,8 +165,8 @@ body.dragging iframe{pointer-events:none}
   <div class="card"><h3>Watermark <span class="tag">103 × 32</span></h3><p>The try-on result watermark as shipped: <b>white, 70%</b>, logo <b>103px wide</b> (max 32px tall), centred in the 103 × 32 slot (Figma 15550-23882). SVG + transparent PNG at 1x, 2x, 3x.</p>
     <div class="wm-prev"><img id="wmPrev" alt=""></div>
     <button class="wm-btn" id="wmbtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 12.5h11"/></svg><span id="wmbtnTxt">Export watermark</span></button></div>
-  <div class="card"><h3>Start screen <span class="tag" id="introTag"></span></h3><p>Your six final layouts (Figma 15898-33012). <b>Slide up</b> on phones, hugging the content; centred on desktop.</p>
-    <span class="seg" id="layoutSeg"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button></span>
+  <div class="card"><h3>Start screen <span class="tag" id="introTag"></span></h3><p>1 to 6: your final layouts (Figma 15898-33012). 7 to 10: shorter versions, tips as plain text (9 Nov). <b>Slide up</b> on phones, hugging the content; centred on desktop.</p>
+    <span class="seg" id="layoutSeg"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button><button data-v="7">7</button><button data-v="8">8</button><button data-v="9">9</button><button data-v="10">10</button></span>
     <p style="margin:8px 0 0" id="layoutName"></p></div>
   <div class="card"><h3>What's new in v2</h3>
     <ul class="notes">
@@ -218,8 +218,8 @@ const $=s=>document.querySelector(s);
 const frame=$('#frame'),stage=$('#stage'),win=$('#win'),preset=$('#preset'),sizebox=$('#sizebox');
 const qs=new URLSearchParams(location.search);
 let BRAND=qs.get('brand')||localStorage.getItem('vs-brand')||'debenhams'; if(!ORDER.includes(BRAND))BRAND='debenhams';
-let LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
-const LAYOUTS={1:'Step cards + pills',2:'Step cards + tip cards, centred',3:'Timeline + tip cards, centred',4:'Timeline + tip cards',5:'Timeline + pills',6:'Welcome, timeline + pills'};
+let LAYOUT=/^([1-9]|10)$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
+const LAYOUTS={1:'Step cards + pills',2:'Step cards + tip cards, centred',3:'Timeline + tip cards, centred',4:'Timeline + tip cards',5:'Timeline + pills',6:'Welcome, timeline + pills',7:'Short: three steps + tip line',8:'Short: intro + tick list',9:'Short: intro + example photo',10:'Shortest: intro + tip line'};
 let W=390,FOLD=true,STATE={step:'pdp',tries:0};
 
 /* fascia chips: top bar + the phone panel header. Switching re-skins the current screen in place (never resets the journey). */

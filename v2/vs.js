@@ -18,7 +18,7 @@
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const desk=()=>innerWidth>=600;
-  let B=null,P=null,LAYOUT=/^[1-6]$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
+  let B=null,P=null,LAYOUT=/^([1-9]|10)$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
   let step='pdp',consent=false,source='camera',stream=null,facing='user',camTimer=null;
   let gen='idle',genStart=0,raf=0,tPhase=0,tDone=0,tToast=0,PHASE_A=4500,GEN_TOTAL=9000,tries=0;const MAX=5;
   let photo=MOCK,cropped=MOCK;
@@ -173,7 +173,7 @@
 
   /* 1 intro — the DS Virtual Stylist intro modal */
   function intro(){closeIntro();closeOverlay();
-    document.body.insertAdjacentHTML('beforeend',DG_vsIntro.layer({fascia:B.name,desk:desk(),left:MAX-tries,consent,layout:LAYOUT}));
+    document.body.insertAdjacentHTML('beforeend',DG_vsIntro.layer({fascia:B.name,desk:desk(),left:MAX-tries,consent,layout:LAYOUT,photo:MOCK}));
     const el=$('[data-vs-intro]');lock(true);
     DG_vsIntro.wire(el,{onClose:()=>{closeIntro();lock(false);setStep('pdp')},onConsent:on=>{consent=on},onCamera:()=>camera(),onUpload:()=>upload()});
     setStep('intro')}
