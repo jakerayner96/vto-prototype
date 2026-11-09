@@ -165,13 +165,10 @@ body.dragging iframe{pointer-events:none}
   <div class="card"><h3>Watermark <span class="tag">103 × 32</span></h3><p>The try-on result watermark as shipped: <b>white, 70%</b>, logo <b>103px wide</b> (max 32px tall), centred in the 103 × 32 slot (Figma 15550-23882). SVG + transparent PNG at 1x, 2x, 3x.</p>
     <div class="wm-prev"><img id="wmPrev" alt=""></div>
     <button class="wm-btn" id="wmbtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 12.5h11"/></svg><span id="wmbtnTxt">Export watermark</span></button></div>
-  <div class="card"><h3>Start screen <span class="tag" id="introTag"></span></h3><p>1 to 6: your final layouts (Figma 15898-33012). 7 to 10: shorter versions, tips as plain text (9 Nov). <b>Slide up</b> on phones, hugging the content; centred on desktop.</p>
-    <span class="seg" id="layoutSeg"><button data-v="1">1</button><button data-v="2">2</button><button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button><button data-v="7">7</button><button data-v="8">8</button><button data-v="9">9</button><button data-v="10">10</button></span>
-    <p style="margin:8px 0 0" id="layoutName"></p></div>
   <div class="card"><h3>What's new in v2</h3>
     <ul class="notes">
       <li><b>PDP</b> is the DS master PDP (debenhamsgroup.design <b>templates/pdp.html</b>, the Master prototype's PDP), loaded fresh, so it always has the latest DS components: buy stack, Ask Deb prompts, membership, Deliver+, delivery grid, BNPL, Subscribe &amp; Save, Bundling, recommendation rails. Its own Virtual Stylist chip opens the flow.</li>
-      <li><b>Intro</b> is the new DS <b>Virtual Stylist intro</b> modal: How it works (3 steps), photo tips, the 18+ consent row (a record, not a gate), Camera / Upload side by side with their icons (as v1), the 5-a-day note. Slide up on phones, centred from 600px; six layouts to compare (Start screen card).</li>
+      <li><b>Intro</b> is the new DS <b>Virtual Stylist intro</b> modal: How it works (3 steps), photo tips, the 18+ consent row (a record, not a gate), Camera / Upload side by side with their icons (as v1), the 5-a-day note. Slide up on phones, centred from 600px. Final design: Figma 15921-1329 (9 Nov).</li>
       <li><b>Camera / Upload</b> work as live (debenhams.com): the phone’s own camera (front camera) or photo picker, the photo scaled to 2000px as a JPEG under 5MB. On a phone, open this page directly to get the real camera. The consent box has to be ticked first, as live.</li>
       <li><b>Crop</b>: new in v2 (live has no crop step). After the photo, our Move and Scale step with a 2:3 frame, the shape of the result. Drag to move, pinch, scroll or double-tap to zoom; the photo always fills the frame. Camera: Retake / Use Photo. Upload: Cancel / Choose.</li>
       <li><b>Loading + result</b> as v1 (signed-off VTO overlay colours). Add to bag and the PDP's Add to bag use the DS toast with the bag count, as the Master prototype.</li>
@@ -218,8 +215,6 @@ const $=s=>document.querySelector(s);
 const frame=$('#frame'),stage=$('#stage'),win=$('#win'),preset=$('#preset'),sizebox=$('#sizebox');
 const qs=new URLSearchParams(location.search);
 let BRAND=qs.get('brand')||localStorage.getItem('vs-brand')||'debenhams'; if(!ORDER.includes(BRAND))BRAND='debenhams';
-let LAYOUT=/^([1-9]|10)$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
-const LAYOUTS={1:'Step cards + pills',2:'Step cards + tip cards, centred',3:'Timeline + tip cards, centred',4:'Timeline + tip cards',5:'Timeline + pills',6:'Welcome, timeline + pills',7:'Short: three steps + tip line',8:'Short: intro + tick list',9:'Short: intro + example photo',10:'Shortest: intro + tip line'};
 let W=390,FOLD=true,STATE={step:'pdp',tries:0};
 
 /* fascia chips: top bar + the phone panel header. Switching re-skins the current screen in place (never resets the journey). */
@@ -278,7 +273,7 @@ function setBrand(k){
   $('#ttlBrand').textContent=VTO_BRANDS[k].name;$('#urltxt').textContent=VTO_BRANDS[k].domain;
   BRAND=k;qsSync();
   renderBrands();renderProd();renderWatermark();
-  frame.contentWindow.postMessage({vtoSet:{brand:k,layout:LAYOUT}},'*');
+  frame.contentWindow.postMessage({vtoSet:{brand:k}},'*');
 }
 function apply(){
   if(matchMedia('(max-width:760px)').matches){frame.style.width='100%';win.style.width='100%';document.body.classList.remove('fold');return;}
@@ -292,7 +287,7 @@ function apply(){
 }
 addEventListener('message',e=>{
   const d=e.data;if(!d||e.source!==frame.contentWindow)return;
-  if(d.vtoReady){frame.contentWindow.postMessage({vtoSet:{brand:BRAND,layout:LAYOUT}},'*');}
+  if(d.vtoReady){frame.contentWindow.postMessage({vtoSet:{brand:BRAND}},'*');}
   if(d.vtoState){STATE=d.vtoState;renderSteps();$('#status').textContent='';}
 });
 preset.onchange=()=>{W=+preset.value;apply();};
@@ -312,19 +307,14 @@ $('#hr').addEventListener('pointerdown',e=>{
 addEventListener('resize',apply);
 $('#ttlBrand').textContent=VTO_BRANDS[BRAND].name;$('#urltxt').textContent=VTO_BRANDS[BRAND].domain;
 renderBrands();renderSteps();renderProd();renderWatermark();apply();
-frame.src='vto.html?brand='+BRAND+'&layout='+LAYOUT+'&_='+Date.now();
-const qsSync=()=>history.replaceState(null,'','?brand='+BRAND+(LAYOUT!=='6'?'&layout='+LAYOUT:''));
-function renderIntro(){document.querySelectorAll('#layoutSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===LAYOUT));
-  $('#introTag').textContent='Layout '+LAYOUT;$('#layoutName').textContent=LAYOUT+' · '+LAYOUTS[LAYOUT];}
-document.querySelectorAll('#layoutSeg button').forEach(b=>b.onclick=()=>{LAYOUT=b.dataset.v;renderIntro();qsSync();
-  frame.contentWindow.postMessage({vtoSet:{brand:BRAND,layout:LAYOUT}},'*');if(STATE.step!=='intro')frame.contentWindow.postMessage({vtoJump:'intro'},'*');});
-renderIntro();
+frame.src='vto.html?brand='+BRAND+'&_='+Date.now();
+const qsSync=()=>history.replaceState(null,'','?brand='+BRAND);
 
 /* ---------- Export: one zip — full-page 390 + 1440 PNGs of the current step, config.json, the page code ---------- */
 const exp=$('#exp'),exptxt=$('#exptxt');
 const FILES=['vto.html','vs.js','../brands.js',DSR+'assets/ds/vs-intro.js',DSR+'templates/pdp.html'];
 function loadFrame(w){return new Promise((res,rej)=>{const f=document.createElement('iframe');f.style.cssText=`width:${w}px;height:${w<600?844:900}px;border:0`;
-  const st=STATE.step||'pdp';f.src=`vto.html?brand=${BRAND}&layout=${LAYOUT}${st==='pdp'?'':'&step='+st}&_=${Date.now()}`;$('#hidden').appendChild(f);
+  const st=STATE.step||'pdp';f.src=`vto.html?brand=${BRAND}${st==='pdp'?'':'&step='+st}&_=${Date.now()}`;$('#hidden').appendChild(f);
   const t=setTimeout(()=>rej(new Error('page did not load')),25000);
   const ok=e=>{if(e.source!==f.contentWindow||!(e.data&&e.data.vtoReady))return;removeEventListener('message',ok);
     setTimeout(()=>{clearTimeout(t);const d=f.contentDocument;
@@ -337,12 +327,12 @@ async function shot(w){const f=await loadFrame(w),doc=f.contentDocument,h=f.offs
   return new Promise(r=>c.toBlob(r,'image/png'))}
 const stamp=()=>new Date().toISOString().slice(0,16).replace('T','-').replace(':','');
 async function doExport(){const btns=[$('#exportbtn'),$('#exportbtn2')];btns.forEach(b=>b.disabled=true);exp.hidden=false;
-  try{const name=`virtual-stylist-${BRAND}-${STATE.step||'pdp'}${(STATE.step||'pdp')==='intro'?'-layout'+LAYOUT:''}-${stamp()}`;
+  try{const name=`virtual-stylist-${BRAND}-${STATE.step||'pdp'}-${stamp()}`;
     exptxt.textContent='Rendering mobile (390) full page…';const m=await shot(390);
     exptxt.textContent='Rendering desktop (1440) full page…';const d=await shot(1440);
     exptxt.textContent='Packaging…';const zip=new JSZip(),root=zip.folder(name);
     root.file(`${name}-mobile-390.png`,m);root.file(`${name}-desktop-1440.png`,d);
-    root.file('config.json',JSON.stringify({brand:BRAND,step:STATE.step||'pdp',layout:LAYOUT,tries:STATE.tries,exportedAt:new Date().toISOString()},null,2));
+    root.file('config.json',JSON.stringify({brand:BRAND,step:STATE.step||'pdp',tries:STATE.tries,exportedAt:new Date().toISOString()},null,2));
     for(const f of FILES){try{const r=await fetch(f);if(r.ok)root.file(f.replace(/^(\.\.\/)+/,''),await r.blob())}catch(e){}}
     root.file('README.txt',`Virtual Stylist — ${VTO_BRANDS[BRAND].name}, step ${STATE.step||'pdp'}\nExported ${new Date().toISOString()}\n\n${name}-mobile-390.png / -desktop-1440.png = full-page renders of this step.\nconfig.json = the decision record. Open vto.html?brand=${BRAND}&step=${STATE.step||'pdp'} over HTTP to reproduce it.\n`);
     const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});

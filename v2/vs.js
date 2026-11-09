@@ -1,6 +1,6 @@
 /* Virtual Stylist v2 — the layer over the DS master PDP (v2/vto.html writes debenhamsgroup.design templates/pdp.html into this document first).
    The PDP is the template as it stands; this file only wires its own Virtual Stylist chip (.pdp-chips .ai-pill--tag) and its Add to bag, and adds:
-     1 intro   DS Virtual Stylist intro, slide up (assets/ds/vs-intro.js): Jake's six start screen layouts, ?layout=1..6
+     1 intro   DS Virtual Stylist intro, slide up (assets/ds/vs-intro.js): the final design, Figma 15921-1329 (Jake, 9 Nov)
      2 photo   as live (debenhams.com VirtualTryOnFlow, 3 Nov 2026): Camera = <input type=file accept=image/jpeg capture=user> (the phone's own
                camera app, front camera; iOS adds its Retake / Use Photo) · Upload = <input type=file accept=image/jpeg> (the phone's photo picker).
                The photo is scaled to 2000px max and re-encoded as a JPEG under 5MB, as live.
@@ -18,7 +18,7 @@
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const desk=()=>innerWidth>=600;
-  let B=null,P=null,LAYOUT=/^([1-9]|10)$/.test(qs.get('layout')||'')?qs.get('layout'):'6';
+  let B=null,P=null;
   let step='pdp',consent=false,source='camera',stream=null,facing='user',camTimer=null;
   let gen='idle',genStart=0,raf=0,tPhase=0,tDone=0,tToast=0,PHASE_A=4500,GEN_TOTAL=9000,tries=0;const MAX=5;
   let photo=MOCK,cropped=MOCK;
@@ -168,11 +168,11 @@
   function closeOverlay(){vs.classList.remove('open');vs.setAttribute('aria-hidden','true');stopCam();lock(false)}
   const lock=on=>{document.documentElement.style.overflow=on?'hidden':''};
   function setStep(s){step=s;post()}
-  function post(){if(parent!==window)parent.postMessage({vtoState:{brand:S.brand,step,tries,look:gen==='ready',layout:LAYOUT}},'*')}
+  function post(){if(parent!==window)parent.postMessage({vtoState:{brand:S.brand,step,tries,look:gen==='ready'}},'*')}
 
   /* 1 intro — the DS Virtual Stylist intro modal */
   function intro(){closeIntro();closeOverlay();
-    document.body.insertAdjacentHTML('beforeend',DG_vsIntro.layer({fascia:B.name,desk:desk(),left:MAX-tries,consent,layout:LAYOUT,photo:MOCK}));
+    document.body.insertAdjacentHTML('beforeend',DG_vsIntro.layer({fascia:B.name,desk:desk(),left:MAX-tries,consent}));
     const el=$('[data-vs-intro]');lock(true);
     DG_vsIntro.wire(el,{onClose:()=>{closeIntro();lock(false);setStep('pdp')},onConsent:on=>{consent=on},onCamera:()=>camera(),onUpload:()=>upload()});
     setStep('intro')}
@@ -279,7 +279,7 @@
       case 'limit':closeOverlay();tries=MAX;syncTries();limit();break}}
   function setBrand(k){if(k&&k!==S.brand&&window.DG_PDP_PRODUCTS[k]){S.brand=k;render()}skin();if(step==='intro')intro()}
   addEventListener('message',e=>{const d=e.data||{};
-    if(d.vtoSet){const v=d.vtoSet;if(v.layout&&String(v.layout)!==LAYOUT){LAYOUT=String(v.layout);if(step==='intro'){setBrand(v.brand);intro();return}}setBrand(d.vtoSet.brand)}
+    if(d.vtoSet){setBrand(d.vtoSet.brand)}
     if(d.vtoJump)jump(d.vtoJump);
     if(d.vtoReset)reset();
     if(d.vtoPing)parent.postMessage({vtoPong:d.vtoPing,h:document.documentElement.scrollHeight},'*')});
