@@ -8,8 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   Review shell — Jake's standard format (review-prototype skill): top bar = title · fascia chips · Desktop/Mobile ·
-   width preset · width · Full page/Fold · status · Restart · Export (+ DS Screenshot drop-in); left panel = the journey steps, product and notes.
+   Review shell — Jake's standard format (review-prototype skill): top bar = title · fascia chips · (mobile only, no Desktop: Jake 11 Nov) phone width preset · width · Full page/Fold · status · Restart · Export (+ DS Screenshot drop-in); left panel = the journey steps, product and notes.
    ============================================================ */
 :root{--bg:#161616;--bar:#000;--panel:#000;--line:rgba(255,255,255,.14);--ink:#F7F7F7;--muted:#9A9A9A;--dim:#707070;--accent:#0D99FF;--ok:#1FA971}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -142,9 +141,8 @@ body.dragging iframe{pointer-events:none}
   <div class="mid">
     <span class="chips" id="brands"></span>
     <span class="div"></span>
-    <span class="seg" id="dev"><button data-w="0">Desktop</button><button data-w="390" class="on">Mobile</button></span>
-    <select id="preset" aria-label="Width preset" title="Exact width — or drag the handle on the preview">
-      <option value="390" selected>390</option><option value="402">402</option><option value="440">440</option><option value="768">768</option><option value="1024">1024</option><option value="1280">1280</option><option value="1440">1440</option><option value="0">Fit</option>
+    <select id="preset" aria-label="Phone width" title="Phone width, or drag the handle on the preview">
+      <option value="375">375</option><option value="390" selected>390</option><option value="402">402</option><option value="430">430</option><option value="440">440</option>
     </select>
     <span class="w" id="sizebox"></span>
     <span class="seg" id="fold"><button data-f="0">Full page</button><button data-f="1" class="on">Fold</button></span>
@@ -152,7 +150,7 @@ body.dragging iframe{pointer-events:none}
   <span class="status" id="status"></span>
   <button class="reset" id="resetbtn" title="Restart the journey for this fascia: back to the PDP, tries reset"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M12.5 1.5v3h-3"/></svg>Restart</button>
   <button class="export" id="wmallbtn" title="Download the Virtual Stylist watermark for every fascia in one zip: white, 70%, 103 x 32 (SVG + PNG 1x / 2x / 3x)"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 12.5h11"/></svg>All watermarks</button>
-  <button class="export" id="exportbtn" title="Export a zip: full-page mobile (390) and desktop (1440) PNGs of the current step, the config and the page code"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 12.5h11"/></svg>Export</button>
+  <button class="export" id="exportbtn" title="Export a zip: a full-page mobile (390) PNG of the current step, the config and the page code"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 12.5h11"/></svg>Export</button>
 </header>
 
 <button id="mtab" aria-label="Open the menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
@@ -278,11 +276,10 @@ function setBrand(k){
 function apply(){
   if(matchMedia('(max-width:760px)').matches){frame.style.width='100%';win.style.width='100%';document.body.classList.remove('fold');return;}
   const avail=stage.clientWidth-16;
-  const w=Math.min(W||avail,avail);
+  const w=Math.min(W||390,avail,440);
   frame.style.width=w+'px';win.style.width=(w+16)+'px';
   document.body.classList.toggle('fold',FOLD&&w<600);   /* Fold = iOS Safari frame, mobile widths only */document.documentElement.style.setProperty('--k',(w/390).toFixed(4));
   document.querySelectorAll('#fold button').forEach(b=>b.classList.toggle('on',(+b.dataset.f===1)===FOLD));
-  document.querySelectorAll('#dev button').forEach(b=>b.classList.toggle('on',(b.dataset.w==='390'&&w<600)||(b.dataset.w==='0'&&w>=600)));
   sizebox.textContent=`${Math.round(w)}px`;
 }
 addEventListener('message',e=>{
@@ -291,7 +288,6 @@ addEventListener('message',e=>{
   if(d.vtoState){STATE=d.vtoState;renderSteps();$('#status').textContent='';}
 });
 preset.onchange=()=>{W=+preset.value;apply();};
-document.querySelectorAll('#dev button').forEach(b=>b.onclick=()=>{W=+b.dataset.w;preset.value=b.dataset.w;apply();});
 document.querySelectorAll('#fold button').forEach(b=>b.onclick=()=>{FOLD=b.dataset.f==='1';apply();});
 $('#resetbtn').onclick=()=>frame.contentWindow.postMessage({vtoReset:1},'*');
 $('#mtab').onclick=()=>$('#panel').classList.add('open');
@@ -300,7 +296,7 @@ $('#panel').addEventListener('click',e=>{if(e.target.closest('.chip,.step')&&mat
 $('#hr').addEventListener('pointerdown',e=>{
   e.preventDefault();document.body.classList.add('dragging');
   const sx=e.clientX,sw=frame.offsetWidth;
-  const move=ev=>{W=Math.max(320,sw+(ev.clientX-sx));preset.value='0';apply();};
+  const move=ev=>{W=Math.min(440,Math.max(320,sw+(ev.clientX-sx)));preset.value=String(W);if(preset.value!==String(W))preset.selectedIndex=-1;apply();};   /* phones only: 320 to 440 */
   const up=()=>{document.body.classList.remove('dragging');removeEventListener('pointermove',move);removeEventListener('pointerup',up);};
   addEventListener('pointermove',move);addEventListener('pointerup',up);
 });
@@ -310,7 +306,7 @@ renderBrands();renderSteps();renderProd();renderWatermark();apply();
 frame.src='vto.html?brand='+BRAND+'&_='+Date.now();
 const qsSync=()=>history.replaceState(null,'','?brand='+BRAND);
 
-/* ---------- Export: one zip — full-page 390 + 1440 PNGs of the current step, config.json, the page code ---------- */
+/* ---------- Export: one zip — full-page 390 PNG of the current step, config.json, the page code ---------- */
 const exp=$('#exp'),exptxt=$('#exptxt');
 const FILES=['vto.html','vs.js','../brands.js',DSR+'assets/ds/vs-intro.js',DSR+'templates/pdp.html'];
 function loadFrame(w){return new Promise((res,rej)=>{const f=document.createElement('iframe');f.style.cssText=`width:${w}px;height:${w<600?844:900}px;border:0`;
@@ -329,15 +325,14 @@ const stamp=()=>new Date().toISOString().slice(0,16).replace('T','-').replace(':
 async function doExport(){const btns=[$('#exportbtn'),$('#exportbtn2')];btns.forEach(b=>b.disabled=true);exp.hidden=false;
   try{const name=`virtual-stylist-${BRAND}-${STATE.step||'pdp'}-${stamp()}`;
     exptxt.textContent='Rendering mobile (390) full page…';const m=await shot(390);
-    exptxt.textContent='Rendering desktop (1440) full page…';const d=await shot(1440);
     exptxt.textContent='Packaging…';const zip=new JSZip(),root=zip.folder(name);
-    root.file(`${name}-mobile-390.png`,m);root.file(`${name}-desktop-1440.png`,d);
+    root.file(`${name}-mobile-390.png`,m);
     root.file('config.json',JSON.stringify({brand:BRAND,step:STATE.step||'pdp',tries:STATE.tries,exportedAt:new Date().toISOString()},null,2));
     for(const f of FILES){try{const r=await fetch(f);if(r.ok)root.file(f.replace(/^(\.\.\/)+/,''),await r.blob())}catch(e){}}
-    root.file('README.txt',`Virtual Stylist — ${VTO_BRANDS[BRAND].name}, step ${STATE.step||'pdp'}\nExported ${new Date().toISOString()}\n\n${name}-mobile-390.png / -desktop-1440.png = full-page renders of this step.\nconfig.json = the decision record. Open vto.html?brand=${BRAND}&step=${STATE.step||'pdp'} over HTTP to reproduce it.\n`);
+    root.file('README.txt',`Virtual Stylist — ${VTO_BRANDS[BRAND].name}, step ${STATE.step||'pdp'}\nExported ${new Date().toISOString()}\n\n${name}-mobile-390.png = the full-page render of this step.\nconfig.json = the decision record. Open vto.html?brand=${BRAND}&step=${STATE.step||'pdp'} over HTTP to reproduce it.\n`);
     const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name+'.zip';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);
-    $('#status').textContent='Exported ✓ zip (390 + 1440 PNGs)';
+    $('#status').textContent='Exported ✓ zip (390 PNG)';
   }catch(err){console.error(err);$('#status').textContent='Export failed: '+err.message}
   finally{btns.forEach(b=>b.disabled=false);exp.hidden=true;setTimeout(()=>$('#status').textContent='',8000)}}
 $('#exportbtn').onclick=doExport;$('#exportbtn2').onclick=doExport;
