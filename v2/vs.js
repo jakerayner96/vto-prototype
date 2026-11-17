@@ -124,7 +124,7 @@
     <div class="scr" data-scr="result">
       <div class="rs-img"><img id="vsResult" alt="Your Virtual Stylist look"></div>
       <div class="wm"><img id="vsWm" alt=""></div>
-      <div class="rs-sheet" id="vsSheet"><div class="rs-sizes" id="vsSizes"></div><div class="buy-row"><button class="rs-atb" data-vs="atb">Add to bag</button><button class="wl-btn wl-btn--cta" id="vsWish" aria-label="Add to wishlist"><img alt=""></button></div></div>
+      <div class="rs-sheet" id="vsSheet" data-toast-avoid><div class="rs-sizes" id="vsSizes"></div><div class="buy-row"><button class="rs-atb" data-vs="atb">Add to bag</button><button class="wl-btn wl-btn--cta" id="vsWish" aria-label="Add to wishlist"><img alt=""></button></div></div>
       <div class="rail" id="vsRail">${RB('','x','close')}${RB('','sh','share')}</div>
     </div>
   </div>
