@@ -13,7 +13,7 @@
    Overlay colours (dark / light sheet, button, selected size, loader) are the signed-off VTO set in ../brands.js; type, radius and case are the DS tokens.
    Shell protocol (v2/index.html): in {vtoSet:{brand,crop}} {vtoJump:step} {vtoReset} {vtoPing}; out {vtoReady} {vtoState} {vtoPong}. */
 (function(){
-  const VT=window.VS2.vt, IC=VT+'assets/icons/', MOCK=VT+'assets/img/bodyshot.png';
+  const VT=window.VS2.vt, IC=VT+'assets/icons/', ICW=window.VS2.ds+'assets/ds/icons/', MOCK=VT+'assets/img/bodyshot.png';
   const qs=new URLSearchParams(location.search);
   const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
@@ -28,7 +28,7 @@
   #vs{--vs-ease:cubic-bezier(.32,.72,0,1);position:fixed;inset:0;z-index:calc(var(--z-modal,500) + 20);background:#000;transform:translateY(100%);transition:transform .45s var(--vs-ease);overflow:hidden;font-family:var(--font-family-base);-webkit-font-smoothing:antialiased}
   #vs.open{transform:none}
   #vs *{box-sizing:border-box;margin:0;padding:0}
-  #vs button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}
+  #vs button:where(:not(.wl-btn)){font:inherit;background:none;border:0;cursor:pointer;color:inherit}   /* the DS wishlist button keeps its own fill + border */
   #vs .scr{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s ease}
   #vs .scr.on{opacity:1;pointer-events:auto}
   #vs .sys{font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;color:#fff;background:#000}
@@ -95,6 +95,7 @@
   #vs .rail .cb{position:relative;opacity:0;transform:translateY(-14px) scale(.9);transition:opacity .28s ease,transform .38s var(--vs-ease)}
   #vs .rail.in .cb{opacity:1;transform:none}
   #vs .rail .cb+.cb{transition-delay:.06s}
+  #vs ~ .wl-layer{z-index:calc(var(--z-modal,500) + 30)}   /* the wishlist collections modal opens over the look */
   @media(min-width:600px){#vs .rs-sheet{left:50%;right:auto;width:440px;transform:translate(-50%,110%)}#vs .rs-sheet.in{transform:translate(-50%,0)}}
   `;
   document.head.insertAdjacentHTML('beforeend','<style id="vs-css">'+css+'</style>');
@@ -123,7 +124,7 @@
     <div class="scr" data-scr="result">
       <div class="rs-img"><img id="vsResult" alt="Your Virtual Stylist look"></div>
       <div class="wm"><img id="vsWm" alt=""></div>
-      <div class="rs-sheet" id="vsSheet"><div class="rs-sizes" id="vsSizes"></div><button class="rs-atb" data-vs="atb">Add to bag</button></div>
+      <div class="rs-sheet" id="vsSheet"><div class="rs-sizes" id="vsSizes"></div><div class="buy-row"><button class="rs-atb" data-vs="atb">Add to bag</button><button class="wl-btn wl-btn--cta" id="vsWish" aria-label="Add to wishlist"><img alt=""></button></div></div>
       <div class="rail" id="vsRail">${RB('','x','close')}${RB('','sh','share')}</div>
     </div>
   </div>
@@ -145,14 +146,26 @@
       '--vs-loader':/^#[0-9a-f]{3,6}$/i.test(cta)&&ratio(cta,ground)>=3?cta:(light?(t.sheetInk||'#000'):'#fff')};
     Object.entries(set).forEach(([a,b])=>vs.style.setProperty(a,b));
     vs.classList.toggle('light',light);
+    $('#vsWish').classList.toggle('wl-btn--inv',!light);
     $('#vsWm').src=VT+'assets/brands/'+k+'.svg';
     $('#vsResult').src=P.imgs[Math.max(0,(P.result||1)-1)]||P.imgs[0];
-    sizes();hook();post()}
+    sizes();wishItem();hook();post()}
   /* sizes: one selection, shared with the template's size selector (.sz) */
   const pdpSize=()=>{const s=$('.sz.on');return s?s.textContent.trim():''};
   function sizes(){const cur=pdpSize();$('#vsSizes').innerHTML=P.sizes.map(z=>`<button class="rsz${z===cur?' sel':''}" data-z="${esc(z)}">${esc(z)}</button>`).join('');
     $$('#vsSizes .rsz').forEach(b=>b.onclick=()=>{const s=$$('.sz').find(x=>x.textContent.trim()===b.dataset.z);if(s)s.click();else mark(b.dataset.z)})}
-  const mark=z=>$$('#vsSizes .rsz').forEach(b=>b.classList.toggle('sel',b.dataset.z===z));
+  const mark=z=>{$$('#vsSizes .rsz').forEach(b=>b.classList.toggle('sel',b.dataset.z===z));wishItem()};
+  /* wishlist (DS .wl-btn--cta + wishlist.js, 17 Nov): the same item as the PDP title's heart, saved with the size picked here */
+  const WISH={boohooman:'bookmark',karenmillen:'bookmark',brandroom:'bookmark',plt:'plt-heart'};
+  function wishItem(){const w=$('#vsWish');if(!w||!P)return;const tx=q=>{const e=$(q);return e?e.textContent.trim():''};
+    const it={brand:tx('.pdp-head .brand')||P.brand,name:tx('.pdp-head .name')||P.name,img:P.imgs[0],price:tx('.price-blk--pdp .now')||P.price,was:tx('.price-blk--pdp .was')||P.was,
+      sizes:(P.sizes||[]).map(l=>({l})),size:pdpSize()||null};
+    w.dataset.wishItem=JSON.stringify(it);
+    const on=!!(window.DG_wishlist&&DG_wishlist.itemFrom&&DG_wishlist.has(DG_wishlist.itemFrom(w).id));
+    w.querySelector('img').setAttribute('src',ICW+(WISH[S.brand]||'heart-24')+(on?'-fill':'')+'.svg');
+    w.classList.toggle('is-wished',on);w.setAttribute('aria-pressed',on);w.setAttribute('aria-label',on?'Remove from wishlist':'Add to wishlist')}
+  /* keep the title heart and this one in step */
+  document.addEventListener('dg:wishlist',e=>{const w=$('#vsWish');if(!e.detail)return;if(e.detail.el===w){if(window.DG_wishlist&&DG_wishlist.sync)setTimeout(DG_wishlist.sync,0)}else setTimeout(wishItem,0)});
   document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.sz'))setTimeout(()=>mark(pdpSize()),0)});
 
   /* the template's own pieces: the Virtual Stylist chip opens the intro (or the look); Add to bag → the DS toast (Master prototype behaviour) */

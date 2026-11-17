@@ -9,6 +9,7 @@
 - **Start screen (final, 9 Nov).** Jake's design, Figma LxHqA4rFpRYNWJu8vzn18X 15921-1329: Welcome to Virtual Stylist, one intro line, an example photo beside four photo tips (plain text, nothing that looks tappable), then consent, Camera / Upload and the note. It slides up on phones, hugging its content. The earlier layout options are retired.
 - **Crop = our Move and Scale step, always on in v2.** It comes after Camera (Retake / Use Photo) or the library (Cancel / Choose). The photo moves and scales under a fixed frame and always covers it: drag, pinch, scroll wheel, double-tap. The crop feeds the loading screen. Frame: **2:3 portrait**, the result shape. This needs building on web (the browser has no crop step) and a custom crop view in the app (the iOS picker's own crop is square only).
 - **Bag + limit = DS.** Add to bag uses the DS toast (Top, actionable) and bumps the header bag count, as the Master prototype does. The daily limit uses the DS modal (`.mdl--alert`).
+- **Intro + result (17 Nov).** Have one person in shot is the first photo tip (DS vs-intro.js). The result sheet has a wishlist beside Add to bag (DS .buy-row + .wl-btn--cta, .wl-btn--inv on dark sheets; bookmark on boohooMAN / KM): it saves the same item as the PDP title heart, with the size picked on the sheet, and runs the DS wishlist toast / Add to Collections flow over the look.
 - Loading and result screens are as v1, with the signed-off VTO overlay colours from `../brands.js`. Type, radius and case come from the DS tokens.
 
 ## Files
