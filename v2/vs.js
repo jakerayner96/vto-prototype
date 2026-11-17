@@ -10,7 +10,7 @@
      5 result  full-bleed look, fascia watermark, sizes (shared with the PDP's size selector), Add to bag
      bag       DS toast (Top, actionable) “Item added to bag · View”, header bag count +1 (as the Master prototype)
      limit     DS modal (Small / alert): the sixth try-on of the day
-   Overlay colours (dark / light sheet, button, selected size, loader) are the signed-off VTO set in ../brands.js; type, radius and case are the DS tokens.
+   One light overlay on every fascia (Jake 17 Nov: no dark modals): white sheet / PLT sand from the surface tokens, DS .sz size tiles, .bd.pri Add to bag, .nav-btn close + share; radius from ../brands.js.
    Shell protocol (v2/index.html): in {vtoSet:{brand,crop}} {vtoJump:step} {vtoReset} {vtoPing}; out {vtoReady} {vtoState} {vtoPong}. */
 (function(){
   const VT=window.VS2.vt, IC=VT+'assets/icons/', ICW=window.VS2.ds+'assets/ds/icons/', MOCK=VT+'assets/img/bodyshot.png';
@@ -27,8 +27,8 @@
   const css=`
   #vs{--vs-ease:cubic-bezier(.32,.72,0,1);position:fixed;inset:0;z-index:calc(var(--z-modal,500) + 20);background:#000;transform:translateY(100%);transition:transform .45s var(--vs-ease);overflow:hidden;font-family:var(--font-family-base);-webkit-font-smoothing:antialiased}
   #vs.open{transform:none}
-  #vs *{box-sizing:border-box;margin:0;padding:0}
-  #vs button:where(:not(.wl-btn)){font:inherit;background:none;border:0;cursor:pointer;color:inherit}   /* the DS wishlist button keeps its own fill + border */
+  :where(#vs) *{box-sizing:border-box;margin:0;padding:0}
+  :where(#vs) button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}   /* zero specificity: DS buttons (.bd, .sz, .nav-btn, .wl-btn) keep their own fill, border and padding */
   #vs .scr{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s ease}
   #vs .scr.on{opacity:1;pointer-events:auto}
   #vs .sys{font-family:-apple-system,'SF Pro Text','Helvetica Neue',sans-serif;color:#fff;background:#000}
@@ -50,33 +50,22 @@
   #vs .cr-bar{position:absolute;left:0;right:0;bottom:0;height:96px;display:flex;justify-content:space-between;align-items:flex-start;padding:22px 26px 0;background:rgba(0,0,0,.35)}
   #vs .cr-bar button{font-size:18px;letter-spacing:-.3px;padding:6px 0}
   /* loading (as v1) */
-  #vs .ld-bg{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.8),rgba(0,0,0,.8)),#e0dedc;overflow:hidden}
-  #vs.light .ld-bg{background:var(--vs-ground)}
+  #vs .ld-bg{position:absolute;inset:0;background:var(--surface-sunken,#FAFAFA);overflow:hidden}
   #vs .ld-blur{position:absolute;left:50%;top:50%;width:156%;height:108%;transform:translate(-50%,-50%);opacity:.2;filter:blur(10.5px)}
   #vs .ld-blur img{width:100%;height:100%;object-fit:cover;display:block}
   #vs .ld{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:16px;align-items:center;padding:8px 18px 18px;text-align:center}
   #vs .ld .ic32{width:32px;height:32px;color:var(--vs-loader);animation:vsPulse 1.8s ease-in-out infinite}
   @keyframes vsPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.92)}}
-  #vs .ld .hl{font-size:20px;font-weight:var(--w-strong,600);color:#fff}
-  #vs .ld .trk{width:240px;height:6px;background:#6b6b6b;border-radius:100px;overflow:hidden}
+  #vs .ld .hl{font-size:20px;font-weight:var(--w-strong,600);color:var(--text-primary)}
+  #vs .ld .trk{width:240px;height:6px;background:var(--border-default,#E7E7E7);border-radius:100px;overflow:hidden}
   #vs .ld .fill{height:6px;width:0;background:var(--vs-loader);border-radius:100px;transition:width .35s ease}
-  #vs .ld .cap,#vs .ld .tl{font-size:11.5px;font-weight:var(--w-regular,400);color:#b5b5b5}
-  #vs .ld .tl.last{color:#fff}
-  #vs.light .ld .hl,#vs.light .ld .tl.last{color:var(--vs-ink)}
-  #vs.light .ld .cap,#vs.light .ld .tl{color:#323232}
-  #vs.light .ld .trk{background:#e7e7e7}
+  #vs .ld .cap,#vs .ld .tl{font-size:11.5px;font-weight:var(--w-regular,400);color:var(--text-primary)}
   #vs .ld .b,#vs .ld .c{display:none}
   #vs .ld.creating .a{display:none}#vs .ld.creating .b{display:block}
   #vs .ld.nearly .a,#vs .ld.nearly .b{display:none}#vs .ld.nearly .c{display:block}
-  /* round buttons (close / share) */
-  #vs .cb{position:absolute;width:32px;height:32px;border-radius:50%;backdrop-filter:blur(2px)}
-  #vs .cb .ring{position:absolute;inset:0;width:100%;height:100%}
-  #vs .cb .g{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:12px;height:12px}
-  #vs .cb .g.sh{width:16px;height:16px}
+  /* close / share: the DS Navigation button (.nav-btn--close / --share, white + shadow on every fascia, Jake 17 Nov) - placed here, styled by the DS */
+  #vs .cb{position:absolute}
   #vs .x-tr{right:20px;top:20px}
-  #vs.light .cb{background:#fff;box-shadow:0 0 14px -4px rgba(0,0,0,.25)}
-  #vs.light .cb .ring{display:none}
-  #vs.light .cb .g{filter:brightness(0)}
   /* result (Figma 15550-23866) */
   #vs .rs-img{position:absolute;inset:0;overflow:hidden;background:#242424}
   #vs .rs-img img{width:100%;height:100%;object-fit:cover;display:block}
@@ -84,13 +73,11 @@
   @keyframes vsReveal{from{transform:scale(1.03);opacity:.4}to{transform:none;opacity:1}}
   #vs .wm{position:absolute;left:50%;bottom:180px;transform:translateX(-50%);width:103px;height:32px;display:flex;align-items:center;justify-content:center;opacity:.7;pointer-events:none}
   #vs .wm img{width:103px;max-height:32px;height:auto;filter:brightness(0) invert(1)}
-  #vs .rs-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:var(--vs-sheet-r) var(--vs-sheet-r) 0 0;background:var(--vs-sheet);display:flex;flex-direction:column;gap:20px;padding:20px 24px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(110%);transition:transform .42s var(--vs-ease)}
+  #vs .rs-sheet{position:absolute;left:0;right:0;bottom:0;border-radius:var(--vs-sheet-r) var(--vs-sheet-r) 0 0;background:var(--surface-raised,#FFF);box-shadow:var(--shadow-float,0 8px 18px rgba(22,19,20,.14));display:flex;flex-direction:column;gap:20px;padding:20px 24px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(110%);transition:transform .42s var(--vs-ease)}
   #vs .rs-sheet.in{transform:none}
   #vs .rs-sizes{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -24px;padding:0 24px}
   #vs .rs-sizes::-webkit-scrollbar{display:none}
-  #vs .rsz{flex:1 0 52px;min-width:52px;height:50px;background:var(--vs-size-bg);border:1px solid var(--vs-size-border);border-radius:var(--radius-default,4px);font-size:16px;font-weight:var(--w-mid,500);color:var(--vs-size-ink)}
-  #vs .rsz.sel{background:var(--vs-sel);border-color:var(--vs-sel);color:var(--vs-sel-ink)}
-  #vs .rs-atb{width:100%;height:50px;background:var(--vs-cta);border-radius:var(--radius-default,4px);font-size:16px;line-height:24px;font-weight:var(--w-btn,600);color:var(--vs-cta-ink);text-transform:var(--case-btn1,none)}
+  #vs .rs-sizes>.sz{flex:1 0 auto}   /* DS size tiles (.sz / .sz.on) in a scrolling row */
   #vs .rail{position:absolute;right:20px;top:20px;display:flex;flex-direction:column;gap:12px}
   #vs .rail .cb{position:relative;opacity:0;transform:translateY(-14px) scale(.9);transition:opacity .28s ease,transform .38s var(--vs-ease)}
   #vs .rail.in .cb{opacity:1;transform:none}
@@ -101,7 +88,7 @@
   document.head.insertAdjacentHTML('beforeend','<style id="vs-css">'+css+'</style>');
 
   const AI='<svg class="ic32" viewBox="0 0 25.9979 25.9977" fill="none" aria-hidden="true"><path d="M6.59147 0.791395C6.5437 0.567446 6.42052 0.366674 6.24251 0.222631C6.06451 0.0785881 5.84246 0 5.61347 0C5.38448 0 5.16243 0.0785881 4.98442 0.222631C4.80642 0.366674 4.68324 0.567446 4.63547 0.791395C4.32614 2.25273 3.90213 3.23806 3.31547 3.9394C2.74347 4.6274 1.94347 5.13006 0.715468 5.49406C0.508816 5.5554 0.327515 5.68186 0.198585 5.85462C0.0696552 6.02737 0 6.23717 0 6.45273C0 6.66829 0.0696552 6.87808 0.198585 7.05084C0.327515 7.22359 0.508816 7.35006 0.715468 7.41139C1.89547 7.76073 2.6888 8.23406 3.27014 8.9114C3.86214 9.5994 4.3128 10.5914 4.63547 12.1141C4.68324 12.338 4.80642 12.5388 4.98442 12.6828C5.16243 12.8269 5.38448 12.9055 5.61347 12.9055C5.84246 12.9055 6.06451 12.8269 6.24251 12.6828C6.42052 12.5388 6.5437 12.338 6.59147 12.1141C6.91414 10.5901 7.3648 9.5994 7.9568 8.9114C8.53813 8.23406 9.33013 7.76073 10.5128 7.41139C10.7195 7.35006 10.9008 7.22359 11.0297 7.05084C11.1586 6.87808 11.2283 6.66829 11.2283 6.45273C11.2283 6.23717 11.1586 6.02737 11.0297 5.85462C10.9008 5.68186 10.7195 5.5554 10.5128 5.49406C9.33147 5.14473 8.53813 4.6714 7.9568 3.99406C7.3648 3.30606 6.91414 2.31406 6.59147 0.791395ZM17.6621 5.12606C17.6094 4.908 17.4849 4.71399 17.3086 4.57524C17.1323 4.43648 16.9145 4.36104 16.6901 4.36104C16.4658 4.36104 16.248 4.43648 16.0717 4.57524C15.8954 4.71399 15.7709 4.908 15.7181 5.12606C14.9795 8.18206 14.1968 10.0247 13.0888 11.3101C11.9955 12.5794 10.4928 13.4114 8.06214 14.2327C7.86399 14.2997 7.69184 14.4271 7.5699 14.5971C7.44797 14.767 7.38238 14.9709 7.38238 15.1801C7.38238 15.3892 7.44797 15.5931 7.5699 15.7631C7.69184 15.933 7.86399 16.0604 8.06214 16.1274C10.6008 16.9847 12.1235 17.8901 13.1981 19.1834C14.2901 20.4981 15.0141 22.3234 15.7181 25.2327C15.7709 25.4508 15.8954 25.6448 16.0717 25.7836C16.248 25.9223 16.4658 25.9977 16.6901 25.9977C16.9145 25.9977 17.1323 25.9223 17.3086 25.7836C17.4849 25.6448 17.6094 25.4508 17.6621 25.2327C18.4008 22.1781 19.1848 20.3354 20.2915 19.0501C21.3848 17.7807 22.8875 16.9487 25.3181 16.1274C25.5163 16.0604 25.6884 15.933 25.8104 15.7631C25.9323 15.5931 25.9979 15.3892 25.9979 15.1801C25.9979 14.9709 25.9323 14.767 25.8104 14.5971C25.6884 14.4271 25.5163 14.2997 25.3181 14.2327C22.7755 13.3741 21.2555 12.4727 20.1821 11.1794C19.0915 9.8674 18.3688 8.0434 17.6621 5.12606Z" fill="currentColor"/></svg>';
-  const RB=(cls,g,fn)=>`<button class="cb ${cls}" data-vs="${fn}" aria-label="${fn==='share'?'Share':'Close'}"><img class="ring" src="${IC}ring.svg" alt=""><img class="g ${g}" src="${IC}${g==='sh'?'share':'close'}.svg" alt=""></button>`;
+  const RB=(cls,g,fn)=>`<button class="nav-btn nav-btn--${fn==='share'?'share':'close'} cb ${cls}" data-vs="${fn}" aria-label="${fn==='share'?'Share':'Close'}"></button>`;
   document.body.insertAdjacentHTML('beforeend',`
   <div id="vs" aria-hidden="true">
     <div class="scr sys" data-scr="crop">
@@ -124,7 +111,7 @@
     <div class="scr" data-scr="result">
       <div class="rs-img"><img id="vsResult" alt="Your Virtual Stylist look"></div>
       <div class="wm"><img id="vsWm" alt=""></div>
-      <div class="rs-sheet" id="vsSheet" data-toast-avoid><div class="rs-sizes" id="vsSizes"></div><div class="buy-row"><button class="rs-atb" data-vs="atb">Add to bag</button><button class="wl-btn wl-btn--cta" id="vsWish" aria-label="Add to wishlist"><img alt=""></button></div></div>
+      <div class="rs-sheet" id="vsSheet" data-toast-avoid><div class="rs-sizes" id="vsSizes"></div><div class="buy-row"><button class="bd pri" data-vs="atb">Add to bag</button><button class="wl-btn wl-btn--cta" id="vsWish" aria-label="Add to wishlist"><img alt=""></button></div></div>
       <div class="rail" id="vsRail">${RB('','x','close')}${RB('','sh','share')}</div>
     </div>
   </div>
@@ -136,25 +123,18 @@
   function lum(h){h=String(h).replace('#','');if(h.length===3)h=h.replace(/./g,'$&$&');return [0,2,4].map(i=>{const c=parseInt(h.substr(i,2),16)/255;return c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4)}).reduce((a,c,i)=>a+c*[.2126,.7152,.0722][i],0)}
   const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
   function skin(){const k=S.brand;B=(window.VTO_BRANDS||{})[k]||VTO_BRANDS.debenhams;P=(window.DG_PDP_PRODUCTS||{})[k]||DG_PDP_PRODUCTS.debenhams;
-    const t=B.tokens,light=B.theme==='light';
-    const dark={sheetBg:'linear-gradient(162.7deg,#0f0f0f 3.09%,#131313 100%)',sheetInk:'#fff',sizeBg:'#242424',sizeInk:'#fff',sizeBorder:'transparent'};
-    const v=n=>t[n]!==undefined?t[n]:(light?{sheetBg:'var(--surface-raised)',sheetInk:'#000',sizeBg:'var(--surface-raised)',sizeInk:'#000',sizeBorder:'var(--border-default)'}:dark)[n];
-    const cta=t.sheetCta||(light?'#000':'#fff'),ground=light?(t.grey05||'#fafafa'):'#2b2b2b';
-    const set={'--vs-sheet':v('sheetBg'),'--vs-ink':v('sheetInk'),'--vs-size-bg':v('sizeBg'),'--vs-size-ink':v('sizeInk'),'--vs-size-border':v('sizeBorder'),
-      '--vs-cta':cta,'--vs-cta-ink':t.sheetCtaInk||(light?'#fff':'#000'),'--vs-sel':t.sheetSel||cta,'--vs-sel-ink':t.sheetSelInk||t.sheetCtaInk||(light?'#fff':'#000'),
-      '--vs-sheet-r':B.sheetRadius||'12px','--vs-ground':ground,
-      '--vs-loader':/^#[0-9a-f]{3,6}$/i.test(cta)&&ratio(cta,ground)>=3?cta:(light?(t.sheetInk||'#000'):'#fff')};
-    Object.entries(set).forEach(([a,b])=>vs.style.setProperty(a,b));
-    vs.classList.toggle('light',light);
-    $('#vsWish').classList.toggle('wl-btn--inv',!light);
+    /* one overlay for every fascia (Jake 17 Nov: no dark modals): white sheet (PLT warm-white sand) via the surface tokens, the fascia's DS buttons + size tiles */
+    vs.style.setProperty('--vs-sheet-r',B.sheetRadius||'12px');
+    vs.style.setProperty('--vs-loader','var(--surface-action,#000)');
     $('#vsWm').src=VT+'assets/brands/'+k+'.svg';
     $('#vsResult').src=P.imgs[Math.max(0,(P.result||1)-1)]||P.imgs[0];
     sizes();wishItem();hook();post()}
   /* sizes: one selection, shared with the template's size selector (.sz) */
-  const pdpSize=()=>{const s=$('.sz.on');return s?s.textContent.trim():''};
-  function sizes(){const cur=pdpSize();$('#vsSizes').innerHTML=P.sizes.map(z=>`<button class="rsz${z===cur?' sel':''}" data-z="${esc(z)}">${esc(z)}</button>`).join('');
-    $$('#vsSizes .rsz').forEach(b=>b.onclick=()=>{const s=$$('.sz').find(x=>x.textContent.trim()===b.dataset.z);if(s)s.click();else mark(b.dataset.z)})}
-  const mark=z=>{$$('#vsSizes .rsz').forEach(b=>b.classList.toggle('sel',b.dataset.z===z));wishItem()};
+  const pdp=()=>$$('.sz').filter(x=>!x.closest('#vs'));
+  const pdpSize=()=>{const s=pdp().find(x=>x.classList.contains('on'));return s?s.textContent.trim():''};
+  function sizes(){const cur=pdpSize();$('#vsSizes').innerHTML=P.sizes.map(z=>`<button class="sz${z===cur?' on':''}" data-z="${esc(z)}">${esc(z)}</button>`).join('');
+    $$('#vsSizes .sz').forEach(b=>b.onclick=()=>{const s=pdp().find(x=>x.textContent.trim()===b.dataset.z);if(s)s.click();else mark(b.dataset.z)})}
+  const mark=z=>{$$('#vsSizes .sz').forEach(b=>b.classList.toggle('on',b.dataset.z===z));wishItem()};
   /* wishlist (DS .wl-btn--cta + wishlist.js, 17 Nov): the same item as the PDP title's heart, saved with the size picked here */
   const WISH={boohooman:'bookmark',karenmillen:'bookmark',brandroom:'bookmark',plt:'plt-heart'};
   function wishItem(){const w=$('#vsWish');if(!w||!P)return;const tx=q=>{const e=$(q);return e?e.textContent.trim():''};
@@ -166,7 +146,7 @@
     w.classList.toggle('is-wished',on);w.setAttribute('aria-pressed',on);w.setAttribute('aria-label',on?'Remove from wishlist':'Add to wishlist')}
   /* keep the title heart and this one in step */
   document.addEventListener('dg:wishlist',e=>{const w=$('#vsWish');if(!e.detail)return;if(e.detail.el===w){if(window.DG_wishlist&&DG_wishlist.sync)setTimeout(DG_wishlist.sync,0)}else setTimeout(wishItem,0)});
-  document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.sz'))setTimeout(()=>mark(pdpSize()),0)});
+  document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.sz')&&!e.target.closest('#vs'))setTimeout(()=>mark(pdpSize()),0)});
 
   /* the template's own pieces: the Virtual Stylist chip opens the intro (or the look); Add to bag → the DS toast (Master prototype behaviour) */
   function hook(){$$('.pdp-chips .ai-pill--tag').forEach(c=>{c.onclick=e=>{e.preventDefault();chip()}});
