@@ -136,13 +136,14 @@
     $$('#vsSizes .sz').forEach(b=>b.onclick=()=>{const s=pdp().find(x=>x.textContent.trim()===b.dataset.z);if(s)s.click();else mark(b.dataset.z)})}
   const mark=z=>{$$('#vsSizes .sz').forEach(b=>b.classList.toggle('on',b.dataset.z===z));wishItem()};
   /* wishlist (DS .wl-btn--cta + wishlist.js, 17 Nov): the same item as the PDP title's heart, saved with the size picked here */
-  const WISH={boohooman:'bookmark',karenmillen:'bookmark',brandroom:'bookmark',plt:'plt-heart'};
+  /* DS icon library only (assets/ds/icons/lib, 24 · 1pt non-scaling stroke — Jake 17 Nov): wishlist heart / bookmark; PLT keeps its solid heart (no stroke) */
+  const WISH={boohooman:'lib/icon-bookmark',karenmillen:'lib/icon-bookmark',brandroom:'lib/icon-bookmark',plt:'plt-heart'};
   function wishItem(){const w=$('#vsWish');if(!w||!P)return;const tx=q=>{const e=$(q);return e?e.textContent.trim():''};
     const it={brand:tx('.pdp-head .brand')||P.brand,name:tx('.pdp-head .name')||P.name,img:P.imgs[0],price:tx('.price-blk--pdp .now')||P.price,was:tx('.price-blk--pdp .was')||P.was,
       sizes:(P.sizes||[]).map(l=>({l})),size:pdpSize()||null};
     w.dataset.wishItem=JSON.stringify(it);
     const on=!!(window.DG_wishlist&&DG_wishlist.itemFrom&&DG_wishlist.has(DG_wishlist.itemFrom(w).id));
-    w.querySelector('img').setAttribute('src',ICW+(WISH[S.brand]||'heart-24')+(on?'-fill':'')+'.svg');
+    w.querySelector('img').setAttribute('src',ICW+(WISH[S.brand]||'lib/icons-wishlist')+(on?'-fill':'')+'.svg');
     w.classList.toggle('is-wished',on);w.setAttribute('aria-pressed',on);w.setAttribute('aria-label',on?'Remove from wishlist':'Add to wishlist')}
   /* keep the title heart and this one in step */
   document.addEventListener('dg:wishlist',e=>{const w=$('#vsWish');if(!e.detail)return;if(e.detail.el===w){if(window.DG_wishlist&&DG_wishlist.sync)setTimeout(DG_wishlist.sync,0)}else setTimeout(wishItem,0)});
